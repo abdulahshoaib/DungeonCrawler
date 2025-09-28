@@ -1,12 +1,15 @@
 #pragma once
+#include "ui.h"
 #include "window.h"
 #include <raylib.h>
 #include <string>
 
 enum GameState {
-  MENU,     // Game currently at the Menu
-  SETTINGS, // Game currently at the Settings menu
-  GAME_LOOP // Game currently running
+  MENU,       // Game currently at the Menu
+  SETTINGS,   // Game currently at the Settings menu
+  GAME_LOOP,  // Game currently running
+  GAME_PAUSE, // Game is paused
+  INVENTORY   // The player has the inventory opened
 };
 
 struct Screen {
@@ -27,13 +30,7 @@ public:
   Vector2 getPos() const;
 };
 
-class UI {
-  Font *font;
 
-public:
-  void DrawMenu(GameState &);
-  UI(Font *);
-};
 
 class Loader {
   Font font;
@@ -59,17 +56,17 @@ public:
   ~Audio();
 };
 
-class Game {
-  Window *window;
-  Player *player;
-  UI *ui;
-  Audio *audio;
-  Loader *loader;
+class Engine {
+  Window window;
+  Player player;
+  UIEngine ui_engine;
+  Audio audio;
+  Loader loader;
   GameState gameState;
 
 public:
-  Game();
-  ~Game();
+  Engine();
+  ~Engine();
 
   // TODO(demon_slayer): initialization of Window, loading
   // game assets and setting up the game state machine
