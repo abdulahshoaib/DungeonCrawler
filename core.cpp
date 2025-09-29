@@ -1,30 +1,15 @@
+#pragma once
 #include "core.h"
 #include <raylib.h>
 
-Game::~Game() {
-  delete window;
-  delete player;
-  delete ui;
-  delete loader;
-}
+Engine::~Engine() {}
 
-void Game::init(Screen screen) {
-  window = new Window(screen.width, screen.height, screen.title);
-
-  // TODO(demon_slayer): change these magic numbers
-  player = new Player({200, 200}, {10, 10});
-
-  Font f = LoadFont("roboto.ttf");
-  loader = new Loader(f);
-
-  ui = new UI(loader->getFont());
-
+void Engine::init(Screen screen) {
   gameState = MENU;
-
   // TODO(demon_slayer): load the assets
 }
 
-void Game::update() {
+void Engine::update() {
 
   while (!WindowShouldClose()) {
     BeginDrawing();
@@ -32,7 +17,7 @@ void Game::update() {
     // TODO(demon_slayer): I don't like how this
     // state management is handled
     if (gameState == MENU)
-      ui->DrawMenu(gameState);
+      ui.DrawMenu(gameState);
     else if (gameState == GAME_LOOP) {
 
       const float speed = 0.4f;
@@ -49,28 +34,29 @@ void Game::update() {
 
       switch (key) {
       case KEY_W:
-        player->move(0, -speed);
+        player.move(0, -speed);
         break;
       case KEY_A:
-        player->move(-speed, 0);
+        player.move(-speed, 0);
         break;
       case KEY_S:
-        player->move(0, speed);
+        player.move(0, speed);
         break;
       case KEY_D:
-        player->move(speed, 0);
+        player.move(speed, 0);
         break;
       }
 
-      DrawRectangleV(player->getPos(), player->getSize(), RED);
+      DrawRectangleV(player.getPos(), player.getSize(), RED);
     }
     EndDrawing();
   }
   CloseWindow();
 }
 
-Game::Game() : window(nullptr) {}
-
+Engine::Engine() {
+    // UI
+}
 Player::Player(Vector2 position, Vector2 size) : pos(position), size(size) {}
 
 Vector2 Player::getPos() const { return pos; }
@@ -84,24 +70,6 @@ void Player::move(float _x, float _y) {
 Loader::Loader(Font f) : font(f) {}
 Font *Loader::getFont() { return &font; } // just return a ref to the font
 
-// MENU UI
-void UI::DrawMenu(GameState &g) {
-  DrawTextEx(*font, "Main Menu", {100, 100}, 30.0f, 3.0f, GREEN);
-  DrawRectangleV({200, 200}, {50, 30}, GREEN);
-  if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) &&
-      (GetMousePosition().x > 200 && GetMousePosition().x < 250) &&
-      (GetMousePosition().y > 200 && GetMousePosition().y < 230)) {
-    g = GAME_LOOP;
-  }
-}
-
-UI::UI(Font *_font) : font(_font) {}
-
-Audio::~Audio() {
-  UnloadWave(wave);
-  CloseAudioDevice();
-}
-
 Audio::Audio(char *audio_name) {
   InitAudioDevice();
 
@@ -110,4 +78,34 @@ Audio::Audio(char *audio_name) {
   // one by one
   wave = LoadWave(audio_name);
   sound = LoadSoundFromWave(wave);
+}
+
+UIElement::UIElement(Font *_font) { font = _font; }
+
+Progressbar::Progressbar(Font *font) : UIElement(font) {}
+Button::Button(Font *font) : UIElement(font) {}
+Label::Label(Font *font) : UIElement(font) {}
+
+Menu::Menu() {}
+
+MenuHUD::MenuHUD(Font *font) {
+  //
+  // elements.Append(const UIElement &)
+}
+
+MenuMain::MenuMain(Font *font) {
+  Button Play_btn(font), Pause_btn(font), Settings_btn(font), Quit(font);
+  elements.Append(Play_btn);
+  elements.Append(Pause_btn);
+  elements.Append(Settings_btn);
+}
+MenuPause::MenuPause(Font *font) {}
+MenuInventory::MenuInventory(Font *font) {}
+
+UIEngine::UIEngine(Loader *l) {
+  Font *font = l->getFont();
+  menus[PAUSE_MENU] = new MenuPause(font);
+  menus[INVENTORY] = new MenuInventory(font);
+  menus[MAIN_MENU] = new MenuMain(font);
+  menus[HUD] = new MenuHUD(font);
 }

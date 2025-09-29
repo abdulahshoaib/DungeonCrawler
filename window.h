@@ -7,6 +7,7 @@ class Window {
   int screenHeigth;
 
 public:
+  Window();
   Window(int, int, std::string);
   int getWindowHeight() const;
   int getWindowWidth() const;

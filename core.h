@@ -1,5 +1,5 @@
 #pragma once
-#include "ui.h"
+#include "utils.h"
 #include "window.h"
 #include <raylib.h>
 #include <string>
@@ -23,6 +23,7 @@ class Player {
   Vector2 size;
 
 public:
+  Player();
   Player(Vector2, Vector2);
   void move(float, float);
 
@@ -30,12 +31,11 @@ public:
   Vector2 getPos() const;
 };
 
-
-
 class Loader {
   Font font;
 
 public:
+  Loader();
   Loader(Font);
   Font *getFont();
 };
@@ -52,16 +52,87 @@ class Audio {
   enum SoundNames {};
 
 public:
+  Audio();
   Audio(char *);
   ~Audio();
 };
 
+class UIElement {
+protected:
+  Font *font;
+  std::string text;
+
+public:
+  UIElement(Font *);
+};
+
+/* UI Elements */
+class Button : public UIElement {
+public:
+  Button(Font *);
+};
+class Label : public UIElement {
+public:
+  Label(Font *);
+};
+class Progressbar : public UIElement {
+  int progress;
+
+public:
+  Progressbar(Font *);
+};
+
+class Menu {
+protected:
+  List<UIElement> elements;
+
+public:
+  Menu();
+  virtual ~Menu();
+  virtual void Draw();
+};
+
+/* Menus */
+class MenuMain : public Menu {
+public:
+  MenuMain(Font *);
+  void Draw();
+};
+class MenuPause : public Menu {
+public:
+  MenuPause(Font *);
+  void Draw();
+};
+class MenuHUD : public Menu {
+public:
+  MenuHUD(Font *);
+  void Draw();
+};
+class MenuInventory : public Menu {
+public:
+  MenuInventory(Font *);
+  void Draw();
+};
+
+#define MAIN_MENU 0
+#define PAUSE_MENU 1
+#define HUD 2
+#define INVENTORY 3
+
+/* UI Engine */
+class UIEngine {
+  Menu *menus[4];
+
+public:
+  UIEngine(Loader *);
+};
+
 class Engine {
+  Audio audio;
+  Loader loader;
   Window window;
   Player player;
   UIEngine ui_engine;
-  Audio audio;
-  Loader loader;
   GameState gameState;
 
 public:
