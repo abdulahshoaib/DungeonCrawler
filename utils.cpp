@@ -1,4 +1,5 @@
-#include "utils.h"
+#include "core.h"
+template class List<UIElement>;
 
 template <typename T> void List<T>::resize(int newCap) {
   T *newArr = new T[newCap];

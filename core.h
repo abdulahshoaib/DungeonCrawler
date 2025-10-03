@@ -63,6 +63,7 @@ protected:
   std::string text;
 
 public:
+  UIElement();
   UIElement(Font *);
 };
 
@@ -121,9 +122,9 @@ public:
 
 /* UI Engine */
 class UIEngine {
-  Menu *menus[4];
-
 public:
+  Menu *menus[4];
+  UIEngine();
   UIEngine(Loader *);
 };
 
@@ -145,5 +146,5 @@ public:
 
   // TODO(demon_slayer): game loop and the updation of the
   // game logic
-  void update();
+  void run();
 };

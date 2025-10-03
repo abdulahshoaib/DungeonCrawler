@@ -1,15 +1,15 @@
-#pragma once
 #include "core.h"
 #include <raylib.h>
 
 Engine::~Engine() {}
 
 void Engine::init(Screen screen) {
+  InitWindow(screen.width, screen.height, "game");
   gameState = MENU;
   // TODO(demon_slayer): load the assets
 }
 
-void Engine::update() {
+void Engine::run() {
 
   while (!WindowShouldClose()) {
     BeginDrawing();
@@ -17,8 +17,8 @@ void Engine::update() {
     // TODO(demon_slayer): I don't like how this
     // state management is handled
     if (gameState == MENU)
-      ui.DrawMenu(gameState);
-    else if (gameState == GAME_LOOP) {
+      ui_engine.menus[MAIN_MENU]->Draw();
+    if (gameState == GAME_LOOP) {
 
       const float speed = 0.4f;
 
@@ -55,9 +55,10 @@ void Engine::update() {
 }
 
 Engine::Engine() {
-    // UI
+  // UI
 }
 Player::Player(Vector2 position, Vector2 size) : pos(position), size(size) {}
+Player::Player() : pos({0, 0}), size({10, 10}) {}
 
 Vector2 Player::getPos() const { return pos; }
 Vector2 Player::getSize() const { return size; }
@@ -68,6 +69,8 @@ void Player::move(float _x, float _y) {
 }
 
 Loader::Loader(Font f) : font(f) {}
+Loader::Loader() {}
+
 Font *Loader::getFont() { return &font; } // just return a ref to the font
 
 Audio::Audio(char *audio_name) {
@@ -80,13 +83,24 @@ Audio::Audio(char *audio_name) {
   sound = LoadSoundFromWave(wave);
 }
 
+Audio::Audio() { InitAudioDevice(); }
+
+Audio::~Audio() {
+  UnloadSound(sound);
+  UnloadWave(wave);
+  CloseAudioDevice();
+}
+
 UIElement::UIElement(Font *_font) { font = _font; }
+UIElement::UIElement() = default;
 
 Progressbar::Progressbar(Font *font) : UIElement(font) {}
 Button::Button(Font *font) : UIElement(font) {}
 Label::Label(Font *font) : UIElement(font) {}
 
 Menu::Menu() {}
+Menu::~Menu() {}
+void Menu::Draw() {}
 
 MenuHUD::MenuHUD(Font *font) {
   //
@@ -101,6 +115,21 @@ MenuMain::MenuMain(Font *font) {
 }
 MenuPause::MenuPause(Font *font) {}
 MenuInventory::MenuInventory(Font *font) {}
+void MenuMain::Draw() {
+  DrawText("GAME TITLE", 100, 50, 40, WHITE);
+
+  DrawRectangle(100, 150, 200, 50, GRAY);
+  DrawText("PLAY", 150, 165, 20, WHITE);
+
+  DrawRectangle(100, 220, 200, 50, GRAY);
+  DrawText("SETTINGS", 130, 235, 20, WHITE);
+
+  DrawRectangle(100, 290, 200, 50, GRAY);
+  DrawText("QUIT", 160, 305, 20, WHITE);
+}
+void MenuPause::Draw() {}
+void MenuHUD::Draw() {}
+void MenuInventory::Draw() {}
 
 UIEngine::UIEngine(Loader *l) {
   Font *font = l->getFont();
@@ -109,3 +138,5 @@ UIEngine::UIEngine(Loader *l) {
   menus[MAIN_MENU] = new MenuMain(font);
   menus[HUD] = new MenuHUD(font);
 }
+
+UIEngine::UIEngine() {}
