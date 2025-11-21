@@ -5,22 +5,22 @@
 - **Prerequisites:** Install Raylib and MinGW (w64devkit). Ensure `C:/raylib/w64devkit/bin` is available on your PATH or use full paths below.
 
 ### Build (release)
-```
+```bash
 mingw32-make
 ```
 
 ### Build (debug)
-```
+```bash
 mingw32-make BUILD_MODE=DEBUG
 ```
 
 If `mingw32-make` is not on your PATH, run with the full path:
-```
+```bash
 C:/raylib/w64devkit/bin/mingw32-make.exe BUILD_MODE=DEBUG
 ```
 
 To specify `RAYLIB_PATH` or other Makefile variables explicitly:
-```
+```bash
 C:/raylib/w64devkit/bin/mingw32-make.exe RAYLIB_PATH=C:/raylib/raylib PROJECT_NAME=game OBJS=*.cpp BUILD_MODE=DEBUG
 ```
 
