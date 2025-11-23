@@ -3,6 +3,6 @@
 
 class MenuInventory : public Menu {
 public:
-  MenuInventory(Font *);
+  MenuInventory();
   void Draw();
 };

@@ -6,9 +6,9 @@
 #define HUD 2
 #define INVENTORY 3
 
-class UIEngine {
+class UIEngine
+{
 public:
   Menu *menus[4];
   UIEngine();
-  UIEngine(Loader *);
 };

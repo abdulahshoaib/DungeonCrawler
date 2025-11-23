@@ -6,5 +6,5 @@ class Progressbar : public UIElement {
   int progress;
 
 public:
-  Progressbar(Font *);
+  Progressbar();
 };

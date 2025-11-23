@@ -1,5 +1,5 @@
 
 #include "MenuInventory.h"
 
-MenuInventory::MenuInventory(Font *font) {}
+MenuInventory::MenuInventory() {}
 void MenuInventory::Draw() {}

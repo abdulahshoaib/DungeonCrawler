@@ -1,5 +1,4 @@
-
 #include "MenuPause.h"
 
-MenuPause::MenuPause(Font *font) {}
+MenuPause::MenuPause() {}
 void MenuPause::Draw() {}

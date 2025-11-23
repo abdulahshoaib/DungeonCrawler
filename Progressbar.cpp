@@ -1,3 +1,3 @@
 
 #include "Progressbar.h"
-Progressbar::Progressbar(Font *font) : UIElement(font) {}
+Progressbar::Progressbar() : UIElement() {}

@@ -1,9 +1,8 @@
 
 #include "MenuHUD.h"
-MenuHUD::MenuHUD(Font *font) {
-  //
+MenuHUD::MenuHUD()
+{
   // elements.Append(const UIElement &)
 }
-
 
 void MenuHUD::Draw() {}

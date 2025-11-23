@@ -3,6 +3,6 @@
 
 class MenuMain : public Menu {
 public:
-  MenuMain(Font *);
+  MenuMain();
   void Draw();
 };

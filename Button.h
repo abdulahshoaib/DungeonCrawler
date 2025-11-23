@@ -4,5 +4,5 @@
 
 class Button : public UIElement {
 public:
-  Button(Font *);
+  Button();
 };
