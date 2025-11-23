@@ -5,12 +5,14 @@
 #include "Window.h" 
 #include "Player.h"
 #include "UIEngine.h"
+
 enum GameState {
     MENU,
     SETTINGS,
     GAME_LOOP,
     GAME_PAUSE
 };
+
 struct Screen {
   int width;
   int height;
@@ -37,4 +39,3 @@ public:
   // game logic
   void run();
 };
-

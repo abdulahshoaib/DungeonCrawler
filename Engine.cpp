@@ -1,24 +1,28 @@
-
 #include "Engine.h"
 
 Engine::~Engine() {}
 
-void Engine::init(Screen screen) {
+void Engine::init(Screen screen)
+{
   InitWindow(screen.width, screen.height, "game");
-  gameState = MENU;
+  gameState = GameState::MENU;
   // TODO(demon_slayer): load the assets
 }
 
-void Engine::run() {
+void Engine::run()
+{
 
-  while (!WindowShouldClose()) {
+  while (!WindowShouldClose())
+  {
     BeginDrawing();
     ClearBackground(BLACK);
     // TODO(demon_slayer): I don't like how this
     // state management is handled
-    if (gameState == MENU)
+    if (gameState == GameState::MENU)
       ui_engine.menus[MAIN_MENU]->Draw();
-    if (gameState == GAME_LOOP) {
+
+    if (gameState == GameState::GAME_LOOP)
+    {
 
       const float speed = 0.4f;
 
@@ -32,7 +36,8 @@ void Engine::run() {
       if (IsKeyDown(KEY_S))
         key = KEY_S;
 
-      switch (key) {
+      switch (key)
+      {
       case KEY_W:
         player.move(0, -speed);
         break;
@@ -54,6 +59,7 @@ void Engine::run() {
   CloseWindow();
 }
 
-Engine::Engine() {
+Engine::Engine()
+{
   // UI
 }
