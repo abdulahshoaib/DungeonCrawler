@@ -1,6 +1,8 @@
+#include "PlayState.h"
 #include "Engine.h"
+#include "SettingsState.h"
 #include "MenuMain.h"
-#include "Button.h"
+
 MenuMain::MenuMain()
 {
   elements.Append(Play_btn);
@@ -61,10 +63,10 @@ void MenuMain::HandleInput(Engine &engine)
 
   // TODO(demon_slayer): a switch statement should be good here
   if (clicked && CheckCollisionPointRec(mousePoint, Play_btn.rect))
-    engine.gameState = new PlayState();
+    engine.ChangeState(new PlayState());
 
   if (clicked && CheckCollisionPointRec(mousePoint, Settings_btn.rect))
-    engine.gameState = new SettingsState();
+    engine.ChangeState(new SettingsState());
 
   if (clicked && CheckCollisionPointRec(mousePoint, Quit_btn.rect))
     CloseWindow();

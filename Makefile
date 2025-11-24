@@ -24,7 +24,7 @@
 .PHONY: all clean
 
 # Define required raylib variables
-PROJECT_NAME       ?= game
+PROJECT_NAME       ?= DungeonCrawler
 RAYLIB_VERSION     ?= 4.5.0
 RAYLIB_PATH        ?= ..\..
 
@@ -250,7 +250,7 @@ endif
 
 # Define include paths for required headers
 # NOTE: Several external required libraries (stb and others)
-INCLUDE_PATHS = -I. -I$(RAYLIB_PATH)/src -I$(RAYLIB_PATH)/src/external
+INCLUDE_PATHS = -I. -I$(RAYLIB_PATH)/src -I$(RAYLIB_PATH)/src/external -Isrc -Isrc/utils -Isrc/engine -Isrc/engine/system -Isrc/engine/state -Isrc/ui -Isrc/core -Isrc/ui/menus -Isrc/ui/ui_elements
 ifneq ($(wildcard /opt/homebrew/include/.*),)
     INCLUDE_PATHS += -I/opt/homebrew/include
 endif
@@ -363,7 +363,8 @@ endif
 # Define a recursive wildcard function
 rwildcard=$(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2) $(filter $(subst *,%,$2),$d))
 
-SRC = $(wildcard *.cpp test/*.cpp)
+SRC = $(call rwildcard, src/, *.cpp) $(wildcard test/*.cpp)
+# OBJS = $(patsubst %.cpp, build/%.o, $(SRC))
 OBJS = $(SRC:.cpp=.o)
 
 # For Android platform we call a custom Makefile.Android
@@ -383,10 +384,12 @@ all:
 # Project target defined by PROJECT_NAME
 $(PROJECT_NAME): $(OBJS)
 	$(CC) -o $(PROJECT_NAME)$(EXT) $(OBJS) $(CFLAGS) $(INCLUDE_PATHS) $(LDFLAGS) $(LDLIBS) -D$(PLATFORM)
+    #./build/$(PROJECT_NAME)$(EXT)
 
 # Compile source files
 # NOTE: This pattern will compile every module defined on $(OBJS)
 %.o: %.cpp
+    #@mkdir -p $(dir $@)
 	$(CC) -c $< -o $@ $(CFLAGS) $(INCLUDE_PATHS) -D$(PLATFORM)
 
 # Clean everything
