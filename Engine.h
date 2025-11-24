@@ -1,5 +1,3 @@
-#pragma once
-
 #include "MenuMain.h"
 #include "MenuPause.h"
 #include "MenuSettings.h"
@@ -8,6 +6,12 @@
 #include "Window.h"
 #include "Player.h"
 #include "UIEngine.h"
+
+class MenuSettings;
+class MenuPause;
+class MenuMain;
+
+class Engine;
 
 class GameState
 {

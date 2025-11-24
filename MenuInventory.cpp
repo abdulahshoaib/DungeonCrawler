@@ -3,3 +3,7 @@
 
 MenuInventory::MenuInventory() {}
 void MenuInventory::Draw() {}
+
+void MenuInventory::HandleInput(Engine &)
+{
+}

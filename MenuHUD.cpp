@@ -5,4 +5,10 @@ MenuHUD::MenuHUD()
   // elements.Append(const UIElement &)
 }
 
-void MenuHUD::Draw() {}
+void MenuHUD::Draw()
+{
+}
+
+void MenuHUD::HandleInput(Engine &)
+{
+}

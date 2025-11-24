@@ -10,6 +10,7 @@ MenuMain::MenuMain()
 
 void MenuMain::Draw()
 {
+  // TODO(demon_slayer): Need to move more of this into the button class code.
   Vector2 mousePoint = GetMousePosition();
   int screenWidth = 1100;
 
@@ -24,6 +25,7 @@ void MenuMain::Draw()
   Rectangle SettingsRect = {cx - (int)200 / 2, PlayRect.y + PlayRect.height + 10, 200, 50};
   Rectangle QuitRect = {cx - (int)200 / 2, SettingsRect.y + SettingsRect.height + 10, 200, 50};
 
+  // TODO(demon_slayer): Need to move all the text into the label UIElement class
   DrawText("Dungeon Crawler", titleText.x, titleText.y, titleFontSize, WHITE);
 
   Color playColor = GRAY;
@@ -56,18 +58,14 @@ void MenuMain::HandleInput(Engine &engine)
   bool clicked = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
 
   Vector2 mousePoint = GetMousePosition();
+
+  // TODO(demon_slayer): a switch statement should be good here
   if (clicked && CheckCollisionPointRec(mousePoint, Play_btn.rect))
-  {
     engine.gameState = new PlayState();
-  }
 
   if (clicked && CheckCollisionPointRec(mousePoint, Settings_btn.rect))
-  {
     engine.gameState = new SettingsState();
-  }
 
   if (clicked && CheckCollisionPointRec(mousePoint, Quit_btn.rect))
-  {
     CloseWindow();
-  }
 }

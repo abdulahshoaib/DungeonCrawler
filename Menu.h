@@ -1,8 +1,8 @@
 #pragma once
-#include <raylib.h>
-#include "Engine.h"
 #include "UIElement.h"
 #include "utils.h"
+
+class Engine;
 
 class Menu
 {
@@ -12,6 +12,6 @@ protected:
 public:
   Menu();
   virtual ~Menu();
-  virtual void Draw();
+  virtual void Draw() = 0;
   virtual void HandleInput(Engine &) = 0;
 };

@@ -3,4 +3,3 @@
 
 Menu::Menu() {}
 Menu::~Menu() {}
-void Menu::Draw() {}

@@ -1,6 +1,7 @@
 #pragma once
 #include "Menu.h"
-#include "Engine.h"
+
+class Engine;
 
 class MenuSettings : public Menu
 {
