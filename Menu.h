@@ -1,9 +1,11 @@
 #pragma once
 #include <raylib.h>
+#include "Engine.h"
 #include "UIElement.h"
 #include "utils.h"
 
-class Menu {
+class Menu
+{
 protected:
   List<UIElement> elements;
 
@@ -11,4 +13,5 @@ public:
   Menu();
   virtual ~Menu();
   virtual void Draw();
+  virtual void HandleInput(Engine &) = 0;
 };
