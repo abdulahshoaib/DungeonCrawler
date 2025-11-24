@@ -1,11 +1,14 @@
 #include "Engine.h"
 
-Engine::~Engine() {}
+Engine::~Engine()
+{
+  delete gameState;
+}
 
 void Engine::init(Screen screen)
 {
   InitWindow(screen.width, screen.height, "game");
-  gameState = GameState::MENU;
+  gameState = new MainMenuState();
   // TODO(demon_slayer): load the assets
 }
 
@@ -14,46 +17,10 @@ void Engine::run()
 
   while (!WindowShouldClose())
   {
+    gameState->Update(*this);
     BeginDrawing();
     ClearBackground(BLACK);
-    // TODO(demon_slayer): I don't like how this
-    // state management is handled
-    if (gameState == GameState::MENU)
-      ui_engine.menus[MAIN_MENU]->Draw();
-
-    if (gameState == GameState::GAME_LOOP)
-    {
-
-      const float speed = 0.4f;
-
-      int key = 0;
-      if (IsKeyDown(KEY_W))
-        key = KEY_W;
-      if (IsKeyDown(KEY_A))
-        key = KEY_A;
-      if (IsKeyDown(KEY_D))
-        key = KEY_D;
-      if (IsKeyDown(KEY_S))
-        key = KEY_S;
-
-      switch (key)
-      {
-      case KEY_W:
-        player.move(0, -speed);
-        break;
-      case KEY_A:
-        player.move(-speed, 0);
-        break;
-      case KEY_S:
-        player.move(0, speed);
-        break;
-      case KEY_D:
-        player.move(speed, 0);
-        break;
-      }
-
-      DrawRectangleV(player.getPos(), player.getSize(), RED);
-    }
+    gameState->Draw(*this);
     EndDrawing();
   }
   CloseWindow();
@@ -62,4 +29,44 @@ void Engine::run()
 Engine::Engine()
 {
   // UI
+}
+
+void MainMenuState::Update(Engine &engine)
+{
+  mainMenu.HandleInput(engine);
+}
+
+void MainMenuState::Draw(Engine &engine)
+{
+  mainMenu.Draw();
+}
+
+void PlayState::Update(Engine &engine)
+{
+  // implement the game manager inputhandling
+}
+
+void PlayState::Draw(Engine &engine)
+{
+  // implement the game manager drawing
+}
+
+void PauseState::Update(Engine &engine)
+{
+  pauseMenu.HandleInput(engine);
+}
+
+void PauseState::Draw(Engine &engine)
+{
+  pauseMenu.Draw();
+}
+
+void SettingsState::Update(Engine &engine)
+{
+  settingsMenu.HandleInput(engine);
+}
+
+void SettingsState::Draw(Engine &)
+{
+  settingsMenu.Draw();
 }
