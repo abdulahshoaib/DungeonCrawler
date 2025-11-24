@@ -6,7 +6,7 @@ int main()
 {
 
   Engine engine;
-  Screen screen = {.width = 800, .height = 700, .title = "Game"};
+  Screen screen = {.width = 1100, .height = 700, .title = "Game"};
 
   // initialize window, assests and the game loop
   engine.init(screen);
