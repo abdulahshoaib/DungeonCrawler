@@ -1,8 +1,11 @@
 
 #include "Player.h"
 
-Player::Player(Vector2 position, Vector2 size) : pos(position), size(size) {}
-Player::Player() : pos({0, 0}), size({10, 10}) {}
+// NOTE(demon_slayer): this constructor is called from the GameManager
+//                     and sets the variable attribs based on the character chosen  
+Player::Player(Character)
+{
+}
 
 void Player::move(float _x, float _y)
 {
