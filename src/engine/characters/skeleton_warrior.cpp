@@ -1,0 +1,14 @@
+#include "skeleton_warrior.h"
+
+void Skeleton_warrior::LoadTex(){
+    attack[0] = LoadTexture("assets/Skeleton/Skeleton_Warrior/Attack_1.png");
+    attack[1] = LoadTexture("assets/Skeleton/Skeleton_Warrior/Attack_2.png");
+    attack[2] = LoadTexture("assets/Skeleton/Skeleton_Warrior/Attack_3.png");
+    dead       = LoadTexture("assets/Skeleton/Skeleton_Warrior/Dead.png");
+    hurt       = LoadTexture("assets/Skeleton/Skeleton_Warrior/Hurt.png");
+    idle[0]       = LoadTexture("assets/Skeleton/Skeleton_Warrior/Idle.png");
+    protect    = LoadTexture("assets/Skeleton/Skeleton_Warrior/Protect.png");
+    run        = LoadTexture("assets/Skeleton/Skeleton_Warrior/Run.png");
+    run_attack = LoadTexture("assets/Skeleton/Skeleton_Warrior/Run+Attack.png");
+    walk       = LoadTexture("assets/Skeleton/Skeleton_Warrior/Walk.png");
+}
