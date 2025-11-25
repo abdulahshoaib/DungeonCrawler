@@ -1,6 +1,6 @@
 #pragma once
 #include "GameState.h"
-#include "GameManager.h"
+#include "core/GameManager.h"
 
 class PlayState : public GameState
 {
@@ -8,7 +8,7 @@ private:
     GameManager gameManager;
 
 public:
-    PlayState();
+    // PlayState();
     void Update(Engine &);
     void Draw(Engine &);
 };

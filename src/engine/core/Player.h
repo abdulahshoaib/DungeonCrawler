@@ -2,7 +2,7 @@
 #pragma once
 
 #include <raylib.h>
-#include "Entitiy.h"
+#include "Entity.h"
 
 class Player : public Entity
 {
