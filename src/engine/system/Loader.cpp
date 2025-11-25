@@ -24,8 +24,6 @@ Skeleton_warrior  loader_sk_warrior;
 Skeleton_spearman loader_sk_spear;
 
 Texture2D Loader::MainMenuBackground = {0};
-Texture2D Loader::map = {0};
-Texture2D Loader::torch = {0};
 Font Loader::TitleFont = {0};
 Font Loader::ButtonFont = {0};
 
@@ -34,8 +32,6 @@ void Loader::LoadAssets()
     // TODO(demon_slayer): Add a config file to manage asset paths
     // Menu Background
     MainMenuBackground = LoadTexture("assets/images/menu_bg.png");
-    map = LoadTexture("assets/maps/map.png");
-    torch = LoadTexture("assets/maps/torch.png");
     // Fonts
     TitleFont = LoadFontEx("assets/fonts/StarCrush.otf", 160, 0, 0);
     ButtonFont = LoadFontEx("assets/fonts/Roboto.ttf", 160, 0, 0);
@@ -67,8 +63,6 @@ void Loader::UnloadAssets()
 {
     // unload textures
     UnloadTexture(MainMenuBackground);
-    UnloadTexture(map);
-    UnloadTexture(torch);
 
     // unload fonts
     UnloadFont(TitleFont);

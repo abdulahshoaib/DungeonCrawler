@@ -23,8 +23,6 @@ class Loader
 {
 public:
   static Texture2D MainMenuBackground;
-  static Texture2D map;
-  static Texture2D torch;
   static Font TitleFont;
   static Font ButtonFont;
 
