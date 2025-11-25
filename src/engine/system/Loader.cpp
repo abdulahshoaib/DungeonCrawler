@@ -1,28 +1,6 @@
 
 #include "Loader.h"
 
-// Create ONE instance of each character class
-Black_werewolf   loader_bw;
-Yamabushi_tengu  loader_yt;
-Karasu_tengu     loader_kt;
-Kitsune          loader_kitsune;
-
-Knight1 loader_knight1;
-Knight2 loader_knight2;
-Knight3 loader_knight3;
-
-Red_werewolf   loader_rw;
-White_werewolf loader_ww;
-
-Samurai            loader_samurai;
-Samurai_archer     loader_samurai_archer;
-Samurai_Commander  loader_samurai_commander;
-
-Satyr_enemy       loader_satyr;
-Skeleton_archer   loader_sk_archer;
-Skeleton_warrior  loader_sk_warrior;
-Skeleton_spearman loader_sk_spear;
-
 Texture2D Loader::MainMenuBackground = {0};
 Font Loader::TitleFont = {0};
 Font Loader::ButtonFont = {0};
@@ -37,26 +15,24 @@ void Loader::LoadAssets()
     ButtonFont = LoadFontEx("assets/fonts/Roboto.ttf", 160, 0, 0);
 
     // CHARACTERS
-    loader_bw.LoadTex();
-    loader_yt.LoadTex();
-    loader_kt.LoadTex();
-    loader_kitsune.LoadTex();
+    blackWerewolf.LoadTex();
+    yamabushiTengu.LoadTex();
+    karasuTengu.LoadTex();
+    kitsune.LoadTex();
 
-    loader_knight1.LoadTex();
-    loader_knight2.LoadTex();
-    loader_knight3.LoadTex();
+    knight1.LoadTex();
+    knight2.LoadTex();
+    knight3.LoadTex();
 
-    loader_rw.LoadTex();
-    loader_ww.LoadTex();
+    samurai.LoadTex();
+    samuraiArcher.LoadTex();
+    samuraiCommander.LoadTex();
 
-    loader_samurai.LoadTex();
-    loader_samurai_archer.LoadTex();
-    loader_samurai_commander.LoadTex();
+    satyr.LoadTex();
 
-    loader_satyr.LoadTex();
-    loader_sk_archer.LoadTex();
-    loader_sk_warrior.LoadTex();
-    loader_sk_spear.LoadTex();
+    skeletonArcher.LoadTex();
+    skeletonWarrior.LoadTex();
+    skeletonSpearman.LoadTex();
 }
 
 void Loader::UnloadAssets()
@@ -68,25 +44,24 @@ void Loader::UnloadAssets()
     UnloadFont(TitleFont);
     UnloadFont(ButtonFont);
 
+    // Unload Characters
+    blackWerewolf.UnloadTex();
 
-    loader_bw.UnloadTex();
-    loader_yt.UnloadTex();
-    loader_kt.UnloadTex();
-    loader_kitsune.UnloadTex();
+    yamabushiTengu.UnloadTex();
+    karasuTengu.UnloadTex();
+    kitsune.UnloadTex();
 
-    loader_knight1.UnloadTex();
-    loader_knight2.UnloadTex();
-    loader_knight3.UnloadTex();
+    knight1.UnloadTex();
+    knight2.UnloadTex();
+    knight3.UnloadTex();
 
-    loader_rw.UnloadTex();
-    loader_ww.UnloadTex();
+    samurai.UnloadTex();
+    samuraiArcher.UnloadTex();
+    samuraiCommander.UnloadTex();
 
-    loader_samurai.UnloadTex();
-    loader_samurai_archer.UnloadTex();
-    loader_samurai_commander.UnloadTex();
+    satyr.UnloadTex();
 
-    loader_satyr.UnloadTex();
-    loader_sk_archer.UnloadTex();
-    loader_sk_warrior.UnloadTex();
-    loader_sk_spear.UnloadTex();
+    skeletonArcher.UnloadTex();
+    skeletonWarrior.UnloadTex();
+    skeletonSpearman.UnloadTex();
 }

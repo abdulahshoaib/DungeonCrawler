@@ -22,6 +22,26 @@
 class Loader
 {
 public:
+  static Black_werewolf blackWerewolf;
+
+  static Yamabushi_tengu yamabushiTengu;
+  static Karasu_tengu karasuTengu;
+  static Kitsune kitsune;
+
+  static Knight1 knight1;
+  static Knight2 knight2;
+  static Knight3 knight3;
+
+  static Samurai samurai;
+  static Samurai_archer samuraiArcher;
+  static Samurai_Commander samuraiCommander;
+
+  static Satyr_enemy satyr;
+
+  static Skeleton_archer skeletonArcher;
+  static Skeleton_warrior skeletonWarrior;
+  static Skeleton_spearman skeletonSpearman;
+
   static Texture2D MainMenuBackground;
   static Font TitleFont;
   static Font ButtonFont;
