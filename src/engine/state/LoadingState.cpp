@@ -2,10 +2,11 @@
 #include "Loader.h"
 #include "MainMenuState.h"
 
-#define TOTAL_STEPS 15 // number of assets to load (adjust)
+#define TOTAL_STEPS 16
 
 void LoadingState::Update(Engine &engine)
 {
+    Loader::TitleFont = LoadFontEx("assets/fonts/StarCrush.otf", 48, 0, 0);
     switch (step)
     {
     case 0:
@@ -78,8 +79,9 @@ void LoadingState::Draw(Engine &)
     ClearBackground(BLACK);
     float progress = (float)step / TOTAL_STEPS;
 
-    DrawText("Loading...", 450, 300, 40, WHITE);
+    DrawTextEx(Loader::TitleFont, "Loading...", {450, 300}, 40, 2, WHITE);
 
-    DrawRectangle(300, 350, 500, 20, GRAY);
-    DrawRectangle(300, 350, (int)(500 * progress), 20, GREEN);
+    // Loading Bar
+    DrawRectangle(300, 500, 500, 5, GRAY);
+    DrawRectangle(300, 500, (int)(500 * progress), 5, DARKGREEN);
 }
