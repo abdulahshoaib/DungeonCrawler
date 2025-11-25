@@ -22,6 +22,13 @@ public:
     Texture2D fall;
     Texture2D fire[2];
 
+    Character();
+
+    // subject to change in each derived class
+    float hp;
+    float damage;
+    float speed;
+
     virtual void LoadTex() = 0;
     virtual void UnloadTex() = 0;
 };
