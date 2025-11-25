@@ -7,8 +7,6 @@ class Engine;
 class Menu
 {
 protected:
-  List<UIElement> elements;
-
 public:
   Menu();
   virtual ~Menu();
