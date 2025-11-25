@@ -1,11 +1,16 @@
 #pragma once
+
 #include <raylib.h>
+#include <string>
 
-class Loader {
-  Font font;
-
+class Loader
+{
 public:
-  Loader();
-  Loader(Font);
-  Font *getFont();
+  static Texture2D MainMenuBackground;
+  static Font TitleFont;
+  static Font ButtonFont;
+
+  static void LoadAssets();
+
+  static void UnloadAssets();
 };
