@@ -1,11 +1,15 @@
 #include "PlayState.h"
 
+PlayState::PlayState()
+{
+}
+
 void PlayState::Update(Engine &engine)
 {
-    // implement the game manager inputhandling
+    gameManager.Update();
 }
 
 void PlayState::Draw(Engine &engine)
 {
-    // implement the game manager drawing
+    gameManager.Draw();
 }
