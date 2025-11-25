@@ -9,7 +9,11 @@ class PlayState;
 class MenuMain : public Menu
 {
 private:
-  Button Play_btn, Settings_btn, Quit_btn;
+  Button NewGame_btn, Settings_btn, Quit_btn, LoadGame_btn;
+  Label titleLabel;
+  Texture2D bgTex;
+  Font titleFont;
+  Font buttonFont;
 
 public:
   MenuMain();

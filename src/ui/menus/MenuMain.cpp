@@ -5,54 +5,59 @@
 
 MenuMain::MenuMain()
 {
-  elements.Append(Play_btn);
-  elements.Append(Quit_btn);
-  elements.Append(Settings_btn);
 }
 
 void MenuMain::Draw()
 {
-  // TODO(demon_slayer): Need to move more of this into the button class code.
-  Vector2 mousePoint = GetMousePosition();
+  float scale = 0.8f;
+  Vector2 bgPosition = {0, 0};
+  Texture2D bgTex = Loader::MainMenuBackground;
+  DrawTextureEx(bgTex, bgPosition, 0.0f, scale, WHITE);
+
   int screenWidth = 1100;
 
-  int cx = screenWidth / 2;
-  int cy = 100;
-  int buttonFontSize = 20;
-  int titleFontSize = 60;
+  float cx = screenWidth / 2;
+  float cy = 150.0f;
+  int titleFontSize = 72;
 
-  Vector2 titleText = {cx - 230, cy};
+  Font titleFont = Loader::TitleFont;
+  Font buttonFont = Loader::ButtonFont;
 
-  Rectangle PlayRect = {cx - (int)(200 / 2), titleText.y + titleFontSize * 4, 200, 50};
-  Rectangle SettingsRect = {cx - (int)200 / 2, PlayRect.y + PlayRect.height + 10, 200, 50};
-  Rectangle QuitRect = {cx - (int)200 / 2, SettingsRect.y + SettingsRect.height + 10, 200, 50};
+  std::string title = "Dungeon Crawler";
 
-  // TODO(demon_slayer): Need to move all the text into the label UIElement class
-  DrawText("Dungeon Crawler", titleText.x, titleText.y, titleFontSize, WHITE);
+  Vector2 size = MeasureTextEx(titleFont, title.c_str(), titleFontSize, 2);
+  Vector2 titleTextPos = {cx - (size.x / 2.0f), cy};
 
-  Color playColor = GRAY;
-  if (CheckCollisionPointRec(mousePoint, PlayRect))
-  {
-    playColor = GREEN;
-  }
-  DrawRectangleRec(PlayRect, playColor);
-  DrawText("PLAY", PlayRect.x + 70, PlayRect.y + 15, buttonFontSize, WHITE);
+  Rectangle NewGameRect = {cx - (200 / 2), titleTextPos.y + 200, 200, 50};
+  Rectangle LoadGameRect = {cx - (200 / 2), NewGameRect.y + NewGameRect.height + 10, 200, 50};
+  Rectangle SettingsRect = {cx - (200 / 2), LoadGameRect.y + LoadGameRect.height + 10, 200, 50};
+  Rectangle QuitRect = {cx - (200 / 2), SettingsRect.y + SettingsRect.height + 10, 200, 50};
 
-  Color settingsColor = GRAY;
-  if (CheckCollisionPointRec(mousePoint, SettingsRect))
-  {
-    settingsColor = PURPLE;
-  }
-  DrawRectangleRec(SettingsRect, settingsColor);
-  DrawText("SETTINGS", SettingsRect.x + 45, SettingsRect.y + 15, buttonFontSize, WHITE);
+  titleLabel.font = titleFont;
+  titleLabel.fontSize = titleFontSize;
+  titleLabel.text = title;
+  titleLabel.position = titleTextPos;
+  titleLabel.Draw(WHITE);
 
-  Color quitColor = GRAY;
-  if (CheckCollisionPointRec(mousePoint, QuitRect))
-  {
-    quitColor = RED;
-  }
-  DrawRectangleRec(QuitRect, quitColor);
-  DrawText("QUIT", QuitRect.x + 70, QuitRect.y + 15, buttonFontSize, WHITE);
+  NewGame_btn.label.text = "NEW GAME";
+  NewGame_btn.rect = NewGameRect;
+  NewGame_btn.label.font = buttonFont;
+  NewGame_btn.Draw(GRAY, GREEN);
+
+  LoadGame_btn.label.text = "LOAD GAME";
+  LoadGame_btn.rect = LoadGameRect;
+  LoadGame_btn.label.font = buttonFont;
+  LoadGame_btn.Draw(GRAY, ORANGE);
+
+  Settings_btn.label.text = "SETTINGS";
+  Settings_btn.label.font = buttonFont;
+  Settings_btn.rect = SettingsRect;
+  Settings_btn.Draw(GRAY, BLUE);
+
+  Quit_btn.label.text = "QUIT";
+  Quit_btn.rect = QuitRect;
+  Quit_btn.label.font = buttonFont;
+  Quit_btn.Draw(GRAY, RED);
 }
 
 void MenuMain::HandleInput(Engine &engine)
@@ -62,7 +67,7 @@ void MenuMain::HandleInput(Engine &engine)
   Vector2 mousePoint = GetMousePosition();
 
   // TODO(demon_slayer): a switch statement should be good here
-  if (clicked && CheckCollisionPointRec(mousePoint, Play_btn.rect))
+  if (clicked && CheckCollisionPointRec(mousePoint, NewGame_btn.rect))
     engine.ChangeState(new PlayState());
 
   if (clicked && CheckCollisionPointRec(mousePoint, Settings_btn.rect))
