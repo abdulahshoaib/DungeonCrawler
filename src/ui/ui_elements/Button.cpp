@@ -2,7 +2,7 @@
 #include "Button.h"
 #include "Loader.h"
 
-Button::Button() : UIElement()
+Button::Button()
 {
 }
 
@@ -18,6 +18,7 @@ void Button::Draw(Color normalColor, Color hoverColor)
     }
 
     label.fontSize = 32.0f;
+    label.font = Loader::ButtonFont;
 
     // Center the label text within the button rectangle
     Vector2 textSize = MeasureTextEx(label.font, label.text.c_str(), label.fontSize, label.spacing);
