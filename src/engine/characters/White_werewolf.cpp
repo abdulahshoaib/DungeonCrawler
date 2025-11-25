@@ -12,3 +12,14 @@ void White_werewolf::LoadTex(){
     walk       = LoadTexture("assests/WereWolf/White_Werewolf/Walk.png");
     run_attack = LoadTexture("assests/WereWolf/White_Werewolf/Run+Attack.png");
 }
+
+void White_werewolf::UnloadTex(){
+    for (int i = 0; i < 3; i++) {UnloadTexture(attack[i]);}
+    UnloadTexture(dead);
+    UnloadTexture(hurt);
+    UnloadTexture(idle[0]);
+    UnloadTexture(jump);
+    UnloadTexture(run);
+    UnloadTexture(walk);
+    UnloadTexture(run_attack);
+}

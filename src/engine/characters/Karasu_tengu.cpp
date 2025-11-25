@@ -13,3 +13,17 @@ void Karasu_tengu::LoadTex()
     idle[0]    = LoadTexture("assets/Yokai/Karasu_tengu/Idle.png");
     idle[1]    = LoadTexture("assets/Yokai/Karasu_tengu/Idle_2.png");
 }
+
+void Karasu_tengu::UnloadTex()
+{
+    for (int i = 0; i < 3; i++) {
+        UnloadTexture(attack[i]);
+    }
+    UnloadTexture(dead);
+    UnloadTexture(hurt);
+    UnloadTexture(jump);
+    UnloadTexture(run);
+    UnloadTexture(walk);
+    UnloadTexture(idle[0]);
+    UnloadTexture(idle[1]);
+}

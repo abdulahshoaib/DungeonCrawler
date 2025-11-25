@@ -16,3 +16,19 @@ void Knight1::LoadTex()
     walk       = LoadTexture("assets/Knight/Knight_1/Walk.png");
 
 }
+
+void Knight1::UnloadTex()
+{
+    for (int i = 0; i < 3; i++) {
+        UnloadTexture(attack[i]);
+    }
+    UnloadTexture(dead);
+    UnloadTexture(defend);
+    UnloadTexture(hurt);
+    UnloadTexture(idle[0]);
+    UnloadTexture(jump);
+    UnloadTexture(protect);
+    UnloadTexture(run);
+    UnloadTexture(run_attack);
+    UnloadTexture(walk);
+}

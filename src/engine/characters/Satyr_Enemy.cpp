@@ -10,3 +10,13 @@ void Satyr_enemy::LoadTex()
     charge = LoadTexture("assets/Satyr_enemy/Charge.png");
 
 }
+
+void Satyr_enemy::UnloadTex()
+{
+    UnloadTexture(attack[0]);
+    UnloadTexture(dead);
+    UnloadTexture(hurt);
+    UnloadTexture(idle[0]);
+    UnloadTexture(walk);
+    UnloadTexture(charge);
+}

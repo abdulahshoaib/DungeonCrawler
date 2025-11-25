@@ -14,3 +14,19 @@ void Samurai_Commander::LoadTex()
     walk       = LoadTexture("assets/Samurai_Char/Samurai_Commander/Walk.png");
 
 }
+
+void Samurai_Commander::UnloadTex()
+{
+    for (int i = 0; i < 3; ++i) {
+        UnloadTexture(attack[i]);
+    }
+    UnloadTexture(dead);
+    UnloadTexture(hurt);
+    for (int i = 0; i < 1; ++i) {
+        UnloadTexture(idle[i]);
+    }
+    UnloadTexture(jump);
+    UnloadTexture(protect);
+    UnloadTexture(run);
+    UnloadTexture(walk);
+}

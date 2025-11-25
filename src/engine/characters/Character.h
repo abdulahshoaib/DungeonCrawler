@@ -23,4 +23,5 @@ public:
     Texture2D fire[2];
 
     virtual void LoadTex() = 0;
+    virtual void UnloadTex() = 0;
 };

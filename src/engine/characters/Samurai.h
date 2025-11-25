@@ -7,4 +7,5 @@ class Samurai : public Character
 {
 public:
     void LoadTex() override;
+    void UnloadTex() override;
 };

@@ -13,3 +13,15 @@ void Yamabushi_tengu::LoadTex()
     run        = LoadTexture("assets/Yokai/Yamabushi_tengu/Run.png");
     walk       = LoadTexture("assets/Yokai/Yamabushi_tengu/Walk.png");
 }
+
+void Yamabushi_tengu::UnloadTex()
+{
+    for (int i = 0; i < 3; i++) {UnloadTexture(attack[i]);}
+    UnloadTexture(dead);
+    UnloadTexture(hurt);
+    UnloadTexture(idle[0]);
+    UnloadTexture(idle[1]);
+    UnloadTexture(jump);
+    UnloadTexture(run);
+    UnloadTexture(walk);
+}

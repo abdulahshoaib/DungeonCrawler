@@ -13,3 +13,16 @@ void Skeleton_spearman::LoadTex()
     run_attack = LoadTexture("assets/Skeleton/Skeleton_Spearman/Run+Attack.png");
     fall = LoadTexture("assets/Skeleton/Skeleton_Spearman/Fall.png");
 }
+
+void Skeleton_spearman::UnloadTex()
+{
+    for (int i = 0; i < 2; i++) {UnloadTexture(attack[i]);}
+    UnloadTexture(dead);
+    UnloadTexture(hurt);
+    UnloadTexture(idle[0]);
+    UnloadTexture(run);
+    UnloadTexture(walk);
+    UnloadTexture(protect);
+    UnloadTexture(run_attack);
+    UnloadTexture(fall);
+}

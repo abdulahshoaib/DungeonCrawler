@@ -7,4 +7,5 @@ class Skeleton_archer : public Character
 {
 public:
     void LoadTex() override;
+    void UnloadTex() override;
 };

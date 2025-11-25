@@ -14,3 +14,15 @@ void Samurai::LoadTex()
     walk       = LoadTexture("assets/Samurai_Char/Samurai/Walk.png");
 
 }
+
+void Samurai::UnloadTex()
+{
+    for (int i = 0; i < 3; i++) {UnloadTexture(attack[i]);}
+    UnloadTexture(dead);
+    UnloadTexture(hurt);
+    UnloadTexture(idle[0]);
+    UnloadTexture(jump);
+    UnloadTexture(protect);
+    UnloadTexture(run);
+    UnloadTexture(walk);
+}

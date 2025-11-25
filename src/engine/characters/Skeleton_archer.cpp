@@ -15,3 +15,16 @@ void Skeleton_archer::LoadTex()
     walk       = LoadTexture("assets/Skeleton/Skeleton_Archer/Walk.png");
     
 }
+
+void Skeleton_archer::UnloadTex()
+{
+    for (int i = 0; i < 3; i++) {UnloadTexture(attack[i]);}
+    UnloadTexture(dead);
+    UnloadTexture(hurt);
+    UnloadTexture(idle[0]);
+    UnloadTexture(arrow);
+    UnloadTexture(shot[0]);
+    UnloadTexture(shot[1]);
+    UnloadTexture(evasion);
+    UnloadTexture(walk);
+}

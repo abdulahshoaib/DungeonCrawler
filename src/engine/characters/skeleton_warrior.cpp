@@ -12,3 +12,14 @@ void Skeleton_warrior::LoadTex(){
     run_attack = LoadTexture("assets/Skeleton/Skeleton_Warrior/Run+Attack.png");
     walk       = LoadTexture("assets/Skeleton/Skeleton_Warrior/Walk.png");
 }
+
+void Skeleton_warrior::UnloadTex(){
+    for (int i = 0; i < 3; i++) {UnloadTexture(attack[i]);}
+    UnloadTexture(dead);
+    UnloadTexture(hurt);
+    UnloadTexture(idle[0]);
+    UnloadTexture(protect);
+    UnloadTexture(run);
+    UnloadTexture(run_attack);
+    UnloadTexture(walk);
+}

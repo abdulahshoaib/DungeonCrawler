@@ -15,3 +15,19 @@ void Kitsune::LoadTex()
     fire[0]    = LoadTexture("assets/Yokai/Kitsune/Fire_1.png");
     fire[1]    = LoadTexture("assets/Yokai/Kitsune/Fire_2.png");
 }
+
+void Kitsune::UnloadTex()
+{
+    for (int i = 0; i < 3; i++) {
+        UnloadTexture(attack[i]);
+    }
+    UnloadTexture(dead);
+    UnloadTexture(hurt);
+    UnloadTexture(jump);
+    UnloadTexture(run);
+    UnloadTexture(walk);
+    UnloadTexture(idle[0]);
+    UnloadTexture(idle[1]);
+    UnloadTexture(fire[0]);
+    UnloadTexture(fire[1]);
+}
