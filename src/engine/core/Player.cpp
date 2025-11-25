@@ -2,8 +2,12 @@
 #include "Player.h"
 
 // NOTE(demon_slayer): this constructor is called from the GameManager
-//                     and sets the variable attribs based on the character chosen  
-Player::Player(Character)
+//                     and sets the variable attribs based on the character chosen
+// Player::Player(Character *)
+//{
+//}
+
+Player::Player()
 {
 }
 

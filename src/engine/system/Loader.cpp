@@ -5,6 +5,26 @@ Texture2D Loader::MainMenuBackground = {0};
 Font Loader::TitleFont = {0};
 Font Loader::ButtonFont = {0};
 
+Black_werewolf Loader::blackWerewolf;
+
+Yamabushi_tengu Loader::yamabushiTengu;
+Karasu_tengu Loader::karasuTengu;
+Kitsune Loader::kitsune;
+
+Knight1 Loader::knight1;
+Knight2 Loader::knight2;
+Knight3 Loader::knight3;
+
+Samurai Loader::samurai;
+Samurai_archer Loader::samuraiArcher;
+Samurai_Commander Loader::samuraiCommander;
+
+Satyr_enemy Loader::satyr;
+
+Skeleton_archer Loader::skeletonArcher;
+Skeleton_warrior Loader::skeletonWarrior;
+Skeleton_spearman Loader::skeletonSpearman;
+
 void Loader::LoadAssets()
 {
     // TODO(demon_slayer): Add a config file to manage asset paths

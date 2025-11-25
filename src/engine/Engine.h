@@ -4,7 +4,7 @@
 #include "Loader.h"
 #include "core/Player.h"
 #include "UIEngine.h"
-#include "state/MainMenuState.h"
+#include "state/LoadingState.h"
 #include "system/Audio.h"
 
 struct Screen

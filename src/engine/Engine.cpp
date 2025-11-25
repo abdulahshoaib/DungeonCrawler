@@ -10,9 +10,7 @@ void Engine::init(Screen screen)
 {
   // NOTE(demon_slayer): InitWindow(screen.width, screen.height, "game");
   InitWindow(screen.width, screen.height, "game");
-  gameState = new MainMenuState();
-
-  Loader::LoadAssets();
+  gameState = new LoadingState();
 }
 
 void Engine::run()

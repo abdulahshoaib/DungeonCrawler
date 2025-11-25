@@ -3,11 +3,11 @@
 
 #include <raylib.h>
 #include "Entity.h"
-#include "Character.h"
+#include "characters/Character.h"
 
 class Player : public Entity
 {
 public:
-  Player(Character);
+  Player();
   void move(float, float);
 };

@@ -1,0 +1,85 @@
+#include "LoadingState.h"
+#include "Loader.h"
+#include "MainMenuState.h"
+
+#define TOTAL_STEPS 15 // number of assets to load (adjust)
+
+void LoadingState::Update(Engine &engine)
+{
+    switch (step)
+    {
+    case 0:
+        Loader::MainMenuBackground = LoadTexture("assets/images/menu_bg.png");
+        break;
+    case 1:
+        Loader::TitleFont = LoadFontEx("assets/fonts/StarCrush.otf", 48, 0, 0);
+        break;
+    case 2:
+        Loader::ButtonFont = LoadFontEx("assets/fonts/Roboto.ttf", 32, 0, 0);
+        break;
+
+    case 3:
+        Loader::blackWerewolf.LoadTex();
+        break;
+    case 4:
+        Loader::yamabushiTengu.LoadTex();
+        break;
+    case 5:
+        Loader::karasuTengu.LoadTex();
+        break;
+    case 6:
+        Loader::kitsune.LoadTex();
+        break;
+
+    case 7:
+        Loader::knight1.LoadTex();
+        break;
+    case 8:
+        Loader::knight2.LoadTex();
+        break;
+    case 9:
+        Loader::knight3.LoadTex();
+        break;
+
+    case 10:
+        Loader::samurai.LoadTex();
+        break;
+    case 11:
+        Loader::samuraiArcher.LoadTex();
+        break;
+    case 12:
+        Loader::samuraiCommander.LoadTex();
+        break;
+
+    case 13:
+        Loader::satyr.LoadTex();
+        break;
+
+    case 14:
+        Loader::skeletonArcher.LoadTex();
+        break;
+    case 15:
+        Loader::skeletonWarrior.LoadTex();
+        break;
+    case 16:
+        Loader::skeletonSpearman.LoadTex();
+        break;
+
+    default:
+        engine.ChangeState(new MainMenuState());
+        return;
+    }
+
+    step++;
+}
+
+void LoadingState::Draw(Engine &)
+{
+    ClearBackground(BLACK);
+    float progress = (float)step / TOTAL_STEPS;
+
+    DrawText("Loading...", 450, 300, 40, WHITE);
+
+    DrawRectangle(300, 350, 500, 20, GRAY);
+    DrawRectangle(300, 350, (int)(500 * progress), 20, GREEN);
+}
