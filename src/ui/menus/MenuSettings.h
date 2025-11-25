@@ -6,7 +6,7 @@
 class MenuSettings : public Menu
 {
 private:
-    Button Vol_btn;
+    Button Vol_btn, Back_btn;
     Label Settings_lbl;
 
 public:

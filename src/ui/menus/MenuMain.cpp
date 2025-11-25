@@ -21,7 +21,6 @@ void MenuMain::Draw()
   int titleFontSize = 72;
 
   Font titleFont = Loader::TitleFont;
-  Font buttonFont = Loader::ButtonFont;
 
   std::string title = "Dungeon Crawler";
 
@@ -41,22 +40,18 @@ void MenuMain::Draw()
 
   NewGame_btn.label.text = "NEW GAME";
   NewGame_btn.rect = NewGameRect;
-  NewGame_btn.label.font = buttonFont;
   NewGame_btn.Draw(GRAY, GREEN);
 
   LoadGame_btn.label.text = "LOAD GAME";
   LoadGame_btn.rect = LoadGameRect;
-  LoadGame_btn.label.font = buttonFont;
   LoadGame_btn.Draw(GRAY, ORANGE);
 
   Settings_btn.label.text = "SETTINGS";
-  Settings_btn.label.font = buttonFont;
   Settings_btn.rect = SettingsRect;
   Settings_btn.Draw(GRAY, BLUE);
 
   Quit_btn.label.text = "QUIT";
   Quit_btn.rect = QuitRect;
-  Quit_btn.label.font = buttonFont;
   Quit_btn.Draw(GRAY, RED);
 }
 
