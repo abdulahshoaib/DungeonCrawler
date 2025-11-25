@@ -2,7 +2,6 @@
 
 #include "GameState.h"
 #include "Loader.h"
-#include "Player.h"
 #include "UIEngine.h"
 #include "state/MainMenuState.h"
 #include "system/Audio.h"
