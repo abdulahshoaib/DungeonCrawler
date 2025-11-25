@@ -3,6 +3,7 @@
 Engine::~Engine()
 {
   delete gameState;
+  Loader::UnloadAssets();
 }
 
 void Engine::init(Screen screen)
@@ -11,7 +12,7 @@ void Engine::init(Screen screen)
   InitWindow(screen.width, screen.height, "game");
   gameState = new MainMenuState();
 
-  // TODO(demon_slayer): load the assets
+  Loader::LoadAssets();
 }
 
 void Engine::run()

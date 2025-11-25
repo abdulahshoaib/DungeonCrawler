@@ -1,11 +1,11 @@
 #pragma once
 
 #include "GameState.h"
-#include "Audio.h"
 #include "Loader.h"
 #include "Player.h"
 #include "UIEngine.h"
 #include "state/MainMenuState.h"
+#include "system/Audio.h"
 
 struct Screen
 {
@@ -17,7 +17,6 @@ struct Screen
 class Engine
 {
   Audio audio;
-  Loader loader;
   Player player;
   UIEngine ui_engine;
 
