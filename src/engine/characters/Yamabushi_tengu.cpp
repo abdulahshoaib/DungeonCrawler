@@ -1,5 +1,6 @@
 #include "Yamabushi_tengu.h"
 
+Yamabushi_tengu::Yamabushi_tengu(){}
 void Yamabushi_tengu::LoadTex()
 {
     attack[0] = LoadTexture("assets/Yokai/Yamabushi_tengu/Attack_1.png");
@@ -24,4 +25,7 @@ void Yamabushi_tengu::UnloadTex()
     UnloadTexture(jump);
     UnloadTexture(run);
     UnloadTexture(walk);
+}
+Yamabushi_tengu::~Yamabushi_tengu() {
+    UnloadTex();
 }

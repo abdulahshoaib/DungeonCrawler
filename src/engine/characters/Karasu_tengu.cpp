@@ -1,5 +1,6 @@
 #include "Karasu_tengu.h"
 
+Karasu_tengu::Karasu_tengu(){}
 void Karasu_tengu::LoadTex()
 {
     attack[0] = LoadTexture("assets/Yokai/Karasu_tengu/Attack_1.png");
@@ -26,4 +27,9 @@ void Karasu_tengu::UnloadTex()
     UnloadTexture(walk);
     UnloadTexture(idle[0]);
     UnloadTexture(idle[1]);
+}
+
+Karasu_tengu::~Karasu_tengu()
+{
+    UnloadTex();
 }

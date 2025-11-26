@@ -1,5 +1,6 @@
 #include "Skeleton_spearman.h"
 
+Skeleton_spearman::Skeleton_spearman(){}
 void Skeleton_spearman::LoadTex()
 {
     attack[0] = LoadTexture("assets/Skeleton/Skeleton_Spearman/Attack_1.png");
@@ -25,4 +26,7 @@ void Skeleton_spearman::UnloadTex()
     UnloadTexture(protect);
     UnloadTexture(run_attack);
     UnloadTexture(fall);
+}
+Skeleton_spearman::~Skeleton_spearman() {
+    UnloadTex();
 }

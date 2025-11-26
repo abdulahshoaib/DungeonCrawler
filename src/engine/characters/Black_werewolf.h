@@ -6,6 +6,8 @@
 class Black_werewolf : public Character
 {
 public:
+    Black_werewolf();
     void LoadTex() override;
     void UnloadTex() override;
+    ~Black_werewolf();
 };

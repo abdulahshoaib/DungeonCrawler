@@ -6,6 +6,8 @@
 class Skeleton_spearman: public Character
 {
 public:
+    Skeleton_spearman();
     void LoadTex() override;
     void UnloadTex() override;
+    ~Skeleton_spearman();
 };

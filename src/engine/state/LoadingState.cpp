@@ -2,7 +2,7 @@
 #include "Loader.h"
 #include "MainMenuState.h"
 
-#define TOTAL_STEPS 16
+#define TOTAL_STEPS 17
 
 void LoadingState::Update(Engine &engine)
 {

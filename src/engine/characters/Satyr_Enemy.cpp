@@ -1,5 +1,6 @@
 #include "Satyr_Enemy.h"
 
+Satyr_enemy::Satyr_enemy(){}
 void Satyr_enemy::LoadTex()
 {
     attack[0] = LoadTexture("assets/Satyr_enemy/Attack.png");
@@ -19,4 +20,7 @@ void Satyr_enemy::UnloadTex()
     UnloadTexture(idle[0]);
     UnloadTexture(walk);
     UnloadTexture(charge);
+}
+Satyr_enemy::~Satyr_enemy() {
+    UnloadTex();
 }

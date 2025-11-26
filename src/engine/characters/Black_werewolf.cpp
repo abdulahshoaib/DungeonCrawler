@@ -1,5 +1,6 @@
 #include "Black_werewolf.h"
 
+Black_werewolf::Black_werewolf(){}
 void Black_werewolf::LoadTex(){
     attack[0] = LoadTexture("assets/WereWolf/Black_Werewolf/Attack_1.png");
     attack[1] = LoadTexture("assets/WereWolf/Black_Werewolf/Attack_2.png");
@@ -26,4 +27,8 @@ void Black_werewolf::UnloadTex(){
     UnloadTexture(run);
     UnloadTexture(walk);
     UnloadTexture(run_attack);
+}
+
+Black_werewolf::~Black_werewolf(){
+    UnloadTex();
 }

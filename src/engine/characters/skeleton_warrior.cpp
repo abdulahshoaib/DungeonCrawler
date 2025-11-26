@@ -1,5 +1,6 @@
 #include "skeleton_warrior.h"
 
+Skeleton_warrior::Skeleton_warrior(){}
 void Skeleton_warrior::LoadTex(){
     attack[0] = LoadTexture("assets/Skeleton/Skeleton_Warrior/Attack_1.png");
     attack[1] = LoadTexture("assets/Skeleton/Skeleton_Warrior/Attack_2.png");
@@ -22,4 +23,8 @@ void Skeleton_warrior::UnloadTex(){
     UnloadTexture(run);
     UnloadTexture(run_attack);
     UnloadTexture(walk);
+}
+
+Skeleton_warrior::~Skeleton_warrior() {
+    UnloadTex();
 }

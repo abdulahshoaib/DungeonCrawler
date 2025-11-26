@@ -1,5 +1,6 @@
 #include "Samurai.h"
 
+Samurai::Samurai(){}
 void Samurai::LoadTex()
 {
     attack[0] = LoadTexture("assets/Samurai_Char/Samurai/Attack_1.png");
@@ -25,4 +26,8 @@ void Samurai::UnloadTex()
     UnloadTexture(protect);
     UnloadTexture(run);
     UnloadTexture(walk);
+}
+
+Samurai::~Samurai() {
+    UnloadTex();
 }

@@ -1,5 +1,6 @@
 #include "Kitsune.h"
 
+Kitsune::Kitsune(){}
 void Kitsune::LoadTex()
 {
     attack[0] = LoadTexture("assets/Yokai/Kitsune/Attack_1.png");
@@ -30,4 +31,8 @@ void Kitsune::UnloadTex()
     UnloadTexture(idle[1]);
     UnloadTexture(fire[0]);
     UnloadTexture(fire[1]);
+}
+Kitsune::~Kitsune()
+{
+    UnloadTex();
 }

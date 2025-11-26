@@ -1,5 +1,6 @@
 #include "Knight3.h"
 
+Knight3::Knight3(){}
 void Knight3::LoadTex()
 {
     attack[0] = LoadTexture("assets/Knight/Knight_3/Attack 1.png");
@@ -31,4 +32,8 @@ void Knight3::UnloadTex()
     UnloadTexture(run);
     UnloadTexture(run_attack);
     UnloadTexture(walk);
+}
+Knight3::~Knight3()
+{
+    UnloadTex();
 }

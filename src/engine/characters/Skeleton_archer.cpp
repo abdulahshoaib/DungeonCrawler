@@ -1,5 +1,6 @@
 #include "Skeleton_archer.h"
 
+Skeleton_archer::Skeleton_archer(){}
 void Skeleton_archer::LoadTex()
 {
     attack[0] = LoadTexture("assets/Skeleton/Skeleton_Archer/Attack_1.png");
@@ -27,4 +28,7 @@ void Skeleton_archer::UnloadTex()
     UnloadTexture(shot[1]);
     UnloadTexture(evasion);
     UnloadTexture(walk);
+}
+Skeleton_archer::~Skeleton_archer() {
+    UnloadTex();
 }

@@ -1,5 +1,6 @@
 #include "Samurai_archer.h"
 
+Samurai_archer::Samurai_archer(){}
 void Samurai_archer::LoadTex()
 {
     attack[0] = LoadTexture("assets/Samurai_Char/Samurai_Archer/Attack_1.png");
@@ -33,4 +34,8 @@ void Samurai_archer::UnloadTex()
     for (int i = 0; i < 1; ++i) {
         UnloadTexture(shot[i]);
     }
+}
+Samurai_archer::~Samurai_archer()
+{
+    UnloadTex();
 }

@@ -6,6 +6,8 @@
 class Kitsune : public Character
 {
 public:
+    Kitsune();
     void LoadTex() override;
     void UnloadTex() override;
+    ~Kitsune();
 };
