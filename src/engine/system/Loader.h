@@ -40,6 +40,14 @@ public:
   static Skeleton_warrior skeletonWarrior;
   static Skeleton_spearman skeletonSpearman;
 
+  static Texture2D knight1Potrait;
+  static Texture2D knight2Potrait;
+  static Texture2D knight3Potrait;
+
+  static Texture2D samuraiPotrait;
+  static Texture2D samuraiArcherPotrait;
+  static Texture2D samuraiCommanderPotrait;
+
   static Texture2D MainMenuBackground;
   static Font TitleFont;
   static Font ButtonFont;

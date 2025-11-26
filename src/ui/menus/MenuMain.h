@@ -3,9 +3,6 @@
 #include "Menu.h"
 #include "Button.h"
 
-class SettingsState;
-class PlayState;
-
 class MenuMain : public Menu
 {
 private:
