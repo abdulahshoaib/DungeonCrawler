@@ -10,10 +10,19 @@ void LoadingState::Update(Engine &engine)
     switch (step)
     {
     case 0:
+    {
+        Loader::knight1Potrait = LoadTexture("assets/images/Knight1.png");
+        Loader::knight2Potrait = LoadTexture("assets/images/Knight2.png");
+        Loader::knight3Potrait = LoadTexture("assets/images/Knight3.png");
+
+        Loader::samuraiPotrait = LoadTexture("assets/images/Samurai.png");
+        Loader::samuraiArcherPotrait = LoadTexture("assets/images/Samurai_Archer.png");
+        Loader::samuraiCommanderPotrait = LoadTexture("assets/images/Samurai_Commander.png");
         Loader::MainMenuBackground = LoadTexture("assets/images/menu_bg.png");
         break;
+    }
     case 1:
-        Loader::TitleFont = LoadFontEx("assets/fonts/StarCrush.otf", 48, 0, 0);
+        Loader::TitleFont = LoadFontEx("assets/fonts/StarCrush.otf", 70, 0, 0);
         break;
     case 2:
         Loader::ButtonFont = LoadFontEx("assets/fonts/Roboto.ttf", 32, 0, 0);
@@ -79,7 +88,7 @@ void LoadingState::Draw(Engine &)
     ClearBackground(BLACK);
     float progress = (float)step / TOTAL_STEPS;
 
-    DrawTextEx(Loader::TitleFont, "Loading...", {450, 300}, 40, 2, WHITE);
+    DrawTextEx(Loader::TitleFont, "Loading", {450, 300}, 40, 2, WHITE);
 
     // Loading Bar
     DrawRectangle(300, 500, 500, 5, GRAY);

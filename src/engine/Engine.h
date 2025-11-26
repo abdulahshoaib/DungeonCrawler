@@ -3,7 +3,6 @@
 #include "GameState.h"
 #include "Loader.h"
 #include "core/Player.h"
-#include "UIEngine.h"
 #include "state/LoadingState.h"
 #include "system/Audio.h"
 
@@ -18,7 +17,6 @@ class Engine
 {
   Audio audio;
   Player player;
-  UIEngine ui_engine;
 
 public:
   Engine();
