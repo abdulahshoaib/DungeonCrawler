@@ -1,5 +1,15 @@
 # Game
 
+# IF YOU ARE CRASHING TRY:
+1.
+```bash
+Get-ChildItem -Recurse -Filter *.o | Remove-Item -Force
+```
+2.
+```bash
+mingw32-make
+```
+
 ## Build Instructions (Windows — PowerShell)
 
 - **Prerequisites:** Install Raylib and MinGW (w64devkit). Ensure `C:/raylib/w64devkit/bin` is available on your PATH or use full paths below.
