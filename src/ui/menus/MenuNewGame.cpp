@@ -9,6 +9,7 @@ MenuNewGame::MenuNewGame()
 
 void MenuNewGame::Draw()
 {
+
     float scale = 0.15f;
     const int nameFontSize = 20;
     const int spacing = 2;
@@ -47,6 +48,22 @@ void MenuNewGame::Draw()
     rectSamurai1 = DrawPortrait(Loader::samuraiPotrait, "Hiro", startX, row2Y);
     rectSamurai2 = DrawPortrait(Loader::samuraiCommanderPotrait, "Shogun Raiken", startX + spacingX, row2Y);
     rectSamurai3 = DrawPortrait(Loader::samuraiArcherPotrait, "Hayato", startX + spacingX * 2, row2Y);
+
+    Vector2 mouse = GetMousePosition();
+
+    auto Hover = [&](Rectangle r)
+    {
+        if (CheckCollisionPointRec(mouse, r))
+            DrawRectangleLinesEx(r, 3, YELLOW);
+    };
+
+    Hover(rectKnight1);
+    Hover(rectKnight2);
+    Hover(rectKnight3);
+
+    Hover(rectSamurai1);
+    Hover(rectSamurai2);
+    Hover(rectSamurai3);
 }
 
 void MenuNewGame::HandleInput(Engine &engine)

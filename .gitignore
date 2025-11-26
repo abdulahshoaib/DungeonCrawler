@@ -4,3 +4,4 @@ main
 game
 *.o
 *.csv
+.VSCodeCounter
