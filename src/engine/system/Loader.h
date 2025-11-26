@@ -52,7 +52,5 @@ public:
   static Font TitleFont;
   static Font ButtonFont;
 
-  static void LoadAssets();
-
   static void UnloadAssets();
 };

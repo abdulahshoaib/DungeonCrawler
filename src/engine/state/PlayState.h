@@ -8,7 +8,7 @@ private:
     GameManager gameManager;
 
 public:
-    // PlayState();
+    PlayState(int);
     void Update(Engine &);
     void Draw(Engine &);
 };

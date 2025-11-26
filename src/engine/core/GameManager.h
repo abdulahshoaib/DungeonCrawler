@@ -10,6 +10,7 @@ using std::vector;
 class GameManager
 {
 private:
+    bool blink = true;
     // Layer 2: Interactables
     Map interactables;
 
@@ -24,7 +25,8 @@ private:
     MenuHUD hud;
 
 public:
-    GameManager();
+    // NOTE(demon_slayer): the int here is for the ID passed to identify the charachter selected
+    GameManager(int);
     ~GameManager();
 
     void Update();

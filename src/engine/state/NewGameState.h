@@ -9,6 +9,7 @@ private:
     MenuNewGame newGameMenu;
 
 public:
+    ~NewGameState();
     void Update(Engine &);
     void Draw(Engine &);
 };

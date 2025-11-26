@@ -25,35 +25,13 @@ Skeleton_archer Loader::skeletonArcher;
 Skeleton_warrior Loader::skeletonWarrior;
 Skeleton_spearman Loader::skeletonSpearman;
 
-void Loader::LoadAssets()
-{
-    // TODO(demon_slayer): Add a config file to manage asset paths
-    // Menu Background
-    MainMenuBackground = LoadTexture("assets/images/menu_bg.png");
-    // Fonts
-    TitleFont = LoadFontEx("assets/fonts/StarCrush.otf", 160, 0, 0);
-    ButtonFont = LoadFontEx("assets/fonts/Roboto.ttf", 160, 0, 0);
+Texture2D Loader::knight1Potrait;
+Texture2D Loader::knight2Potrait;
+Texture2D Loader::knight3Potrait;
 
-    // CHARACTERS
-    blackWerewolf.LoadTex();
-    yamabushiTengu.LoadTex();
-    karasuTengu.LoadTex();
-    kitsune.LoadTex();
-
-    knight1.LoadTex();
-    knight2.LoadTex();
-    knight3.LoadTex();
-
-    samurai.LoadTex();
-    samuraiArcher.LoadTex();
-    samuraiCommander.LoadTex();
-
-    satyr.LoadTex();
-
-    skeletonArcher.LoadTex();
-    skeletonWarrior.LoadTex();
-    skeletonSpearman.LoadTex();
-}
+Texture2D Loader::samuraiPotrait;
+Texture2D Loader::samuraiArcherPotrait;
+Texture2D Loader::samuraiCommanderPotrait;
 
 void Loader::UnloadAssets()
 {
