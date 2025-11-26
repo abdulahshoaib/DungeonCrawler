@@ -6,11 +6,19 @@
 class MenuSettings : public Menu
 {
 private:
-    Button Vol_btn, Back_btn;
-    Label Settings_lbl;
+    // UI Elements defined in the .cpp file
+    Label titleLabel;
+
+    // Volume Control Buttons
+    Button MasterMinus_btn, MasterPlus_btn;
+    Button MusicMinus_btn, MusicPlus_btn;
+    Button SFXMinus_btn, SFXPlus_btn;
+
+    // Navigation
+    Button Back_btn;
 
 public:
     MenuSettings();
-    void Draw();
+    void Draw(); // Virtual is likely handled in parent Menu class
     void HandleInput(Engine &);
 };
