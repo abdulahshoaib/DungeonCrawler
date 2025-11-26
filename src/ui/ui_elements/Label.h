@@ -1,8 +1,9 @@
 #pragma once
-#include <raylib.h>
-#include "UIElement.h"
 
-class Label : public UIElement
+#include <raylib.h>
+#include <string>
+
+class Label
 {
 public:
   Vector2 position;
@@ -11,8 +12,8 @@ public:
   int spacing = 2;
 
   std::string text = "Label not set";
-  Font font;
 
   Label();
+  ~Label();
   void Draw(Color normalColor);
 };

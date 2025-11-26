@@ -1,10 +1,10 @@
 #include "MenuSettings.h"
-#include "MenuMain.h" // Required to switch back to Main Menu
+#include "MenuMain.h"
 #include "Engine.h"
+#include "MainMenuState.h"
 #include "Loader.h"
 #include <string>
 
-// Simple in-memory persistence for this session
 static int masterVolume = 50;
 static int musicVolume = 75;
 static int sfxVolume = 100;
@@ -32,7 +32,6 @@ void MenuSettings::Draw()
     Vector2 size = MeasureTextEx(titleFont, title.c_str(), titleFontSize, 2);
     Vector2 titleTextPos = {cx - (size.x / 2.0f), cy};
 
-    titleLabel.font = titleFont;
     titleLabel.fontSize = titleFontSize;
     titleLabel.text = title;
     titleLabel.position = titleTextPos;
@@ -46,8 +45,11 @@ void MenuSettings::Draw()
 
     // --- MASTER VOLUME ---
     // Label
-    DrawText("Master", cx - 200, startY + 5, textSize, WHITE);
-    
+    Master_lbl.text = "Master";
+    Master_lbl.fontSize = textSize;
+    Master_lbl.position = {cx - 200, startY + 5};
+    Master_lbl.Draw(WHITE);
+
     // Minus Button
     Rectangle mMinusRect = {cx - 20, startY, btnSize, btnSize};
     MasterMinus_btn.label.text = "-";
@@ -64,10 +66,12 @@ void MenuSettings::Draw()
     MasterPlus_btn.rect = mPlusRect;
     MasterPlus_btn.Draw(WHITE, GREEN);
 
-
     // --- MUSIC VOLUME ---
     float musicY = startY + rowHeight;
-    DrawText("Music", cx - 200, musicY + 5, textSize, WHITE);
+    Music_lbl.text = "Music";
+    Music_lbl.fontSize = textSize;
+    Music_lbl.position = {cx - 200, musicY + 5};
+    Music_lbl.Draw(WHITE);
 
     Rectangle musicMinusRect = {cx - 20, musicY, btnSize, btnSize};
     MusicMinus_btn.label.text = "-";
@@ -82,10 +86,12 @@ void MenuSettings::Draw()
     MusicPlus_btn.rect = musicPlusRect;
     MusicPlus_btn.Draw(WHITE, GREEN);
 
-
     // --- SFX VOLUME ---
     float sfxY = musicY + rowHeight;
-    DrawText("SFX", cx - 200, sfxY + 5, textSize, WHITE);
+    SFX_lbl.text = "SFx";
+    SFX_lbl.fontSize = textSize;
+    SFX_lbl.position = {cx - 200, sfxY + 5};
+    SFX_lbl.Draw(WHITE);
 
     Rectangle sfxMinusRect = {cx - 20, sfxY, btnSize, btnSize};
     SFXMinus_btn.label.text = "-";
@@ -102,10 +108,9 @@ void MenuSettings::Draw()
 
     // --- CONTROLS HINT ---
     float hintY = sfxY + rowHeight + 20;
-    const char* controlsText = "Controls: WASD to Move, SPACE to Jump";
+    const char *controlsText = "Controls: WASD to Move, SPACE to Jump";
     int hintWidth = MeasureText(controlsText, 20);
     DrawText(controlsText, cx - (hintWidth / 2), hintY, 20, LIGHTGRAY);
-
 
     // --- BACK BUTTON ---
     Rectangle BackRect = {cx - (200 / 2), hintY + 60, 200, 50};
@@ -121,30 +126,32 @@ void MenuSettings::HandleInput(Engine &engine)
 
     // Handle Volume Adjustments (Clamped 0-100)
     // TODO: Hook these into your Audio System (e.g. Audio::SetMasterVolume(masterVolume / 100.0f))
-    
     if (clicked && CheckCollisionPointRec(mousePoint, MasterMinus_btn.rect))
-        if (masterVolume > 0) masterVolume -= 10;
+        if (masterVolume > 0)
+            masterVolume -= 10;
 
     if (clicked && CheckCollisionPointRec(mousePoint, MasterPlus_btn.rect))
-        if (masterVolume < 100) masterVolume += 10;
+        if (masterVolume < 100)
+            masterVolume += 10;
 
     if (clicked && CheckCollisionPointRec(mousePoint, MusicMinus_btn.rect))
-        if (musicVolume > 0) musicVolume -= 10;
+        if (musicVolume > 0)
+            musicVolume -= 10;
 
     if (clicked && CheckCollisionPointRec(mousePoint, MusicPlus_btn.rect))
-        if (musicVolume < 100) musicVolume += 10;
+        if (musicVolume < 100)
+            musicVolume += 10;
 
     if (clicked && CheckCollisionPointRec(mousePoint, SFXMinus_btn.rect))
-        if (sfxVolume > 0) sfxVolume -= 10;
+        if (sfxVolume > 0)
+            sfxVolume -= 10;
 
     if (clicked && CheckCollisionPointRec(mousePoint, SFXPlus_btn.rect))
-        if (sfxVolume < 100) sfxVolume += 10;
+        if (sfxVolume < 100)
+            sfxVolume += 10;
 
-
-    // Handle Navigation
     if (clicked && CheckCollisionPointRec(mousePoint, Back_btn.rect))
     {
-        // FIX: Transition back to MenuMain instead of MainMenuState
-        engine.ChangeState(new MenuMain());
+        engine.ChangeState(new MainMenuState());
     }
 }

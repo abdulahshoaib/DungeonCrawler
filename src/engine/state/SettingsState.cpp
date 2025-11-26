@@ -9,3 +9,5 @@ void SettingsState::Draw(Engine &)
 {
     settingsMenu.Draw();
 }
+
+SettingsState::~SettingsState() {}

@@ -9,4 +9,5 @@ private:
 public:
     void Update(Engine &);
     void Draw(Engine &);
+    ~SettingsState();
 };

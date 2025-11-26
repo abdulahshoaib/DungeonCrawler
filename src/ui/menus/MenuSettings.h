@@ -14,6 +14,9 @@ private:
     Button MusicMinus_btn, MusicPlus_btn;
     Button SFXMinus_btn, SFXPlus_btn;
 
+    // Labels
+    Label Music_lbl, Master_lbl, SFX_lbl;
+
     // Navigation
     Button Back_btn;
 

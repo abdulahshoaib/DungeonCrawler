@@ -1,9 +1,9 @@
 #pragma once
+
 #include <raylib.h>
-#include "UIElement.h"
 #include "Label.h"
 
-class Button : public UIElement
+class Button
 {
 public:
   Rectangle rect;

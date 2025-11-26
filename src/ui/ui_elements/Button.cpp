@@ -1,4 +1,3 @@
-
 #include "Button.h"
 #include "Loader.h"
 
@@ -17,11 +16,10 @@ void Button::Draw(Color normalColor, Color hoverColor)
         DrawRectangleRec(rect, normalColor);
     }
 
-    label.fontSize = 32.0f;
-    label.font = Loader::ButtonFont;
+    label.fontSize = 26.0f;
 
     // Center the label text within the button rectangle
-    Vector2 textSize = MeasureTextEx(label.font, label.text.c_str(), label.fontSize, label.spacing);
+    Vector2 textSize = MeasureTextEx(Loader::TitleFont, label.text.c_str(), label.fontSize, label.spacing);
     label.position = {rect.x + (rect.width - textSize.x) / 2, rect.y + (rect.height - textSize.y) / 2};
     label.Draw(WHITE);
 }

@@ -32,7 +32,6 @@ void MenuMain::Draw()
   Rectangle SettingsRect = {cx - (200 / 2), LoadGameRect.y + LoadGameRect.height + 10, 200, 50};
   Rectangle QuitRect = {cx - (200 / 2), SettingsRect.y + SettingsRect.height + 10, 200, 50};
 
-  titleLabel.font = titleFont;
   titleLabel.fontSize = titleFontSize;
   titleLabel.text = title;
   titleLabel.position = titleTextPos;

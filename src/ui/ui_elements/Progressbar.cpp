@@ -1,3 +1,5 @@
-
 #include "Progressbar.h"
-Progressbar::Progressbar() : UIElement() {}
+
+Progressbar::Progressbar()
+{
+}

@@ -1,12 +1,10 @@
 #pragma once
-#include "GameState.h" // <--- 1. Essential Include
-#include "UIElement.h"
-#include "utils/utils.h"
+#include "GameState.h"
 
 class Engine;
 
 // 2. Inherit from GameState (Must be PUBLIC)
-class Menu : public GameState 
+class Menu : public GameState
 {
 public:
     Menu();
@@ -15,14 +13,14 @@ public:
     // --- THE BRIDGE ---
     // The Engine calls Update/Draw(engine), so we must implement them here
     // and redirect them to your Menu functions.
-    
-    void Update(Engine& engine) override 
-    { 
-        HandleInput(engine); 
+
+    void Update(Engine &engine) override
+    {
+        HandleInput(engine);
     }
 
-    void Draw(Engine& engine) override 
-    { 
+    void Draw(Engine &engine) override
+    {
         Draw(); // Menus don't need the engine for drawing
     }
 

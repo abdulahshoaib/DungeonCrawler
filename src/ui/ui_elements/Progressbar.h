@@ -1,8 +1,9 @@
 #pragma once
-#include <raylib.h>
-#include "UIElement.h"
 
-class Progressbar : public UIElement {
+#include <raylib.h>
+
+class Progressbar
+{
   int progress;
 
 public:
