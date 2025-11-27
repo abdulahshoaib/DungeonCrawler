@@ -2,6 +2,7 @@
 #include "Loader.h"
 
 Texture2D Loader::MainMenuBackground = {0};
+Texture2D Loader::SelectionMenuBackground = {0};
 Font Loader::TitleFont = {0};
 Font Loader::ButtonFont = {0};
 
@@ -37,6 +38,7 @@ void Loader::UnloadAssets()
 {
     // unload textures
     UnloadTexture(MainMenuBackground);
+    UnloadTexture(SelectionMenuBackground);
 
     // unload fonts
     UnloadFont(TitleFont);

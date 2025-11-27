@@ -9,45 +9,42 @@ MenuNewGame::MenuNewGame()
 
 void MenuNewGame::Draw()
 {
+    DrawTextureEx(Loader::SelectionMenuBackground, {0, 0}, 0, 0.45f, WHITE);
+    int screenWidth = 1100;
+    int screenHeight = 700;
 
-    float scale = 0.15f;
-    const int nameFontSize = 20;
-    const int spacing = 2;
+    float scale = 0.12f; 
 
-    int startX = 150;
-    int startY = 100;
+    float itemW = Loader::knight1Potrait.width * scale;
+    float itemH = Loader::knight1Potrait.height * scale;
 
-    int spacingX = 200;
-    int spacingY = 200;
+    float paddingX = 30.0f; 
+    float paddingY = 40.0f;
 
-    Font font = Loader::TitleFont;
+    float totalContentWidth = (itemW * 3) + (paddingX * 2);
+    float totalContentHeight = (itemH * 2) + (paddingY);
 
-    auto DrawPortrait = [&](Texture2D tex, const char *name, int x, int y)
+    float startX = (screenWidth - totalContentWidth) / 2.0f;
+    float startY = (screenHeight - totalContentHeight) / 2.0f;
+    
+    float stepX = itemW + paddingX;
+    float stepY = itemH + paddingY;
+
+    auto DrawPortrait = [&](Texture2D tex, float x, float y)
     {
-        DrawTextureEx(tex, {(float)x, (float)y}, 0, scale, WHITE);
-
-        float scaledWidth = tex.width * scale;
-        float textWidth = MeasureTextEx(font, name, nameFontSize, spacing).x;
-
-        float textX = x + (scaledWidth / 2) - (textWidth / 2);
-        float textY = y + tex.height * scale + 10;
-
-        DrawTextEx(font, name, {textX, textY}, nameFontSize, spacing, WHITE);
-
-        return Rectangle{(float)x, (float)y, scaledWidth, tex.height * scale};
+        DrawTextureEx(tex, {x, y}, 0, scale, WHITE);
+        return Rectangle{x, y, (float)tex.width * scale, (float)tex.height * scale};
     };
 
-    // ROW 1
-    rectKnight1 = DrawPortrait(Loader::knight1Potrait, "Aldric", startX, startY);
-    rectKnight2 = DrawPortrait(Loader::knight2Potrait, "Garron", startX + spacingX, startY);
-    rectKnight3 = DrawPortrait(Loader::knight3Potrait, "Varek", startX + spacingX * 2, startY);
+    rectKnight1 = DrawPortrait(Loader::knight1Potrait, startX, startY);
+    rectKnight2 = DrawPortrait(Loader::knight2Potrait, startX + stepX, startY);
+    rectKnight3 = DrawPortrait(Loader::knight3Potrait, startX + stepX * 2, startY);
 
-    // ROW 2
-    int row2Y = startY + spacingY;
-
-    rectSamurai1 = DrawPortrait(Loader::samuraiPotrait, "Hiro", startX, row2Y);
-    rectSamurai2 = DrawPortrait(Loader::samuraiCommanderPotrait, "Shogun Raiken", startX + spacingX, row2Y);
-    rectSamurai3 = DrawPortrait(Loader::samuraiArcherPotrait, "Hayato", startX + spacingX * 2, row2Y);
+    float row2Y = startY + stepY;
+    
+    rectSamurai1 = DrawPortrait(Loader::samuraiPotrait, startX, row2Y);
+    rectSamurai2 = DrawPortrait(Loader::samuraiCommanderPotrait, startX + stepX, row2Y);
+    rectSamurai3 = DrawPortrait(Loader::samuraiArcherPotrait, startX + stepX * 2, row2Y);
 
     Vector2 mouse = GetMousePosition();
 
@@ -60,7 +57,6 @@ void MenuNewGame::Draw()
     Hover(rectKnight1);
     Hover(rectKnight2);
     Hover(rectKnight3);
-
     Hover(rectSamurai1);
     Hover(rectSamurai2);
     Hover(rectSamurai3);

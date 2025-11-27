@@ -49,6 +49,8 @@ public:
   static Texture2D samuraiCommanderPotrait;
 
   static Texture2D MainMenuBackground;
+  static Texture2D SelectionMenuBackground;
+
   static Font TitleFont;
   static Font ButtonFont;
 
