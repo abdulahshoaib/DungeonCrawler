@@ -52,6 +52,8 @@ void MenuSettings::Draw()
 
     // Minus Button
     Rectangle mMinusRect = {cx - 20, startY, btnSize, btnSize};
+    MasterMinus_btn.labelNormalColor = BLACK;
+    MasterMinus_btn.labelHoverColor = WHITE;
     MasterMinus_btn.label.text = "-";
     MasterMinus_btn.rect = mMinusRect;
     MasterMinus_btn.Draw(GRAY, RED);
@@ -62,6 +64,8 @@ void MenuSettings::Draw()
 
     // Plus Button
     Rectangle mPlusRect = {cx + 100, startY, btnSize, btnSize};
+    MasterPlus_btn.labelNormalColor = BLACK;
+    MasterPlus_btn.labelHoverColor = WHITE;
     MasterPlus_btn.label.text = "+";
     MasterPlus_btn.rect = mPlusRect;
     MasterPlus_btn.Draw(GRAY, GREEN);
@@ -74,6 +78,8 @@ void MenuSettings::Draw()
     Music_lbl.Draw(WHITE);
 
     Rectangle musicMinusRect = {cx - 20, musicY, btnSize, btnSize};
+    MusicMinus_btn.labelNormalColor = BLACK;
+    MusicMinus_btn.labelHoverColor = WHITE;
     MusicMinus_btn.label.text = "-";
     MusicMinus_btn.rect = musicMinusRect;
     MusicMinus_btn.Draw(GRAY, RED);
@@ -82,6 +88,8 @@ void MenuSettings::Draw()
     DrawText(musicVal.c_str(), cx + 40, musicY + 5, textSize, WHITE);
 
     Rectangle musicPlusRect = {cx + 100, musicY, btnSize, btnSize};
+    MusicPlus_btn.labelNormalColor = BLACK;
+    MusicPlus_btn.labelHoverColor = WHITE;
     MusicPlus_btn.label.text = "+";
     MusicPlus_btn.rect = musicPlusRect;
     MusicPlus_btn.Draw(GRAY, GREEN);
@@ -94,6 +102,8 @@ void MenuSettings::Draw()
     SFX_lbl.Draw(WHITE);
 
     Rectangle sfxMinusRect = {cx - 20, sfxY, btnSize, btnSize};
+    SFXMinus_btn.labelNormalColor = BLACK;
+    SFXMinus_btn.labelHoverColor = WHITE;
     SFXMinus_btn.label.text = "-";
     SFXMinus_btn.rect = sfxMinusRect;
     SFXMinus_btn.Draw(GRAY, RED);
@@ -102,6 +112,8 @@ void MenuSettings::Draw()
     DrawText(sfxVal.c_str(), cx + 40, sfxY + 5, textSize, WHITE);
 
     Rectangle sfxPlusRect = {cx + 100, sfxY, btnSize, btnSize};
+    SFXPlus_btn.labelNormalColor = BLACK;
+    SFXPlus_btn.labelHoverColor = WHITE;
     SFXPlus_btn.label.text = "+";
     SFXPlus_btn.rect = sfxPlusRect;
     SFXPlus_btn.Draw(GRAY, GREEN);

@@ -22,6 +22,6 @@ private:
 
 public:
     MenuSettings();
-    void Draw(); // Virtual is likely handled in parent Menu class
+    void Draw();
     void HandleInput(Engine &);
 };

@@ -8,7 +8,12 @@ class Button
 public:
   Rectangle rect;
   Label label;
-  int padding = 3; // padding around the label text
+
+  Color labelColor;
+  Color labelNormalColor;
+  Color labelHoverColor;
+
+  int padding = 3;
 
   Button();
   void Draw(Color, Color);
