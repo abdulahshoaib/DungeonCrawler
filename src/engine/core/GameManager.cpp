@@ -9,7 +9,8 @@
 
 GameManager::GameManager(int ID)
 {
-    map.LoadMap("assets/maps/platforms.csv");
+    map_collide.LoadMap("assets/maps/platforms.csv");
+    map_non_colliding.LoadMap("assets/maps/map.csv");
     interactables.LoadMap("assets/maps/interactables.csv");
 
     // TODO(demon_slayer): a way to set the player entity to a selected charachter
@@ -43,7 +44,8 @@ void GameManager::Update()
 void GameManager::Draw()
 {
     interactables.DrawMap();
-    map.DrawMap();
+    map_collide.DrawMap();
+    map_non_colliding.DrawMap();
     hud.Draw();
 
     // TODO(demon_slayer): Remove this later just to test game state

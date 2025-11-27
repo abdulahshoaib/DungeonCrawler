@@ -11,11 +11,14 @@ class GameManager
 {
 private:
     bool blink = true;
-    // Layer 2: Interactables
+    // Layer 0: Interactables
     Map interactables;
 
-    // Layer 1: Map
-    Map map;
+    // Layer 1: Map non-colliding
+    Map map_non_colliding;
+
+    // Layer 2: Colliding Map
+    Map map_collide;
 
     // Layer 3: Players + Enemies + NPCs
     std::vector<Entity> entities;
