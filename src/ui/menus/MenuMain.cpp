@@ -3,6 +3,7 @@
 #include "SettingsState.h"
 #include "NewGameState.h"
 #include "MenuMain.h"
+#include "LoadGameState.h"
 
 MenuMain::MenuMain()
 {
@@ -64,6 +65,9 @@ void MenuMain::HandleInput(Engine &engine)
   // TODO(demon_slayer): a switch statement should be good here
   if (clicked && CheckCollisionPointRec(mousePoint, NewGame_btn.rect))
     engine.ChangeState(new NewGameState());
+
+  if (clicked && CheckCollisionPointRec(mousePoint, LoadGame_btn.rect))
+    engine.ChangeState(new LoadGameState());
 
   if (clicked && CheckCollisionPointRec(mousePoint, Settings_btn.rect))
     engine.ChangeState(new SettingsState());
