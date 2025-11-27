@@ -54,7 +54,7 @@ void MenuSettings::Draw()
     Rectangle mMinusRect = {cx - 20, startY, btnSize, btnSize};
     MasterMinus_btn.label.text = "-";
     MasterMinus_btn.rect = mMinusRect;
-    MasterMinus_btn.Draw(WHITE, RED);
+    MasterMinus_btn.Draw(GRAY, RED);
 
     // Value Display
     std::string masterVal = std::to_string(masterVolume);
@@ -64,7 +64,7 @@ void MenuSettings::Draw()
     Rectangle mPlusRect = {cx + 100, startY, btnSize, btnSize};
     MasterPlus_btn.label.text = "+";
     MasterPlus_btn.rect = mPlusRect;
-    MasterPlus_btn.Draw(WHITE, GREEN);
+    MasterPlus_btn.Draw(GRAY, GREEN);
 
     // --- MUSIC VOLUME ---
     float musicY = startY + rowHeight;
@@ -76,7 +76,7 @@ void MenuSettings::Draw()
     Rectangle musicMinusRect = {cx - 20, musicY, btnSize, btnSize};
     MusicMinus_btn.label.text = "-";
     MusicMinus_btn.rect = musicMinusRect;
-    MusicMinus_btn.Draw(WHITE, RED);
+    MusicMinus_btn.Draw(GRAY, RED);
 
     std::string musicVal = std::to_string(musicVolume);
     DrawText(musicVal.c_str(), cx + 40, musicY + 5, textSize, WHITE);
@@ -84,7 +84,7 @@ void MenuSettings::Draw()
     Rectangle musicPlusRect = {cx + 100, musicY, btnSize, btnSize};
     MusicPlus_btn.label.text = "+";
     MusicPlus_btn.rect = musicPlusRect;
-    MusicPlus_btn.Draw(WHITE, GREEN);
+    MusicPlus_btn.Draw(GRAY, GREEN);
 
     // --- SFX VOLUME ---
     float sfxY = musicY + rowHeight;
@@ -96,7 +96,7 @@ void MenuSettings::Draw()
     Rectangle sfxMinusRect = {cx - 20, sfxY, btnSize, btnSize};
     SFXMinus_btn.label.text = "-";
     SFXMinus_btn.rect = sfxMinusRect;
-    SFXMinus_btn.Draw(WHITE, RED);
+    SFXMinus_btn.Draw(GRAY, RED);
 
     std::string sfxVal = std::to_string(sfxVolume);
     DrawText(sfxVal.c_str(), cx + 40, sfxY + 5, textSize, WHITE);
@@ -104,7 +104,7 @@ void MenuSettings::Draw()
     Rectangle sfxPlusRect = {cx + 100, sfxY, btnSize, btnSize};
     SFXPlus_btn.label.text = "+";
     SFXPlus_btn.rect = sfxPlusRect;
-    SFXPlus_btn.Draw(WHITE, GREEN);
+    SFXPlus_btn.Draw(GRAY, GREEN);
 
     // --- CONTROLS HINT ---
     float hintY = sfxY + rowHeight + 20;
@@ -127,27 +127,27 @@ void MenuSettings::HandleInput(Engine &engine)
     // Handle Volume Adjustments (Clamped 0-100)
     // TODO: Hook these into your Audio System (e.g. Audio::SetMasterVolume(masterVolume / 100.0f))
     if (clicked && CheckCollisionPointRec(mousePoint, MasterMinus_btn.rect))
-        if (masterVolume > 0)
+        if (masterVolume >= 10)
             masterVolume -= 10;
 
     if (clicked && CheckCollisionPointRec(mousePoint, MasterPlus_btn.rect))
-        if (masterVolume < 100)
+        if (masterVolume <= 90)
             masterVolume += 10;
 
     if (clicked && CheckCollisionPointRec(mousePoint, MusicMinus_btn.rect))
-        if (musicVolume > 0)
+        if (musicVolume >= 10)
             musicVolume -= 10;
 
     if (clicked && CheckCollisionPointRec(mousePoint, MusicPlus_btn.rect))
-        if (musicVolume < 100)
+        if (musicVolume <= 90)
             musicVolume += 10;
 
     if (clicked && CheckCollisionPointRec(mousePoint, SFXMinus_btn.rect))
-        if (sfxVolume > 0)
+        if (sfxVolume >= 10)
             sfxVolume -= 10;
 
     if (clicked && CheckCollisionPointRec(mousePoint, SFXPlus_btn.rect))
-        if (sfxVolume < 100)
+        if (sfxVolume <= 90)
             sfxVolume += 10;
 
     if (clicked && CheckCollisionPointRec(mousePoint, Back_btn.rect))
