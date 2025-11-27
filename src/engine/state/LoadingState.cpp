@@ -88,9 +88,22 @@ void LoadingState::Draw(Engine &)
     ClearBackground(BLACK);
     float progress = (float)step / TOTAL_STEPS;
 
-    DrawTextEx(Loader::TitleFont, "Loading", {450, 300}, 40, 2, WHITE);
+    const int screenW = GetScreenWidth();
+    const int screenH = GetScreenHeight();
 
-    // Loading Bar
-    DrawRectangle(300, 500, 500, 5, GRAY);
-    DrawRectangle(300, 500, (int)(500 * progress), 5, DARKGREEN);
+    const char* msg = "Loading";
+    const float fontSize = 40.0f;
+    const float spacing = 2.0f;
+    Vector2 textSize = MeasureTextEx(Loader::TitleFont, msg, fontSize, spacing);
+    Vector2 textPos = { (screenW - textSize.x) * 0.5f, screenH * 0.45f - textSize.y * 0.5f };
+
+    DrawTextEx(Loader::TitleFont, msg, textPos, fontSize, spacing, WHITE);
+
+    const int barWidth = 500;
+    const int barHeight = 8;
+    const int barX = (screenW - barWidth) / 2;
+    const int barY = (int)(textPos.y + textSize.y + 20); // gap below text
+
+    DrawRectangle(barX, barY, barWidth, barHeight, GRAY);
+    DrawRectangle(barX, barY, (int)(barWidth * progress), barHeight, DARKGREEN);
 }
