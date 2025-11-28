@@ -11,8 +11,9 @@ void LoadingState::Update(Engine &engine)
     {
     case 0:
     {
+        Loader::NewButton = LoadTexture("assets/images/button.jpg");
         Loader::SelectionMenuBackground = LoadTexture("assets/images/selection_bg.png");
-        break;   
+        break;
     }
     case 1:
         Loader::TitleFont = LoadFontEx("assets/fonts/StarCrush.otf", 70, 0, 0);
@@ -94,11 +95,11 @@ void LoadingState::Draw(Engine &)
     const int screenW = GetScreenWidth();
     const int screenH = GetScreenHeight();
 
-    const char* msg = "Loading";
+    const char *msg = "Loading";
     const float fontSize = 40.0f;
     const float spacing = 2.0f;
     Vector2 textSize = MeasureTextEx(Loader::TitleFont, msg, fontSize, spacing);
-    Vector2 textPos = { (screenW - textSize.x) * 0.5f, screenH * 0.45f - textSize.y * 0.5f };
+    Vector2 textPos = {(screenW - textSize.x) * 0.5f, screenH * 0.45f - textSize.y * 0.5f};
 
     DrawTextEx(Loader::TitleFont, msg, textPos, fontSize, spacing, WHITE);
 

@@ -51,6 +51,9 @@ public:
   static Texture2D MainMenuBackground;
   static Texture2D SelectionMenuBackground;
 
+  // TODO(demon_slayer): remove this or re-purpose, for aznawar's understanding
+  static Texture2D NewButton;
+
   static Font TitleFont;
   static Font ButtonFont;
 

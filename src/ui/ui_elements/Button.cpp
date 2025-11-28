@@ -12,12 +12,14 @@ void Button::Draw(Color normalColor, Color hoverColor)
 {
     if (CheckCollisionPointRec(GetMousePosition(), rect))
     {
-        DrawRectangleRec(rect, hoverColor);
+        DrawTextureEx(Loader::NewButton, {rect.x, rect.y}, 0, 0.02, WHITE);
+        // DrawRectangleRec(rect, hoverColor);
         labelColor = labelHoverColor;
     }
     else
     {
-        DrawRectangleRec(rect, normalColor);
+        DrawTextureEx(Loader::NewButton, {rect.x, rect.y}, 0, 0.02, WHITE);
+        // DrawRectangleRec(rect, normalColor);
         labelColor = labelNormalColor;
     }
 
