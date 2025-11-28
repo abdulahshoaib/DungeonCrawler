@@ -34,7 +34,6 @@ Texture2D Loader::knight3Potrait;
 Texture2D Loader::samuraiPotrait;
 Texture2D Loader::samuraiArcherPotrait;
 Texture2D Loader::samuraiCommanderPotrait;
-Texture2D Loader::NewButton;
 
 void Loader::UnloadAssets()
 {

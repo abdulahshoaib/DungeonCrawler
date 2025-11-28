@@ -47,11 +47,4 @@ void GameManager::Draw()
     map_collide.DrawMap();
     map_non_colliding.DrawMap();
     hud.Draw();
-
-    // TODO(demon_slayer): Remove this later just to test game state
-    if (blink)
-        DrawTextEx(Loader::TitleFont, "Under Construction", {350, 500}, 50, 2, WHITE);
-    else
-        DrawTextEx(Loader::TitleFont, "Under Construction", {350, 500}, 50, 2, YELLOW);
-    blink = !blink;
 }

@@ -11,7 +11,6 @@ void LoadingState::Update(Engine &engine)
     {
     case 0:
     {
-        Loader::NewButton = LoadTexture("assets/images/button.jpg");
         Loader::LoadMenuBackground = LoadTexture("assets/images/loadmenubg.jpeg");
         Loader::SelectionMenuBackground = LoadTexture("assets/images/selection_bg.png");
         break;
@@ -29,9 +28,6 @@ void LoadingState::Update(Engine &engine)
     case 4:
     {
         Loader::yamabushiTengu.LoadTex();
-        Loader::knight1Potrait = LoadTexture("assets/images/Knight1.png");
-        Loader::knight2Potrait = LoadTexture("assets/images/Knight2.png");
-        Loader::knight3Potrait = LoadTexture("assets/images/Knight3.png");
 
         Loader::samuraiPotrait = LoadTexture("assets/images/Samurai.png");
         Loader::samuraiArcherPotrait = LoadTexture("assets/images/Samurai_Archer.png");
@@ -43,9 +39,13 @@ void LoadingState::Update(Engine &engine)
         Loader::karasuTengu.LoadTex();
         break;
     case 6:
+    {
+        Loader::knight1Potrait = LoadTexture("assets/images/Knight1.png");
+        Loader::knight2Potrait = LoadTexture("assets/images/Knight2.png");
+        Loader::knight3Potrait = LoadTexture("assets/images/Knight3.png");
         Loader::kitsune.LoadTex();
         break;
-
+    }
     case 7:
         Loader::knight1.LoadTex();
         break;
@@ -110,5 +110,5 @@ void LoadingState::Draw(Engine &)
     const int barY = (int)(textPos.y + textSize.y + 20); // gap below text
 
     DrawRectangle(barX, barY, barWidth, barHeight, GRAY);
-    DrawRectangle(barX, barY, (int)(barWidth * progress), barHeight, DARKGREEN);
+    DrawRectangle(barX, barY, (int)(barWidth * progress), barHeight, YELLOW);
 }
