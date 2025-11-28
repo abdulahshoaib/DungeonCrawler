@@ -19,9 +19,12 @@ void LoadingState::Update(Engine &engine)
         Loader::TitleFont = LoadFontEx("assets/fonts/StarCrush.otf", 70, 0, 0);
         break;
     case 2:
+    {
+        Loader::Coin = LoadTexture("assets/images/coin.png");
+        Loader::CoinAnim = LoadTexture("assets/images/coinAnim.png");
         Loader::ButtonFont = LoadFontEx("assets/fonts/Roboto.ttf", 32, 0, 0);
         break;
-
+    }
     case 3:
         Loader::blackWerewolf.LoadTex();
         break;

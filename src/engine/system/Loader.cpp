@@ -4,6 +4,9 @@
 Texture2D Loader::MainMenuBackground = {0};
 Texture2D Loader::SelectionMenuBackground = {0};
 Texture2D Loader::LoadMenuBackground = {0};
+Texture2D Loader::CoinAnim = {0};
+Texture2D Loader::Coin = {0};
+
 Font Loader::TitleFont = {0};
 Font Loader::ButtonFont = {0};
 

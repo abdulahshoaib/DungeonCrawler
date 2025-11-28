@@ -51,6 +51,8 @@ public:
   static Texture2D MainMenuBackground;
   static Texture2D SelectionMenuBackground;
   static Texture2D LoadMenuBackground;
+  static Texture2D CoinAnim;
+  static Texture2D Coin;
 
   static Font TitleFont;
   static Font ButtonFont;
