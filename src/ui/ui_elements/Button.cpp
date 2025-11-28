@@ -5,21 +5,17 @@ Button::Button()
 {
     labelColor = WHITE;
     labelNormalColor = WHITE;
-    labelHoverColor = WHITE;
+    labelHoverColor = YELLOW;
 }
 
 void Button::Draw(Color normalColor, Color hoverColor)
 {
     if (CheckCollisionPointRec(GetMousePosition(), rect))
     {
-        DrawTextureEx(Loader::NewButton, {rect.x, rect.y}, 0, 0.02, WHITE);
-        // DrawRectangleRec(rect, hoverColor);
         labelColor = labelHoverColor;
     }
     else
     {
-        DrawTextureEx(Loader::NewButton, {rect.x, rect.y}, 0, 0.02, WHITE);
-        // DrawRectangleRec(rect, normalColor);
         labelColor = labelNormalColor;
     }
 
