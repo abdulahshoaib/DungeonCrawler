@@ -10,15 +10,20 @@ MenuNewGame::MenuNewGame()
 void MenuNewGame::Draw()
 {
     DrawTextureEx(Loader::SelectionMenuBackground, {0, 0}, 0, 0.45f, WHITE);
+    selectcharacter.text = "SELECT CHARACTER";
+    int size = GetMeasurement
+                   selectcharacter.position = {550, 1};
+    selectcharacter.fontSize = 40;
+    selectcharacter.Draw(YELLOW);
     int screenWidth = 1100;
     int screenHeight = 700;
 
-    float scale = 0.12f; 
+    float scale = 0.12f;
 
     float itemW = Loader::knight1Potrait.width * scale;
     float itemH = Loader::knight1Potrait.height * scale;
 
-    float paddingX = 30.0f; 
+    float paddingX = 30.0f;
     float paddingY = 40.0f;
 
     float totalContentWidth = (itemW * 3) + (paddingX * 2);
@@ -26,7 +31,7 @@ void MenuNewGame::Draw()
 
     float startX = (screenWidth - totalContentWidth) / 2.0f;
     float startY = (screenHeight - totalContentHeight) / 2.0f;
-    
+
     float stepX = itemW + paddingX;
     float stepY = itemH + paddingY;
 
@@ -41,7 +46,7 @@ void MenuNewGame::Draw()
     rectKnight3 = DrawPortrait(Loader::knight3Potrait, startX + stepX * 2, startY);
 
     float row2Y = startY + stepY;
-    
+
     rectSamurai1 = DrawPortrait(Loader::samuraiPotrait, startX, row2Y);
     rectSamurai2 = DrawPortrait(Loader::samuraiCommanderPotrait, startX + stepX, row2Y);
     rectSamurai3 = DrawPortrait(Loader::samuraiArcherPotrait, startX + stepX * 2, row2Y);
