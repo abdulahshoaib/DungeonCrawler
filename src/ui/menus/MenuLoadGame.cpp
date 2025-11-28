@@ -9,7 +9,7 @@ MenuLoadGame::MenuLoadGame()
 }
 void MenuLoadGame::Draw()
 {
-    DrawTextureEx(Loader::SelectionMenuBackground, {0, 0}, 0, 0.45f, WHITE);
+    DrawTextureEx(Loader::LoadMenuBackground, {0, 0}, 0, 0.9f, WHITE);
 }
 void MenuLoadGame::HandleInput(Engine &engine)
 {

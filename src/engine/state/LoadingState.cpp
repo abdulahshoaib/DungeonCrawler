@@ -12,6 +12,7 @@ void LoadingState::Update(Engine &engine)
     case 0:
     {
         Loader::NewButton = LoadTexture("assets/images/button.jpg");
+        Loader::LoadMenuBackground = LoadTexture("assets/images/loadmenubg.jpeg");
         Loader::SelectionMenuBackground = LoadTexture("assets/images/selection_bg.png");
         break;
     }
