@@ -3,6 +3,8 @@
 #include <vector>
 #include "Map.h"
 #include "MenuHUD.h"
+#include "Animation.h"
+#include "Animator.h"
 
 using std::vector;
 
@@ -19,13 +21,15 @@ private:
     // Layer 2: Colliding Map
     Map map_collide;
 
-    // Layer 3: Players + Enemies + NPCs
-    std::vector<Character*> entities;
+    // Layer 3: Players +Enemies + NPCs
+    std::vector<Character *> entities;
     Character *player;
 
     // Layer 4: HUD + UI Overlays
     MenuHUD hud;
-
+    
+    Animator animator;
+ 
 public:
     // NOTE(demon_slayer): the int here is for the ID passed to identify the charachter selected
     GameManager(int);
