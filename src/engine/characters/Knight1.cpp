@@ -63,6 +63,10 @@ void Knight1::anim()
         currentAnim = deadAnim;
         break;
 
+    case AnimState::RUN_ATTACK:
+        currentAnim = runAttackAnim;
+        break;
+
     default:
         currentAnim = idle1Anim;
         break;
