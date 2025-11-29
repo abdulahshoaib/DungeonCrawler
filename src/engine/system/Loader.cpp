@@ -324,7 +324,7 @@ void Loader::LoadBackgrounds()
 {
     MainMenuBackground = LoadTexture("assets/images/menu_bg.png");
     LoadMenuBackground = LoadTexture("assets/images/loadmenu_bg.jpeg");
-    SelectionMenuBackground = LoadTexture("assets/imgaes/selection_bg.png");
+    SelectionMenuBackground = LoadTexture("assets/images/selection.png");
 }
 
 void Loader::UnLoadBackgrounds()
