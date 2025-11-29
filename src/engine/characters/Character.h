@@ -1,27 +1,48 @@
 #pragma once
 
+#include "AnimStates.h"
 #include <raylib.h>
+#include "Animation.h"
 
 class Character
 {
-public:
-    Texture2D attack[3];
-    Texture2D dead;
-    Texture2D defend;
-    Texture2D hurt;
-    Texture2D idle[2];
-    Texture2D jump;
-    Texture2D protect;
-    Texture2D run;
-    Texture2D run_attack;
-    Texture2D walk;
-    Texture2D arrow;
-    Texture2D shot[2];
-    Texture2D charge;
-    Texture2D evasion;
-    Texture2D fall;
-    Texture2D fire[2];
+protected:
+    Animation *idle1Anim = nullptr;
+    Animation *idle2Anim = nullptr;
 
+    Animation *runAnim = nullptr;
+    Animation *walkAnim = nullptr;
+
+    Animation *jumpAnim = nullptr;
+    Animation *fallAnim = nullptr;
+
+    Animation *attack1Anim = nullptr;
+    Animation *attack2Anim = nullptr;
+    Animation *attack3Anim = nullptr;
+
+    Animation *runAttackAnim = nullptr;
+
+    Animation *defendAnim = nullptr;
+    Animation *hurtAnim = nullptr;
+    Animation *deadAnim = nullptr;
+    Animation *protectAnim = nullptr;
+
+    Animation *shot1Anim = nullptr;
+    Animation *shot2Anim = nullptr;
+
+    Animation *arrowAnim = nullptr;
+
+    Animation *chargeAnim = nullptr;
+    Animation *evasionAnim = nullptr;
+
+    Animation *fire1Anim = nullptr;
+    Animation *fire2Anim = nullptr;
+
+    Animation *currentAnim = nullptr;
+
+    AnimState animState;
+
+public:
     Character();
 
     // subject to change in each derived class
@@ -29,6 +50,6 @@ public:
     float damage;
     float speed;
 
-    virtual void LoadTex() = 0;
-    virtual void UnloadTex() = 0;
+    virtual void anim() = 0;
+    void ChangeAnimState(AnimState);
 };
