@@ -37,10 +37,7 @@ void MenuEnterName::Draw()
     //  Draw input box background
     DrawRectangleRec(inputBox, BLACK);
 
-    // Optional border
-    DrawRectangleLinesEx(inputBox, 10, GREEN);
-
-    // Draw text inside
+        // Draw text inside
     DrawText(typedName.c_str(), inputBox.x + 15, inputBox.y + 15, 32, YELLOW); // was 100 → 32
 
     // Blinking cursor if active
