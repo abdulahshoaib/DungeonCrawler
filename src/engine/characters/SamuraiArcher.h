@@ -3,10 +3,10 @@
 #include <raylib.h>
 #include "Character.h"
 
-class Samurai_archer : public Character
+class SamuraiArcher : public Character
 {
 public:
-    Samurai_archer();
+    SamuraiArcher();
 
     void anim() override;
 };

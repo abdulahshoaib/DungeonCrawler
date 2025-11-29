@@ -1,7 +1,7 @@
-#include "Samurai_commander.h"
+#include "SamuraiCommander.h"
 #include "Loader.h"
 
-Samurai_Commander::Samurai_Commander()
+SamuraiCommander::SamuraiCommander()
 {
     attack1Anim = &Loader::SamuraiCommanderAttack1;
     attack2Anim = &Loader::SamuraiCommanderAttack2;
@@ -15,4 +15,8 @@ Samurai_Commander::Samurai_Commander()
     protectAnim = &Loader::SamuraiCommanderProtect;
 
     currentAnim = idle1Anim;
+}
+
+void SamuraiCommander::anim()
+{
 }

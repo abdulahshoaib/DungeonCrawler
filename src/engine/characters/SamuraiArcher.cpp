@@ -1,7 +1,7 @@
-#include "Samurai_archer.h"
+#include "SamuraiArcher.h"
 #include "Loader.h"
 
-Samurai_archer::Samurai_archer()
+SamuraiArcher::SamuraiArcher()
 {
     attack1Anim = &Loader::SamuraiArcherAttack1;
     attack2Anim = &Loader::SamuraiArcherAttack2;
@@ -16,6 +16,6 @@ Samurai_archer::Samurai_archer()
     currentAnim = idle1Anim;
 }
 
-void Samurai_archer::anim()
+void SamuraiArcher::anim()
 {
 }
