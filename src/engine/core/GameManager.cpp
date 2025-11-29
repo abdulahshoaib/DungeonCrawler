@@ -17,17 +17,41 @@ GameManager::GameManager(int ID)
     switch (ID)
     {
     case KNIGHT1:
+    {
+        hud.playerName = "Lionheart";
+        hud.Potrait = Loader::Knight1HUD;
         break;
+    }
     case KNIGHT2:
+    {
+        hud.playerName = "Van Gaurd";
+        hud.Potrait = Loader::Knight2HUD;
         break;
+    }
     case KNIGHT3:
+    {
+        hud.playerName = "Valerius";
+        hud.Potrait = Loader::Knight3HUD;
         break;
+    }
     case SAMURAI:
+    {
+        hud.playerName = "Akuna Bushi";
+        hud.Potrait = Loader::SamuraiHUD;
         break;
+    }
     case SAMURAI_ARCHER:
+    {
+        hud.playerName = "Kengi";
+        hud.Potrait = Loader::SamuraiArcherHUD;
         break;
+    }
     case SAMURAI_COMMANDER:
+    {
+        hud.playerName = "Shogun Kengi";
+        hud.Potrait = Loader::SamuraiCommanderHUD;
         break;
+    }
     }
 }
 

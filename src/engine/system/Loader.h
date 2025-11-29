@@ -26,10 +26,16 @@ public:
   static Karasu_tengu karasuTengu;
   static Kitsune kitsune;
 
+  static Texture2D Knight1HUD;
+  static Texture2D Knight2HUD;
+  static Texture2D Knight3HUD;
   static Knight1 knight1;
   static Knight2 knight2;
   static Knight3 knight3;
 
+  static Texture2D SamuraiHUD;
+  static Texture2D SamuraiArcherHUD;
+  static Texture2D SamuraiCommanderHUD;
   static Samurai samurai;
   static Samurai_archer samuraiArcher;
   static Samurai_Commander samuraiCommander;

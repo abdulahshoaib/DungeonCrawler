@@ -7,6 +7,14 @@ Texture2D Loader::LoadMenuBackground = {0};
 Texture2D Loader::CoinAnim = {0};
 Texture2D Loader::Coin = {0};
 
+Texture2D Loader::Knight1HUD = {0};
+Texture2D Loader::Knight2HUD = {0};
+Texture2D Loader::Knight3HUD = {0};
+
+Texture2D Loader::SamuraiHUD = {0};
+Texture2D Loader::SamuraiArcherHUD = {0};
+Texture2D Loader::SamuraiCommanderHUD = {0};
+
 Font Loader::TitleFont = {0};
 Font Loader::ButtonFont = {0};
 

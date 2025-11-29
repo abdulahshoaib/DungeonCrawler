@@ -26,8 +26,13 @@ void LoadingState::Update(Engine &engine)
         break;
     }
     case 3:
+    {
+        Loader::SamuraiHUD = LoadTexture("assets/images/SamuraiHUD.png");
+        Loader::SamuraiArcherHUD = LoadTexture("assets/images/SamuraiArcherHUD.png");
+        Loader::SamuraiCommanderHUD = LoadTexture("assets/images/SamuraiCommanderHUD.png");
         Loader::blackWerewolf.LoadTex();
         break;
+    }
     case 4:
     {
         Loader::yamabushiTengu.LoadTex();
@@ -43,6 +48,9 @@ void LoadingState::Update(Engine &engine)
         break;
     case 6:
     {
+        Loader::Knight1HUD = LoadTexture("assets/images/Knight1HUD.png");
+        Loader::Knight2HUD = LoadTexture("assets/images/Knight2HUD.png");
+        Loader::Knight3HUD = LoadTexture("assets/images/Knight3HUD.png");
         Loader::knight1Potrait = LoadTexture("assets/images/Knight1.png");
         Loader::knight2Potrait = LoadTexture("assets/images/Knight2.png");
         Loader::knight3Potrait = LoadTexture("assets/images/Knight3.png");

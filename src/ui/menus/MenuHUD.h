@@ -5,12 +5,14 @@
 
 class MenuHUD : public Menu
 {
-  std::string playerName;
   int currentHealth;
   int maxHealth;
   int coins;
 
 public:
+  std::string playerName;
+  Texture2D Potrait;
+
   MenuHUD();
   void Draw();
   void HandleInput(Engine &);

@@ -10,7 +10,7 @@ MenuHUD::MenuHUD()
 
 void MenuHUD::Draw()
 {
-  int padding = 15;
+  int padding = 40;
 
   // ==== PORTRAIT BOX ====
   int portraitX = padding;
@@ -18,10 +18,13 @@ void MenuHUD::Draw()
   int portraitW = 100;
   int portraitH = 100;
 
-  DrawRectangle(portraitX, portraitY, portraitW, portraitH, DARKGRAY);
-  DrawRectangleLines(portraitX, portraitY, portraitW, portraitH, YELLOW);
-  // Portrait image goes here when available:
-  // DrawTexturePro(PlayerPortraitTexture, ...)
+  DrawTextureEx(
+      Potrait,
+      {(float)portraitX, (float)portraitY},
+      0.0f,
+      1.0f,
+      WHITE);
+  DrawRectangleLines(portraitX, portraitY, portraitW, portraitH, BROWN);
 
   // ==== PLAYER NAME ====
   DrawTextEx(Loader::TitleFont,
