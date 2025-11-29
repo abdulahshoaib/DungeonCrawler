@@ -12,7 +12,7 @@ void MenuNewGame::Draw()
     DrawTextureEx(Loader::SelectionMenuBackground, {0, 0}, 0, 0.45f, WHITE);
     selectcharacter.text = "SELECT CHARACTER";
     // int size = GetMeasurement
-    selectcharacter.position = {550, 1};
+    selectcharacter.position = {398, 10};
     selectcharacter.fontSize = 40;
     selectcharacter.Draw(YELLOW);
     int screenWidth = 1100;

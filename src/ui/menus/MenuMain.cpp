@@ -4,6 +4,7 @@
 #include "NewGameState.h"
 #include "MenuMain.h"
 #include "LoadGameState.h"
+#include "EnterNameState.h"
 
 MenuMain::MenuMain()
 {
@@ -64,7 +65,7 @@ void MenuMain::HandleInput(Engine &engine)
 
   // TODO(demon_slayer): a switch statement should be good here
   if (clicked && CheckCollisionPointRec(mousePoint, NewGame_btn.rect))
-    engine.ChangeState(new NewGameState());
+    engine.ChangeState(new EnterNameState());
 
   if (clicked && CheckCollisionPointRec(mousePoint, LoadGame_btn.rect))
     engine.ChangeState(new LoadGameState());

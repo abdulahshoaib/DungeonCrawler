@@ -1,15 +1,19 @@
-#pragma once
+#ifndef ENTER_NAME_STATE_H
+#define ENTER_NAME_STATE_H
 
 #include "GameState.h"
-#include "MenuNewGame.h"
+#include "../../ui/menus/MenuEnterName.h"
 
-class NewGameState : public GameState
+class EnterNameState : public GameState
 {
 private:
-    MenuNewGame newGameMenu;
+    MenuEnterName menu; // we OWN one MenuEnterName object
 
 public:
-    ~NewGameState();
-    void Update(Engine &);
-    void Draw(Engine &);
+    EnterNameState() = default;
+
+    void Update(Engine &engine) override;
+    void Draw(Engine &engine) override;
 };
+
+#endif
