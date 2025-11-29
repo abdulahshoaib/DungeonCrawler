@@ -1,39 +1,29 @@
 #include "Knight1.h"
+#include "AnimStates.h"
+#include "Loader.h"
 
-Knight1::Knight1(){}
-void Knight1::LoadTex()
+Knight1::Knight1()
 {
-    attack[0] = LoadTexture("assets/Knight/Knight_1/Attack 1.png");
-    attack[1] = LoadTexture("assets/Knight/Knight_1/Attack 2.png");
-    attack[2] = LoadTexture("assets/Knight/Knight_1/Attack 3.png");
-    dead       = LoadTexture("assets/Knight/Knight_1/Dead.png");
-    defend     = LoadTexture("assets/Knight/Knight_1/Defend.png");
-    hurt       = LoadTexture("assets/Knight/Knight_1/Hurt.png");
-    idle[0]       = LoadTexture("assets/Knight/Knight_1/Idle.png");
-    jump       = LoadTexture("assets/Knight/Knight_1/Jump.png");
-    protect    = LoadTexture("assets/Knight/Knight_1/Protect.png");
-    run        = LoadTexture("assets/Knight/Knight_1/Run.png");
-    run_attack = LoadTexture("assets/Knight/Knight_1/Run+Attack.png");
-    walk       = LoadTexture("assets/Knight/Knight_1/Walk.png");
+    idle1Anim = &Loader::Knight1Idle;
+    runAnim = &Loader::Knight1Run;
+    walkAnim = &Loader::Knight1Walk;
 
+    attack1Anim = &Loader::Knight1Attack1;
+    attack2Anim = &Loader::Knight1Attack2;
+    attack3Anim = &Loader::Knight1Attack3;
+
+    hurtAnim = &Loader::Knight1Hurt;
+    deadAnim = &Loader::Knight1Dead;
+    defendAnim = &Loader::Knight1Defend;
+
+    jumpAnim = &Loader::Knight1Jump;
+    protectAnim = &Loader::Knight1Protect;
+    runAttackAnim = &Loader::Knight1RunAttack;
+
+    currentAnim = idle1Anim;
 }
 
-void Knight1::UnloadTex()
+void Knight1::anim()
 {
-    for (int i = 0; i < 3; i++) {
-        UnloadTexture(attack[i]);
-    }
-    UnloadTexture(dead);
-    UnloadTexture(defend);
-    UnloadTexture(hurt);
-    UnloadTexture(idle[0]);
-    UnloadTexture(jump);
-    UnloadTexture(protect);
-    UnloadTexture(run);
-    UnloadTexture(run_attack);
-    UnloadTexture(walk);
-}
-Knight1::~Knight1()
-{
-    UnloadTex();
+    // TODO(demon_slayer): Add animations for the charachter
 }
