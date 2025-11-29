@@ -24,4 +24,54 @@ Knight2::Knight2()
 
 void Knight2::anim()
 {
+    switch (animState)
+    {
+    case AnimState::IDLE:
+        currentAnim = idle1Anim;
+        break;
+
+    case AnimState::RUN:
+        currentAnim = runAnim;
+        break;
+
+    case AnimState::WALK:
+        currentAnim = walkAnim;
+        break;
+
+    case AnimState::JUMP:
+        currentAnim = jumpAnim;
+        break;
+
+    case AnimState::ATTACK1:
+        currentAnim = attack1Anim;
+        break;
+
+    case AnimState::ATTACK2:
+        currentAnim = attack2Anim;
+        break;
+
+    case AnimState::ATTACK3:
+        currentAnim = attack3Anim;
+        break;
+
+    case AnimState::HURT:
+        currentAnim = hurtAnim;
+        break;
+
+    case AnimState::DEAD:
+        currentAnim = deadAnim;
+        break;
+
+    case AnimState::PROTECT:
+        currentAnim = protectAnim;
+        break;
+
+    case AnimState::RUN_ATTACK:
+        currentAnim = runAttackAnim;
+        break;
+
+    default:
+        currentAnim = idle1Anim;
+        break;
+    }
 }
