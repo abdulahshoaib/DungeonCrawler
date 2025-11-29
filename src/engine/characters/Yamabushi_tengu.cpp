@@ -1,31 +1,21 @@
 #include "Yamabushi_tengu.h"
+#include "Loader.h"
 
-Yamabushi_tengu::Yamabushi_tengu(){}
-void Yamabushi_tengu::LoadTex()
+Yamabushi_tengu::Yamabushi_tengu()
 {
-    attack[0] = LoadTexture("assets/Yokai/Yamabushi_tengu/Attack_1.png");
-    attack[1] = LoadTexture("assets/Yokai/Yamabushi_tengu/Attack_2.png");
-    attack[2] = LoadTexture("assets/Yokai/Yamabushi_tengu/Attack_3.png");
-    dead       = LoadTexture("assets/Yokai/Yamabushi_tengu/Dead.png");
-    hurt       = LoadTexture("assets/Yokai/Yamabushi_tengu/Hurt.png");
-    idle[0]       = LoadTexture("assets/Yokai/Yamabushi_tengu/Idle.png");
-    idle[1]       = LoadTexture("assets/Yokai/Yamabushi_tengu/Idle_2.png");
-    jump       = LoadTexture("assets/Yokai/Yamabushi_tengu/Jump.png");
-    run        = LoadTexture("assets/Yokai/Yamabushi_tengu/Run.png");
-    walk       = LoadTexture("assets/Yokai/Yamabushi_tengu/Walk.png");
+    attack1Anim = &Loader::YamabushiTenguAttack1;
+    attack2Anim = &Loader::YamabushiTenguAttack2;
+    attack3Anim = &Loader::YamabushiTenguAttack3;
+    deadAnim = &Loader::YamabushiTenguDead;
+    hurtAnim = &Loader::YamabushiTenguHurt;
+    idle1Anim = &Loader::YamabushiTenguIdle1;
+    idle2Anim = &Loader::YamabushiTenguIdle2;
+    runAnim = &Loader::YamabushiTenguRun;
+    walkAnim = &Loader::YamabushiTenguWalk;
+
+    currentAnim = idle1Anim;
 }
 
-void Yamabushi_tengu::UnloadTex()
+void Yamabushi_tengu::anim()
 {
-    for (int i = 0; i < 3; i++) {UnloadTexture(attack[i]);}
-    UnloadTexture(dead);
-    UnloadTexture(hurt);
-    UnloadTexture(idle[0]);
-    UnloadTexture(idle[1]);
-    UnloadTexture(jump);
-    UnloadTexture(run);
-    UnloadTexture(walk);
-}
-Yamabushi_tengu::~Yamabushi_tengu() {
-    UnloadTex();
 }
