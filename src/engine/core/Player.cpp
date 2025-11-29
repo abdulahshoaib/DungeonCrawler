@@ -11,8 +11,8 @@ Player::Player()
 {
 }
 
-void Player::move(float _x, float _y)
-{
-  pos.x += _x;
-  pos.y += _y;
-}
+// void Player::move(float _x, float _y)
+// {
+// pos.x += _x;
+// pos.y += _y;
+// }

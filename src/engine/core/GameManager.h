@@ -1,7 +1,6 @@
 #pragma once
 
 #include <vector>
-#include "Entity.h"
 #include "Map.h"
 #include "MenuHUD.h"
 
@@ -21,8 +20,8 @@ private:
     Map map_collide;
 
     // Layer 3: Players + Enemies + NPCs
-    std::vector<Entity> entities;
-    Entity player;
+    std::vector<Character*> entities;
+    Character *player;
 
     // Layer 4: HUD + UI Overlays
     MenuHUD hud;

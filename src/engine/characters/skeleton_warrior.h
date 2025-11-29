@@ -7,7 +7,4 @@ class Skeleton_warrior : public Character
 {
 public:
     Skeleton_warrior();
-    void LoadTex() override;
-    void UnloadTex() override;
-    ~Skeleton_warrior();
 };

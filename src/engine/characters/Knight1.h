@@ -7,7 +7,6 @@ class Knight1 : public Character
 {
 public:
     Knight1();
-    void LoadTex() override;
-    void UnloadTex() override;
-    ~Knight1();
+
+    void anim() override;
 };

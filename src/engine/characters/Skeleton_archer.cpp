@@ -1,34 +1,18 @@
 #include "Skeleton_archer.h"
+#include "Loader.h"
 
-Skeleton_archer::Skeleton_archer(){}
-void Skeleton_archer::LoadTex()
+Skeleton_archer::Skeleton_archer()
 {
-    attack[0] = LoadTexture("assets/Skeleton/Skeleton_Archer/Attack_1.png");
-    attack[1] = LoadTexture("assets/Skeleton/Skeleton_Archer/Attack_2.png");
-    attack[2] = LoadTexture("assets/Skeleton/Skeleton_Archer/Attack_3.png");
-    dead       = LoadTexture("assets/Skeleton/Skeleton_Archer/Dead.png");
-    hurt       = LoadTexture("assets/Skeleton/Skeleton_Archer/Hurt.png");
-    idle[0]       = LoadTexture("assets/Skeleton/Skeleton_Archer/Idle.png");
-    arrow = LoadTexture("assets/Skeleton/Skeleton_Archer/Arrow.png");
-    shot[0] = LoadTexture("assets/Skeleton/Skeleton_Archer/Shot_1.png");
-    shot[1] = LoadTexture("assets/Skeleton/Skeleton_Archer/Shot_2.png");    
-    evasion   = LoadTexture("assets/Skeleton/Skeleton_Archer/Evasion.png");
-    walk       = LoadTexture("assets/Skeleton/Skeleton_Archer/Walk.png");
-    
-}
+    attack1Anim = &Loader::SkeletonArcherAttack1;
+    attack2Anim = &Loader::SkeletonArcherAttack2;
+    attack3Anim = &Loader::SkeletonArcherAttack3;
+    deadAnim   = &Loader::SkeletonArcherDead;
+    hurtAnim   = &Loader::SkeletonArcherHurt;
+    idle1Anim  = &Loader::SkeletonArcherIdle;
+    shot1Anim  = &Loader::SkeletonArcherShot1;
+    shot2Anim  = &Loader::SkeletonArcherShot2;
+    evasionAnim = &Loader::SkeletonArcherEvasion;
+    walkAnim    = &Loader::SkeletonArcherWalk;
 
-void Skeleton_archer::UnloadTex()
-{
-    for (int i = 0; i < 3; i++) {UnloadTexture(attack[i]);}
-    UnloadTexture(dead);
-    UnloadTexture(hurt);
-    UnloadTexture(idle[0]);
-    UnloadTexture(arrow);
-    UnloadTexture(shot[0]);
-    UnloadTexture(shot[1]);
-    UnloadTexture(evasion);
-    UnloadTexture(walk);
-}
-Skeleton_archer::~Skeleton_archer() {
-    UnloadTex();
+    currentAnim = idle1Anim;   // start idle
 }

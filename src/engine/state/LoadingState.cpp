@@ -6,89 +6,74 @@
 
 void LoadingState::Update(Engine &engine)
 {
-    Loader::TitleFont = LoadFontEx("assets/fonts/StarCrush.otf", 48, 0, 0);
+    Loader::LoadFont();
     switch (step)
     {
     case 0:
-    {
-        Loader::LoadMenuBackground = LoadTexture("assets/images/loadmenubg.jpeg");
-        Loader::SelectionMenuBackground = LoadTexture("assets/images/selection_bg.png");
+        Loader::LoadSkeletonArcher();
         break;
-    }
-    case 1:
-        Loader::TitleFont = LoadFontEx("assets/fonts/StarCrush.otf", 70, 0, 0);
-        break;
-    case 2:
-    {
-        Loader::Coin = LoadTexture("assets/images/coin.png");
-        Loader::CoinAnim = LoadTexture("assets/images/coinAnim.png");
-        Loader::ButtonFont = LoadFontEx("assets/fonts/Roboto.ttf", 32, 0, 0);
-        break;
-    }
-    case 3:
-    {
-        Loader::SamuraiHUD = LoadTexture("assets/images/SamuraiHUD.png");
-        Loader::SamuraiArcherHUD = LoadTexture("assets/images/SamuraiArcherHUD.png");
-        Loader::SamuraiCommanderHUD = LoadTexture("assets/images/SamuraiCommanderHUD.png");
-        Loader::blackWerewolf.LoadTex();
-        break;
-    }
-    case 4:
-    {
-        Loader::yamabushiTengu.LoadTex();
 
-        Loader::samuraiPotrait = LoadTexture("assets/images/Samurai.png");
-        Loader::samuraiArcherPotrait = LoadTexture("assets/images/Samurai_Archer.png");
-        Loader::samuraiCommanderPotrait = LoadTexture("assets/images/Samurai_Commander.png");
-        Loader::MainMenuBackground = LoadTexture("assets/images/menu_bg.png");
+    case 1:
+        Loader::LoadSkeletonWarrior();
         break;
-    }
+
+    case 2:
+        Loader::LoadSkeletonSpearman();
+        break;
+
+    case 3:
+        Loader::LoadKnight1();
+        break;
+
+    case 4:
+        Loader::LoadKnight2();
+        break;
+
     case 5:
-        Loader::karasuTengu.LoadTex();
+        Loader::LoadKnight3();
         break;
+
     case 6:
-    {
-        Loader::Knight1HUD = LoadTexture("assets/images/Knight1HUD.png");
-        Loader::Knight2HUD = LoadTexture("assets/images/Knight2HUD.png");
-        Loader::Knight3HUD = LoadTexture("assets/images/Knight3HUD.png");
-        Loader::knight1Potrait = LoadTexture("assets/images/Knight1.png");
-        Loader::knight2Potrait = LoadTexture("assets/images/Knight2.png");
-        Loader::knight3Potrait = LoadTexture("assets/images/Knight3.png");
-        Loader::kitsune.LoadTex();
+        Loader::LoadSamurai();
         break;
-    }
+
     case 7:
-        Loader::knight1.LoadTex();
+        Loader::LoadSamuraiArcher();
         break;
+
     case 8:
-        Loader::knight2.LoadTex();
+        Loader::LoadSamuraiCommander();
         break;
+
     case 9:
-        Loader::knight3.LoadTex();
+        Loader::LoadKarasuTengu();
         break;
 
     case 10:
-        Loader::samurai.LoadTex();
+        Loader::LoadYamabushiTengu();
         break;
+
     case 11:
-        Loader::samuraiArcher.LoadTex();
+        Loader::LoadBackgrounds();
         break;
+
     case 12:
-        Loader::samuraiCommander.LoadTex();
+        Loader::LoadCollectables();
         break;
 
     case 13:
-        Loader::satyr.LoadTex();
+        Loader::LoadHUDPotraits();
         break;
 
     case 14:
-        Loader::skeletonArcher.LoadTex();
+        Loader::LoadPotraitCards();
         break;
+
     case 15:
-        Loader::skeletonWarrior.LoadTex();
+        Loader::LoadSpecialItems();
         break;
+
     case 16:
-        Loader::skeletonSpearman.LoadTex();
         break;
 
     default:

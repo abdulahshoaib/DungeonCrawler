@@ -1,33 +1,22 @@
 #include "Samurai.h"
+#include "Loader.h"
 
-Samurai::Samurai(){}
-void Samurai::LoadTex()
+Samurai::Samurai()
 {
-    attack[0] = LoadTexture("assets/Samurai_Char/Samurai/Attack_1.png");
-    attack[1] = LoadTexture("assets/Samurai_Char/Samurai/Attack_2.png");
-    attack[2] = LoadTexture("assets/Samurai_Char/Samurai/Attack_3.png");
-    dead       = LoadTexture("assets/Samurai_Char/Samurai/Dead.png");
-    hurt       = LoadTexture("assets/Samurai_Char/Samurai/Hurt.png");
-    idle[0]       = LoadTexture("assets/Samurai_Char/Samurai/Idle.png");
-    jump       = LoadTexture("assets/Samurai_Char/Samurai/Jump.png");
-    protect    = LoadTexture("assets/Samurai_Char/Samurai/Protection.png");
-    run        = LoadTexture("assets/Samurai_Char/Samurai/Run.png");
-    walk       = LoadTexture("assets/Samurai_Char/Samurai/Walk.png");
+    attack1Anim = &Loader::SamuraiAttack1;
+    attack2Anim = &Loader::SamuraiAttack2;
+    attack3Anim = &Loader::SamuraiAttack3;
+    deadAnim = &Loader::SamuraiDead;
+    hurtAnim = &Loader::SamuraiHurt;
+    idle1Anim = &Loader::SamuraiIdle;
+    jumpAnim = &Loader::SamuraiJump;
+    runAnim = &Loader::SamuraiRun;
+    walkAnim = &Loader::SamuraiWalk;
+    protectAnim = &Loader::SamuraiProtect;
 
+    currentAnim = idle1Anim;
 }
 
-void Samurai::UnloadTex()
+void Samurai::anim()
 {
-    for (int i = 0; i < 3; i++) {UnloadTexture(attack[i]);}
-    UnloadTexture(dead);
-    UnloadTexture(hurt);
-    UnloadTexture(idle[0]);
-    UnloadTexture(jump);
-    UnloadTexture(protect);
-    UnloadTexture(run);
-    UnloadTexture(walk);
-}
-
-Samurai::~Samurai() {
-    UnloadTex();
 }

@@ -5,6 +5,7 @@
 #include "core/Player.h"
 #include "state/LoadingState.h"
 #include "system/Audio.h"
+#include <string>
 
 struct Screen
 {
