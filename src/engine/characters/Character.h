@@ -38,11 +38,18 @@ protected:
     Animation *fire1Anim = nullptr;
     Animation *fire2Anim = nullptr;
 
-    Animation *currentAnim = nullptr;
-
+public:
+    Vector2 Pos;
     AnimState animState;
 
-public:
+    bool isAnimationLocked = false;
+
+    Animation *currentAnim = nullptr;
+    Animation *previousAnim = nullptr;
+
+    bool IsAnimationLocked() const;
+    void OnAnimationComplete();
+
     Character();
 
     // subject to change in each derived class

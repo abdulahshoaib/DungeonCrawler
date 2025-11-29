@@ -7,7 +7,10 @@ struct Animation
     Texture2D spriteSheet;
 
     int frameWidth;
-    int frawHeight;
+    int frameHeight;
     int frameCount;
     int fps;
+
+    int currentFrame = 0;
+    float frameTimer = 0.0f;
 };
