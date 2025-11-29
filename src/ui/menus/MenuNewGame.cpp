@@ -20,8 +20,8 @@ void MenuNewGame::Draw()
 
     float scale = 0.12f;
 
-    float itemW = Loader::knight1Potrait.width * scale;
-    float itemH = Loader::knight1Potrait.height * scale;
+    float itemW = Loader::Knight1Potrait.width * scale;
+    float itemH = Loader::Knight1Potrait.height * scale;
 
     float paddingX = 30.0f;
     float paddingY = 40.0f;
@@ -41,15 +41,15 @@ void MenuNewGame::Draw()
         return Rectangle{x, y, (float)tex.width * scale, (float)tex.height * scale};
     };
 
-    rectKnight1 = DrawPortrait(Loader::knight1Potrait, startX, startY);
-    rectKnight2 = DrawPortrait(Loader::knight2Potrait, startX + stepX, startY);
-    rectKnight3 = DrawPortrait(Loader::knight3Potrait, startX + stepX * 2, startY);
+    rectKnight1 = DrawPortrait(Loader::Knight1Potrait, startX, startY);
+    rectKnight2 = DrawPortrait(Loader::Knight2Potrait, startX + stepX, startY);
+    rectKnight3 = DrawPortrait(Loader::Knight3Potrait, startX + stepX * 2, startY);
 
     float row2Y = startY + stepY;
 
-    rectSamurai1 = DrawPortrait(Loader::samuraiPotrait, startX, row2Y);
-    rectSamurai2 = DrawPortrait(Loader::samuraiCommanderPotrait, startX + stepX, row2Y);
-    rectSamurai3 = DrawPortrait(Loader::samuraiArcherPotrait, startX + stepX * 2, row2Y);
+    rectSamurai1 = DrawPortrait(Loader::SamuraiPotrait, startX, row2Y);
+    rectSamurai2 = DrawPortrait(Loader::SamuraiCommanderPotrait, startX + stepX, row2Y);
+    rectSamurai3 = DrawPortrait(Loader::SamuraiArcherPotrait, startX + stepX * 2, row2Y);
 
     Vector2 mouse = GetMousePosition();
 
