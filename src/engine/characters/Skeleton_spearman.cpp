@@ -1,32 +1,17 @@
 #include "Skeleton_spearman.h"
+#include "Loader.h"
 
-Skeleton_spearman::Skeleton_spearman(){}
-void Skeleton_spearman::LoadTex()
+Skeleton_spearman::Skeleton_spearman()
 {
-    attack[0] = LoadTexture("assets/Skeleton/Skeleton_Spearman/Attack_1.png");
-    attack[1] = LoadTexture("assets/Skeleton/Skeleton_Spearman/Attack_2.png");
-    dead       = LoadTexture("assets/Skeleton/Skeleton_Spearman/Dead.png");
-    hurt       = LoadTexture("assets/Skeleton/Skeleton_Spearman/Hurt.png");
-    idle[0]       = LoadTexture("assets/Skeleton/Skeleton_Spearman/Idle.png");
-    run        = LoadTexture("assets/Skeleton/Skeleton_Spearman/Run.png");
-    walk       = LoadTexture("assets/Skeleton/Skeleton_Spearman/Walk.png");
-    protect    = LoadTexture("assets/Skeleton/Skeleton_Spearman/Protect.png");
-    run_attack = LoadTexture("assets/Skeleton/Skeleton_Spearman/Run+Attack.png");
-    fall = LoadTexture("assets/Skeleton/Skeleton_Spearman/Fall.png");
-}
+    *attack1Anim = Loader::SkeletonSpearmanAttack1;
+    *attack2Anim = Loader::SkeletonSpearmanAttack2;
+    *deadAnim = Loader::SkeletonSpearmanDead;
+    *hurtAnim = Loader::SkeletonSpearmanHurt;
+    *idle1Anim = Loader::SkeletonSpearmanIdle;
+    *runAnim = Loader::SkeletonSpearmanRun;
+    *walkAnim = Loader::SkeletonSpearmanWalk;
+    *protectAnim = Loader::SkeletonSpearmanProtect;
+    *runAttackAnim = Loader::SkeletonSpearmanRunAttack;
 
-void Skeleton_spearman::UnloadTex()
-{
-    for (int i = 0; i < 2; i++) {UnloadTexture(attack[i]);}
-    UnloadTexture(dead);
-    UnloadTexture(hurt);
-    UnloadTexture(idle[0]);
-    UnloadTexture(run);
-    UnloadTexture(walk);
-    UnloadTexture(protect);
-    UnloadTexture(run_attack);
-    UnloadTexture(fall);
-}
-Skeleton_spearman::~Skeleton_spearman() {
-    UnloadTex();
+    currentAnim = idle1Anim;
 }
