@@ -323,8 +323,8 @@ void Loader::UnLoadSamuraiCommander()
 void Loader::LoadBackgrounds()
 {
     MainMenuBackground = LoadTexture("assets/images/menu_bg.png");
-    LoadMenuBackground = LoadTexture("assets/loadmenu_bg.jpeg");
-    SelectionMenuBackground = LoadTexture("assets/selection_bg.png");
+    LoadMenuBackground = LoadTexture("assets/images/loadmenu_bg.jpeg");
+    SelectionMenuBackground = LoadTexture("assets/imgaes/selection_bg.png");
 }
 
 void Loader::UnLoadBackgrounds()
