@@ -25,5 +25,46 @@ Knight1::Knight1()
 
 void Knight1::anim()
 {
-    // TODO(demon_slayer): Add animations for the charachter
+    switch (animState)
+    {
+    case AnimState::IDLE:
+        currentAnim = idle1Anim;
+        break;
+
+    case AnimState::RUN:
+        currentAnim = runAnim;
+        break;
+
+    case AnimState::WALK:
+        currentAnim = walkAnim;
+        break;
+
+    case AnimState::JUMP:
+        currentAnim = jumpAnim;
+        break;
+
+    case AnimState::ATTACK1:
+        currentAnim = attack1Anim;
+        break;
+
+    case AnimState::ATTACK2:
+        currentAnim = attack2Anim;
+        break;
+
+    case AnimState::ATTACK3:
+        currentAnim = attack3Anim;
+        break;
+
+    case AnimState::HURT:
+        currentAnim = hurtAnim;
+        break;
+
+    case AnimState::DEAD:
+        currentAnim = deadAnim;
+        break;
+
+    default:
+        currentAnim = idle1Anim;
+        break;
+    }
 }
