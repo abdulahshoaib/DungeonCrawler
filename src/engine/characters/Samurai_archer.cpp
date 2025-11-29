@@ -1,41 +1,21 @@
 #include "Samurai_archer.h"
+#include "Loader.h"
 
-Samurai_archer::Samurai_archer(){}
-void Samurai_archer::LoadTex()
+Samurai_archer::Samurai_archer()
 {
-    attack[0] = LoadTexture("assets/Samurai_Char/Samurai_Archer/Attack_1.png");
-    attack[1] = LoadTexture("assets/Samurai_Char/Samurai_Archer/Attack_2.png");
-    attack[2] = LoadTexture("assets/Samurai_Char/Samurai_Archer/Attack_3.png");
-    dead       = LoadTexture("assets/Samurai_Char/Samurai_Archer/Dead.png");
-    hurt       = LoadTexture("assets/Samurai_Char/Samurai_Archer/Hurt.png");
-    idle[0]       = LoadTexture("assets/Samurai_Char/Samurai_Archer/Idle.png");
-    jump       = LoadTexture("assets/Samurai_Char/Samurai_Archer/Jump.png");
-    run        = LoadTexture("assets/Samurai_Char/Samurai_Archer/Run.png");
-    walk       = LoadTexture("assets/Samurai_Char/Samurai_Archer/Walk.png");
-    arrow = LoadTexture("assets/Samurai_Char/Samurai_Archer/Arrow.png");
-    shot[0] = LoadTexture("assets/Samurai_Char/Samurai_Archer/Shot.png");
+    attack1Anim = &Loader::SamuraiArcherAttack1;
+    attack2Anim = &Loader::SamuraiArcherAttack2;
+    attack3Anim = &Loader::SamuraiArcherAttack3;
+    deadAnim = &Loader::SamuraiArcherDead;
+    idle1Anim = &Loader::SamuraiArcherIdle;
+    jumpAnim = &Loader::SamuraiArcherJump;
+    runAnim = &Loader::SamuraiArcherRun;
+    walkAnim = &Loader::SamuraiArcherWalk;
+    shot1Anim = &Loader::SamuraiArcherShot;
 
+    currentAnim = idle1Anim;
 }
 
-void Samurai_archer::UnloadTex()
+void Samurai_archer::anim()
 {
-    for (int i = 0; i < 3; ++i) {
-        UnloadTexture(attack[i]);
-    }
-    UnloadTexture(dead);
-    UnloadTexture(hurt);
-    for (int i = 0; i < 1; ++i) {
-        UnloadTexture(idle[i]);
-    }
-    UnloadTexture(jump);
-    UnloadTexture(run);
-    UnloadTexture(walk);
-    UnloadTexture(arrow);
-    for (int i = 0; i < 1; ++i) {
-        UnloadTexture(shot[i]);
-    }
-}
-Samurai_archer::~Samurai_archer()
-{
-    UnloadTex();
 }

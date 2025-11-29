@@ -7,7 +7,6 @@ class Samurai : public Character
 {
 public:
     Samurai();
-    void LoadTex() override;
-    void UnloadTex() override;
-    ~Samurai();
+
+    void anim() override;
 };
