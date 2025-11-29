@@ -67,8 +67,10 @@ void GameManager::Update()
 
 void GameManager::Draw()
 {
-    interactables.DrawMap();
-    map_collide.DrawMap();
-    map_non_colliding.DrawMap();
+    // interactables.DrawMap();
+    // map_collide.DrawMap();
+    // map_non_colliding.DrawMap();
+    // player->anim();
+
     hud.Draw();
 }
