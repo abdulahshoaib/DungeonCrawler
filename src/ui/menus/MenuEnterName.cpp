@@ -8,6 +8,7 @@
 static Rectangle inputBox = {(1100 - 400) / 2, (700 - 60) / 2, 400, 60};
 static std::string typedName = "";
 static bool typingActive = false;
+Font InputFont = LoadFont("assets\fonts\titleFont.otf");
 
 MenuEnterName::MenuEnterName()
 {
@@ -34,20 +35,20 @@ void MenuEnterName::Draw()
 
     // DrawRectangleLinesEx(inputBox, 3, border);
     //  Draw input box background
-    DrawRectangleRec(inputBox, WHITE);
+    DrawRectangleRec(inputBox, BLACK);
 
     // Optional border
-    DrawRectangleLinesEx(inputBox, 10, BLACK);
+    DrawRectangleLinesEx(inputBox, 10, GREEN);
 
     // Draw text inside
-    DrawText(typedName.c_str(), inputBox.x + 10, inputBox.y + 15, 32, BLACK); // was 100 → 32
+    DrawText(typedName.c_str(), inputBox.x + 15, inputBox.y + 15, 32, YELLOW); // was 100 → 32
 
     // Blinking cursor if active
     if (typingActive)
     {
-        float cx = inputBox.x + 10 + MeasureText(typedName.c_str(), 32);
+        float cx = inputBox.x + 18 + MeasureText(typedName.c_str(), 32);
         if (((int)(GetTime() * 2)) % 2 == 0)
-            DrawText("|", cx + 5, inputBox.y + 15, 32, BLACK); // was WHITE → BLACK
+            DrawText("|", cx, inputBox.y + 15, 32, GREEN); // was WHITE → BLACK
     }
 
     // Store values for HandleInput
