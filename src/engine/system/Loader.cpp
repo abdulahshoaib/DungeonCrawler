@@ -325,7 +325,6 @@ void Loader::LoadBackgrounds()
     MainMenuBackground = LoadTexture("assets/images/menu_bg.png");
     LoadMenuBackground = LoadTexture("assets/images/loadmenu_bg.jpeg");
     SelectionMenuBackground = LoadTexture("assets/images/selection.png");
-    AudioSys.LoadMusic("MenuTheme", "assets/audio/Menu_BG.mp3");
 }
 
 void Loader::UnLoadBackgrounds()
@@ -408,6 +407,15 @@ void Loader::UnLoadHUDPotraits()
     UnloadTexture(SamuraiHUD);
     UnloadTexture(SamuraiArcherHUD);
     UnloadTexture(SamuraiCommanderHUD);
+}
+
+void Loader::LoadMusic()
+{
+    MainMenuBGM = LoadMusicStream("assets/audio/Menu_BG.mp3");
+}
+void Loader::UnLoadMusic()
+{
+    UnloadMusicStream(MainMenuBGM);
 }
 
 void Loader::UnloadAssets()

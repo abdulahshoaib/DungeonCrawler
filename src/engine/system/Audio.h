@@ -5,34 +5,34 @@
 #include <vector>
 #include <iostream>
 
-class Audio {
+class Audio
+{
 private:
-    std::map<std::string, Sound> m_sounds;
-    std::map<std::string, Music> m_music;
-    
-    Music* m_currentMusic = nullptr;
-    float m_masterVolume = 1.0f;
+    static Music *MainMenuBGM;
 
-    bool m_fadingIn = false;
-    float m_fadeSpeed = 1.0f;
-    float m_currentMusicVol = 1.0f;
+    inline static Music *m_currentMusic = nullptr;
+    inline static float m_masterVolume = 1.0f;
+
+    inline static bool m_fadingIn = false;
+    inline static float m_fadeSpeed = 1.0f;
+    inline static float m_currentMusicVol = 1.0f;
 
 public:
     Audio();
     ~Audio();
 
-    void Init();   
-    void Clean();  
-    void Update(); 
+    static void Init();
+    static void Clean();
+    static void Update();
 
     // RENAMED: LoadSound -> LoadSFX
-    void LoadSFX(std::string id, std::string fileName);
-    void LoadMusic(std::string id, std::string fileName);
+    static void LoadSFX(std::string id, std::string fileName);
+    static void LoadMusic(std::string id, std::string fileName);
 
     // RENAMED: PlaySound -> PlaySFX
-    void PlaySFX(std::string id);
-    void PlayMusic(std::string id, bool loop = true, bool fadeIn = false);
-    void StopMusic();
+    static void PlaySFX();
+    static void PlayMusic(int);
+    static void StopMusic();
 
-    void SetMasterVolume(float vol);
+    static void SetMasterVolume(float vol);
 };

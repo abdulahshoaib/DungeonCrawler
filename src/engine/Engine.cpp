@@ -9,18 +9,17 @@ Engine::Engine()
 Engine::~Engine()
 {
   delete gameState;
-  
-  // 2. Clean up Audio before closing
-  Loader::AudioSys.Clean(); 
+
+  Audio::Clean();
   Loader::UnloadAssets();
 }
 
 void Engine::init(Screen screen)
 {
   InitWindow(screen.width, screen.height, "game");
-  
+
   // 3. Initialize Audio Device (Must happen after InitWindow usually)
-  Loader::AudioSys.Init();
+  Audio::Init();
 
   gameState = new LoadingState();
 }
@@ -31,10 +30,9 @@ void Engine::run()
   {
     // 4. CRITICAL: Update Audio Stream
     // If you forget this line, music will stutter or stop!
-    Loader::AudioSys.Update();
-
+    Audio::Update();
     gameState->Update(*this);
-    
+
     BeginDrawing();
     ClearBackground(BLACK);
     gameState->Draw(*this);

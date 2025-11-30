@@ -2,14 +2,14 @@
 
 #include <raylib.h>
 #include "Animation.h"
-#include "Audio.h" // <--- FIXED: Added this include so the compiler knows what 'Audio' is
 
 class Loader
 {
 public:
-  // == GLOBAL AUDIO SYSTEM ==
-  // We make this static so you can access it anywhere: Loader::AudioSys.PlaySFX(...)
-  inline static Audio AudioSys;
+  // == Audios ==
+  inline static Music MainMenuBGM;
+  static void LoadMusic();
+  static void UnLoadMusic();
 
   // == Skeleton Warrior ==
   inline static Animation SkeletonWarriorAttack1;
