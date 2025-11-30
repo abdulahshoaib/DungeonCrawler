@@ -8,6 +8,7 @@
 
 MenuMain::MenuMain()
 {
+  Loader::AudioSys.PlayMusic("MenuTheme", true, true);
 }
 
 void MenuMain::Draw()
@@ -59,20 +60,31 @@ void MenuMain::Draw()
 
 void MenuMain::HandleInput(Engine &engine)
 {
-  bool clicked = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
+    bool clicked = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
+    Vector2 mousePoint = GetMousePosition();
 
-  Vector2 mousePoint = GetMousePosition();
+    // 1. Play SFX on interactions
+    if (clicked) {
+        // Check if any button was clicked to play sound
+        if (CheckCollisionPointRec(mousePoint, NewGame_btn.rect) ||
+            CheckCollisionPointRec(mousePoint, LoadGame_btn.rect) ||
+            CheckCollisionPointRec(mousePoint, Settings_btn.rect) ||
+            CheckCollisionPointRec(mousePoint, Quit_btn.rect)) 
+        {
+             Loader::AudioSys.PlaySFX("Click"); // Ensure you loaded "Click" in Loader
+        }
+    }
 
-  // TODO(demon_slayer): a switch statement should be good here
-  if (clicked && CheckCollisionPointRec(mousePoint, NewGame_btn.rect))
-    engine.ChangeState(new EnterNameState());
+    // 2. State Switching Logic
+    if (clicked && CheckCollisionPointRec(mousePoint, NewGame_btn.rect))
+        engine.ChangeState(new EnterNameState());
 
-  if (clicked && CheckCollisionPointRec(mousePoint, LoadGame_btn.rect))
-    engine.ChangeState(new LoadGameState());
+    if (clicked && CheckCollisionPointRec(mousePoint, LoadGame_btn.rect))
+        engine.ChangeState(new LoadGameState());
 
-  if (clicked && CheckCollisionPointRec(mousePoint, Settings_btn.rect))
-    engine.ChangeState(new SettingsState());
+    if (clicked && CheckCollisionPointRec(mousePoint, Settings_btn.rect))
+        engine.ChangeState(new SettingsState());
 
-  if (clicked && CheckCollisionPointRec(mousePoint, Quit_btn.rect))
-    CloseWindow();
+    if (clicked && CheckCollisionPointRec(mousePoint, Quit_btn.rect))
+        CloseWindow();
 }

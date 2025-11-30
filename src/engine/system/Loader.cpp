@@ -156,7 +156,7 @@ void Loader::LoadKnight2()
     Knight2Protect = {LoadTexture("assets/Knight/Knight_2/Protect.png"), frameSize, frameSize, 1, 10};
     Knight2Run = {LoadTexture("assets/Knight/Knight_2/Run.png"), frameSize, frameSize, 7, 10};
     Knight2RunAttack = {LoadTexture("assets/Knight/Knight_2/Run+Attack.png"), frameSize, frameSize, 6, 10};
-    Knight2Walk = {LoadTexture("assets/Knight/Knight_2/Walk.png"), frameSize, frameSize, 8, 10};
+    Knight2Walk = {LoadTexture("assets/Knight/Knight_2/Walk.png"), frameSize, frameSize, 8, 7};
 }
 void Loader::UnLoadKnight2()
 {
@@ -325,6 +325,7 @@ void Loader::LoadBackgrounds()
     MainMenuBackground = LoadTexture("assets/images/menu_bg.png");
     LoadMenuBackground = LoadTexture("assets/images/loadmenu_bg.jpeg");
     SelectionMenuBackground = LoadTexture("assets/images/selection.png");
+    AudioSys.LoadMusic("MenuTheme", "assets/audio/Menu_BG.mp3");
 }
 
 void Loader::UnLoadBackgrounds()
