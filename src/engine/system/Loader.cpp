@@ -145,18 +145,18 @@ void Loader::UnLoadKnight1()
 void Loader::LoadKnight2()
 {
     int frameSize = 128;
-    Knight2Attack1 = {LoadTexture("assets/Knight/Knight_2/Attack1.png"), frameSize, frameSize, 5, 30};
-    Knight2Attack2 = {LoadTexture("assets/Knight/Knight_2/Attack2.png"), frameSize, frameSize, 4, 30};
-    Knight2Attack3 = {LoadTexture("assets/Knight/Knight_2/Attack3.png"), frameSize, frameSize, 4, 30};
-    Knight2Dead = {LoadTexture("assets/Knight/Knight_2/Dead.png"), frameSize, frameSize, 6, 30};
-    Knight2Defend = {LoadTexture("assets/Knight/Knight_2/Defend.png"), frameSize, frameSize, 5, 30};
-    Knight2Hurt = {LoadTexture("assets/Knight/Knight_2/Hurt.png"), frameSize, frameSize, 2, 30};
-    Knight2Idle = {LoadTexture("assets/Knight/Knight_2/Idle.png"), frameSize, frameSize, 4, 30};
-    Knight2Jump = {LoadTexture("assets/Knight/Knight_2/Jump.png"), frameSize, frameSize, 6, 30};
-    Knight2Protect = {LoadTexture("assets/Knight/Knight_2/Protect.png"), frameSize, frameSize, 1, 30};
-    Knight2Run = {LoadTexture("assets/Knight/Knight_2/Run.png"), frameSize, frameSize, 7, 30};
-    Knight2RunAttack = {LoadTexture("assets/Knight/Knight_2/Run+Attack.png"), frameSize, frameSize, 6, 30};
-    Knight2Walk = {LoadTexture("assets/Knight/Knight_2/Walk.png"), frameSize, frameSize, 8, 30};
+    Knight2Attack1 = {LoadTexture("assets/Knight/Knight_2/Attack1.png"), frameSize, frameSize, 5, 10};
+    Knight2Attack2 = {LoadTexture("assets/Knight/Knight_2/Attack2.png"), frameSize, frameSize, 4, 10};
+    Knight2Attack3 = {LoadTexture("assets/Knight/Knight_2/Attack3.png"), frameSize, frameSize, 4, 10};
+    Knight2Dead = {LoadTexture("assets/Knight/Knight_2/Dead.png"), frameSize, frameSize, 6, 10};
+    Knight2Defend = {LoadTexture("assets/Knight/Knight_2/Defend.png"), frameSize, frameSize, 5, 10};
+    Knight2Hurt = {LoadTexture("assets/Knight/Knight_2/Hurt.png"), frameSize, frameSize, 2, 10};
+    Knight2Idle = {LoadTexture("assets/Knight/Knight_2/Idle.png"), frameSize, frameSize, 4, 10};
+    Knight2Jump = {LoadTexture("assets/Knight/Knight_2/Jump.png"), frameSize, frameSize, 6, 10};
+    Knight2Protect = {LoadTexture("assets/Knight/Knight_2/Protect.png"), frameSize, frameSize, 1, 10};
+    Knight2Run = {LoadTexture("assets/Knight/Knight_2/Run.png"), frameSize, frameSize, 7, 10};
+    Knight2RunAttack = {LoadTexture("assets/Knight/Knight_2/Run+Attack.png"), frameSize, frameSize, 6, 10};
+    Knight2Walk = {LoadTexture("assets/Knight/Knight_2/Walk.png"), frameSize, frameSize, 8, 10};
 }
 void Loader::UnLoadKnight2()
 {
@@ -177,18 +177,18 @@ void Loader::UnLoadKnight2()
 void Loader::LoadKnight3()
 {
     int frameSize = 128;
-    Knight3Attack1 = {LoadTexture("assets/Knight/Knight_3/Attack1.png"), frameSize, frameSize, 3, 30};
-    Knight3Attack2 = {LoadTexture("assets/Knight/Knight_3/Attack2.png"), frameSize, frameSize, 4, 30};
-    Knight3Attack3 = {LoadTexture("assets/Knight/Knight_3/Attack3.png"), frameSize, frameSize, 4, 30};
-    Knight3Dead = {LoadTexture("assets/Knight/Knight_3/Dead.png"), frameSize, frameSize, 6, 30};
-    Knight3Defend = {LoadTexture("assets/Knight/Knight_3/Defend.png"), frameSize, frameSize, 5, 30};
-    Knight3Hurt = {LoadTexture("assets/Knight/Knight_3/Hurt.png"), frameSize, frameSize, 2, 30};
-    Knight3Idle = {LoadTexture("assets/Knight/Knight_3/Idle.png"), frameSize, frameSize, 4, 30};
-    Knight3Jump = {LoadTexture("assets/Knight/Knight_3/Jump.png"), frameSize, frameSize, 6, 30};
-    Knight3Protect = {LoadTexture("assets/Knight/Knight_3/Protect.png"), frameSize, frameSize, 1, 30};
-    Knight3Run = {LoadTexture("assets/Knight/Knight_3/Run.png"), frameSize, frameSize, 7, 30};
-    Knight3RunAttack = {LoadTexture("assets/Knight/Knight_3/Run+Attack.png"), frameSize, frameSize, 6, 30};
-    Knight3Walk = {LoadTexture("assets/Knight/Knight_3/Walk.png"), frameSize, frameSize, 8, 30};
+    Knight3Attack1 = {LoadTexture("assets/Knight/Knight_3/Attack1.png"), frameSize, frameSize, 3, 10};
+    Knight3Attack2 = {LoadTexture("assets/Knight/Knight_3/Attack2.png"), frameSize, frameSize, 4, 10};
+    Knight3Attack3 = {LoadTexture("assets/Knight/Knight_3/Attack3.png"), frameSize, frameSize, 4, 10};
+    Knight3Dead = {LoadTexture("assets/Knight/Knight_3/Dead.png"), frameSize, frameSize, 6, 10};
+    Knight3Defend = {LoadTexture("assets/Knight/Knight_3/Defend.png"), frameSize, frameSize, 5, 10};
+    Knight3Hurt = {LoadTexture("assets/Knight/Knight_3/Hurt.png"), frameSize, frameSize, 2, 10};
+    Knight3Idle = {LoadTexture("assets/Knight/Knight_3/Idle.png"), frameSize, frameSize, 4, 10};
+    Knight3Jump = {LoadTexture("assets/Knight/Knight_3/Jump.png"), frameSize, frameSize, 6, 10};
+    Knight3Protect = {LoadTexture("assets/Knight/Knight_3/Protect.png"), frameSize, frameSize, 1, 10};
+    Knight3Run = {LoadTexture("assets/Knight/Knight_3/Run.png"), frameSize, frameSize, 7, 10};
+    Knight3RunAttack = {LoadTexture("assets/Knight/Knight_3/Run+Attack.png"), frameSize, frameSize, 6, 10};
+    Knight3Walk = {LoadTexture("assets/Knight/Knight_3/Walk.png"), frameSize, frameSize, 8, 10};
 }
 
 void Loader::UnLoadKnight3()
