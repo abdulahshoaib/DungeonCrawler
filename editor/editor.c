@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 #define TILE_SIZE 32
-#define MAP_WIDTH 1000
+#define MAP_WIDTH 500
 #define MAP_HEIGHT 70
 
 // Layers
