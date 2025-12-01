@@ -13,7 +13,6 @@ private:
   Font buttonFont;
 
 public:
-  MenuMain();
   void Draw();
   void HandleInput(Engine &) override;
 };

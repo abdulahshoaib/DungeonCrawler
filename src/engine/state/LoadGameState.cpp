@@ -1,9 +1,5 @@
 #include "LoadGameState.h"
 
-LoadGameState::~LoadGameState()
-{
-}
-
 void LoadGameState::Update(Engine &engine)
 {
     loadGameMenu.HandleInput(engine);

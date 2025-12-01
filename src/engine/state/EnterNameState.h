@@ -7,7 +7,7 @@
 class EnterNameState : public GameState
 {
 private:
-    MenuEnterName menu; // we OWN one MenuEnterName object
+    MenuEnterName menu;
 
 public:
     EnterNameState() = default;

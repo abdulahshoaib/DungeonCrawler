@@ -7,11 +7,6 @@
 #include "EnterNameState.h"
 #include "Audio.h"
 
-MenuMain::MenuMain()
-{
-    Audio::PlayMusic(1);
-}
-
 void MenuMain::Draw()
 {
     float scale = 0.8f;
