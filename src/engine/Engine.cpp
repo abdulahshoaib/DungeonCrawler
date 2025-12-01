@@ -1,5 +1,6 @@
 #include "Engine.h"
-#include "Loader.h" // <--- 1. Include this so you can access AudioSys
+#include "Loader.h"
+#include "Audio.h"
 
 Engine::Engine()
 {
@@ -18,7 +19,6 @@ void Engine::init(Screen screen)
 {
   InitWindow(screen.width, screen.height, "game");
 
-  // 3. Initialize Audio Device (Must happen after InitWindow usually)
   Audio::Init();
 
   gameState = new LoadingState();
@@ -28,8 +28,6 @@ void Engine::run()
 {
   while (!WindowShouldClose())
   {
-    // 4. CRITICAL: Update Audio Stream
-    // If you forget this line, music will stutter or stop!
     Audio::Update();
     gameState->Update(*this);
 
@@ -41,8 +39,9 @@ void Engine::run()
   CloseWindow();
 }
 
-void Engine::ChangeState(GameState *gameState)
+void Engine::ChangeState(GameState *newGameState)
 {
   delete this->gameState;
-  this->gameState = gameState;
+  this->gameState = newGameState;
+  gameState->Enter(*this);
 }
