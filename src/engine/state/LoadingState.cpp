@@ -71,18 +71,13 @@ void LoadingState::Update(Engine &engine)
         break;
 
     case 15:
-        Loader::LoadMusic();
         Loader::LoadSkeletonArcher();
         break;
 
     case 16:
-    {
-        Audio::Load();
         break;
-    }
 
     default:
-        Audio::Update();
         engine.ChangeState(new MainMenuState());
         return;
     }

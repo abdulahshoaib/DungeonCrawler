@@ -20,6 +20,8 @@ void Engine::init(Screen screen)
   InitWindow(screen.width, screen.height, "game");
 
   Audio::Init();
+  Audio::Load();
+  Audio::Play(MAIN_MENU_MUSIC);
 
   gameState = new LoadingState();
 }

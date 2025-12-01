@@ -1,18 +1,24 @@
 #include "Audio.h"
-#include "Loader.h"
 #include <iostream>
 
 void Audio::Load()
 {
-    MainMenuMusic = &Loader::MainMenuBGM;
-    // LevelMusic = &Loader::LevelBGM;
+    // --- MUSIC ---
+    MainMenuMusic = LoadMusicStream("assets/audio/music.mp3");
+    // LevelMusic    = LoadMusicStream("assets/audio/music/level_theme.mp3");
 
-    // AttackSFX = &Loader::AttackSFx;
-    // HurtSFX = &Loader::HurtSFx;
-    // JumpSFX = &Loader::JumpSFx;
+    // MainMenuMusic.looping = true;
+    // LevelMusic.looping = true;
 
-    ButtonClicked = &Loader::ButtonClickSFX;
-    // HoverButton = &Loader::HoverButtonSFx;
+    // // --- SFX ---
+    // HoverButton  = LoadSound("assets/audio/sfx/hover.wav");
+    ButtonClicked = LoadSound("assets/audio/click.mp3");
+
+    // AttackSFX = LoadSound("assets/audio/sfx/attack.wav");
+    // HurtSFX   = LoadSound("assets/audio/sfx/hurt.wav");
+    // JumpSFX   = LoadSound("assets/audio/sfx/jump.wav");
+
+    currentMusic = MainMenuMusic;
 }
 
 void Audio::Init()
@@ -21,40 +27,29 @@ void Audio::Init()
 
     if (!IsAudioDeviceReady())
     {
-        // TODO(demon_slayer): Handle audio device not ready
+        std::cerr << "ERROR: Audio device not ready!\n";
+        return;
     }
 
     SetMasterVolume(masterVolume);
 }
 
-void Audio::Update()
-{
-    if (currentMusic != nullptr)
-    {
-        UpdateMusicStream(*currentMusic);
-        if (fadingIn)
-        {
-            musicVolume += fadeSpeed * GetFrameTime();
-            if (musicVolume >= 1.0f)
-            {
-                musicVolume = 1.0f;
-                fadingIn = false;
-            }
-            SetMusicVolume(musicVolume);
-        }
-    }
-}
-
 void Audio::Clean()
 {
+    UnloadMusicStream(MainMenuMusic);
+    UnloadMusicStream(LevelMusic);
+
+    UnloadSound(HoverButton);
+    UnloadSound(ButtonClicked);
+    UnloadSound(AttackSFX);
+    UnloadSound(HurtSFX);
+    UnloadSound(JumpSFX);
+
     CloseAudioDevice();
 }
 
 void Audio::Play(GMusic ref)
 {
-    if (currentMusic)
-        StopMusicStream(*currentMusic);
-
     switch (ref)
     {
     case MAIN_MENU_MUSIC:
@@ -64,31 +59,20 @@ void Audio::Play(GMusic ref)
     case LEVEL_MUSIC:
         currentMusic = LevelMusic;
         break;
-
-    default:
-        break;
-    }
-    if (!currentMusic)
-    {
-        std::cerr << "Audio::Play(): Music reference was nullptr!\n";
-        return;
     }
 
-    currentMusic->looping = true;
+    PlayMusicStream(currentMusic);
+}
 
-    // Fade-in logic
-    musicVolume = 0.0f;
-    fadingIn = true;
-
-    SetMusicVolume(musicVolume);
-    PlayMusicStream(*currentMusic);
+void Audio::Update()
+{
+    UpdateMusicStream(currentMusic);
 }
 
 void Audio::StopMusic()
 {
-    if (currentMusic)
-        StopMusicStream(*currentMusic);
-    currentMusic = nullptr;
+    if (currentMusic.stream.buffer != nullptr)
+        StopMusicStream(currentMusic);
 }
 
 void Audio::PlaySFx(SFx ref)
@@ -97,30 +81,24 @@ void Audio::PlaySFx(SFx ref)
 
     switch (ref)
     {
+    case HOVER_BUTTON:
+        sound = &HoverButton;
+        break;
     case BUTTON_CLICKED:
-        sound = ButtonClicked;
+        sound = &ButtonClicked;
         break;
 
     case ATTACK_SFX:
-        sound = AttackSFX;
+        sound = &AttackSFX;
         break;
-
     case HURT_SFX:
-        sound = HurtSFX;
+        sound = &HurtSFX;
         break;
-
     case JUMP_SFX:
-        sound = JumpSFX;
+        sound = &JumpSFX;
         break;
 
     default:
-        // std::cerr << "Audio::PlaySFx(): Invalid SFx enum!\n";
-        return;
-    }
-
-    if (!sound)
-    {
-        // std::cerr << "Audio::PlaySFx(): SFX reference was nullptr!\n";
         return;
     }
 
@@ -138,18 +116,15 @@ void Audio::SetSFxVolume(float vol)
 {
     sfxVolume = vol;
 
-    if (AttackSFX)
-        SetSoundVolume(*AttackSFX, vol);
-    if (HurtSFX)
-        SetSoundVolume(*HurtSFX, vol);
-    if (JumpSFX)
-        SetSoundVolume(*JumpSFX, vol);
+    SetSoundVolume(AttackSFX, vol);
+    SetSoundVolume(HurtSFX, vol);
+    SetSoundVolume(JumpSFX, vol);
+    SetSoundVolume(ButtonClicked, vol);
+    SetSoundVolume(HoverButton, vol);
 }
 
 void Audio::SetMusicVolume(float vol)
 {
     musicVolume = vol;
-
-    if (currentMusic)
-        ::SetMusicVolume(*currentMusic, vol);
+    ::SetMusicVolume(currentMusic, vol);
 }

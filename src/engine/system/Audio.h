@@ -21,18 +21,18 @@ class Audio
 {
 private:
     // ======== MUSIC REFERENCES ========
-    inline static Music *MainMenuMusic = nullptr;
-    inline static Music *LevelMusic = nullptr;
+    inline static Music MainMenuMusic;
+    inline static Music LevelMusic;
 
     // ======== SFX REFERENCES ========
-    inline static Sound *HoverButton = nullptr;
-    inline static Sound *ButtonClicked = nullptr;
-    inline static Sound *AttackSFX = nullptr;
-    inline static Sound *HurtSFX = nullptr;
-    inline static Sound *JumpSFX = nullptr;
+    inline static Sound HoverButton;
+    inline static Sound ButtonClicked;
+    inline static Sound AttackSFX;
+    inline static Sound HurtSFX;
+    inline static Sound JumpSFX;
 
     // ======== CURRENT STREAM ========
-    inline static Music *currentMusic = nullptr;
+    inline static Music currentMusic;
 
     // ======== VOLUME + FADE ========
     inline static float masterVolume = 1.0f;

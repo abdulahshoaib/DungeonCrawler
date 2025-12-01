@@ -11,13 +11,20 @@ Button::Button()
 
 void Button::Draw(Color normalColor, Color hoverColor)
 {
-    if (CheckCollisionPointRec(GetMousePosition(), rect))
+    bool isHovering = CheckCollisionPointRec(GetMousePosition(), rect);
+    if (isHovering)
     {
         labelColor = labelHoverColor;
-        Audio::PlaySFx(BUTTON_CLICKED);
+        // Play sfx only on hover enter, not every frame
+        if (!hovered)
+        {
+            hovered = true;
+            Audio::PlaySFx(BUTTON_CLICKED);
+        }
     }
     else
     {
+        hovered = false;
         labelColor = labelNormalColor;
     }
 

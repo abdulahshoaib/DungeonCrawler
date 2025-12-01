@@ -14,6 +14,7 @@ public:
   Color labelHoverColor;
 
   int padding = 3;
+  bool hovered = false;
 
   Button();
   void Draw(Color, Color);
