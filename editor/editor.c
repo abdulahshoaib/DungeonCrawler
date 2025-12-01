@@ -7,27 +7,22 @@
 #define MAP_WIDTH 1000
 #define MAP_HEIGHT 70
 
-// Two layers: layer1 is drawn on top of layer2
-// layer1: interactables / non-colliding objects (flags, pillars)
-// layer2: platforms / collision layer
-static int layer1[MAP_WIDTH * MAP_HEIGHT] = {0}; // top layer (interactables)
-static int layer2[MAP_WIDTH * MAP_HEIGHT] = {0}; // bottom layer (platforms)
+// Layers
+static int collidingLayer[MAP_WIDTH * MAP_HEIGHT] = {0};    // top - blocks
+static int interactablesLayer[MAP_WIDTH * MAP_HEIGHT] = {0}; // middle - interactables
+static int nonCollidingLayer[MAP_WIDTH * MAP_HEIGHT] = {0};  // bottom - background/decor
 
 void SaveCSV(const char *filename, int *map)
 {
     FILE *f = fopen(filename, "w");
-    if (!f) {
-        printf("Failed to save: %s\n", filename);
-        return;
-    }
+    if (!f) { printf("Failed to save: %s\n", filename); return; }
 
     for (int y = 0; y < MAP_HEIGHT; y++)
     {
         for (int x = 0; x < MAP_WIDTH; x++)
         {
             fprintf(f, "%d", map[y * MAP_WIDTH + x]);
-            if (x < MAP_WIDTH - 1)
-                fprintf(f, ",");
+            if (x < MAP_WIDTH - 1) fprintf(f, ",");
         }
         fprintf(f, "\n");
     }
@@ -38,44 +33,27 @@ void SaveCSV(const char *filename, int *map)
 
 void LoadCSV(const char *filename, int *map) {
     FILE *file = fopen(filename, "r");
-    if (!file) {
-        printf("Failed to load: %s\n", filename);
-        return;
-    }
+    if (!file) { printf("Failed to load: %s\n", filename); return; }
 
-    // Large buffer because MAP_WIDTH is large and a single line can be long
     char line[65536];
     int row = 0;
 
     while (fgets(line, sizeof(line), file) && row < MAP_HEIGHT) {
         int col = 0;
-        // strtok modifies buffer; that's fine here
         char *token = strtok(line, ",");
         while (token && col < MAP_WIDTH) {
-            // trim leading spaces (optional)
             while (*token == ' ' || *token == '\t') token++;
             map[row * MAP_WIDTH + col] = atoi(token);
             col++;
             token = strtok(NULL, ",");
         }
-
-        // Fill missing columns with 0
-        while (col < MAP_WIDTH) {
-            map[row * MAP_WIDTH + col] = 0;
-            col++;
-        }
-
+        while (col < MAP_WIDTH) { map[row * MAP_WIDTH + col] = 0; col++; }
         row++;
     }
-
-    // Fill extra rows with 0
     while (row < MAP_HEIGHT) {
-        for (int col = 0; col < MAP_WIDTH; col++) {
-            map[row * MAP_WIDTH + col] = 0;
-        }
+        for (int col = 0; col < MAP_WIDTH; col++) map[row * MAP_WIDTH + col] = 0;
         row++;
     }
-
     fclose(file);
     printf("Loaded CSV: %s\n", filename);
 }
@@ -84,215 +62,148 @@ int main()
 {
     const int screenWidth = 1800;
     const int screenHeight = 800;
-    // (optional) maximize or omit
     SetConfigFlags(FLAG_WINDOW_MAXIMIZED);
-
-    InitWindow(screenWidth, screenHeight, "Raylib Tilemap Editor - 2 Layers");
+    InitWindow(screenWidth, screenHeight, "Raylib Tilemap Editor - 3 Layers");
 
     int PALETTE_TILE_SIZE = 36;
-    // Load sprite sheet
     Texture2D tileset = LoadTexture("../assets/maps/map.png");
-    if (tileset.id == 0) {
-        // Warn, but continue — textures may fail if path wrong.
-        printf("Warning: failed to load tileset: ../assets/maps/map.png\n");
-    }
+    if (tileset.id == 0) printf("Warning: failed to load tileset\n");
 
     int tilesetCols = (tileset.width > 0) ? tileset.width / TILE_SIZE : 1;
     int tilesetRows = (tileset.height > 0) ? tileset.height / TILE_SIZE : 1;
     int totalTiles = tilesetCols * tilesetRows;
 
-    int selectedTile = 1; // tile indexing starts at 1
+    int selectedTile = 1;
+    int activeLayer = 1; // 1=Colliding, 2=Interactables, 3=Non-colliding
+    Vector2 cameraOffset = {0,0};
 
-    // Active editing layer: 1 = top (interactables), 2 = bottom (platforms)
-    int activeLayer = 1;
-
-    Vector2 cameraOffset = {0, 0};
-
-    // --- Load previously-saved CSVs on startup ---
-    LoadCSV("../assets/maps/map.csv", layer2);            // bottom/platforms
-    LoadCSV("../assets/maps/interactables.csv", layer1); // top/interactables
+    // Load CSVs at startup
+    LoadCSV("../assets/maps/map.csv", collidingLayer);
+    LoadCSV("../assets/maps/interactables.csv", interactablesLayer);
+    LoadCSV("../assets/maps/non_colliding.csv", nonCollidingLayer);
 
     SetTargetFPS(60);
 
     while (!WindowShouldClose())
     {
-        // Input: Move canvas view
-        if (IsKeyDown(KEY_RIGHT))
-            cameraOffset.x -= 5;
-        if (IsKeyDown(KEY_LEFT))
-            cameraOffset.x += 5;
-        if (IsKeyDown(KEY_DOWN))
-            cameraOffset.y -= 5;
-        if (IsKeyDown(KEY_UP))
-            cameraOffset.y += 5;
-        if (IsKeyDown(KEY_EQUAL))
-            PALETTE_TILE_SIZE++;
-        if (IsKeyDown(KEY_MINUS))
-            PALETTE_TILE_SIZE--;
+        // Camera movement
+        if (IsKeyDown(KEY_RIGHT)) cameraOffset.x -= 5;
+        if (IsKeyDown(KEY_LEFT)) cameraOffset.x += 5;
+        if (IsKeyDown(KEY_DOWN)) cameraOffset.y -= 5;
+        if (IsKeyDown(KEY_UP)) cameraOffset.y += 5;
+        if (IsKeyDown(KEY_EQUAL)) PALETTE_TILE_SIZE++;
+        if (IsKeyDown(KEY_MINUS)) PALETTE_TILE_SIZE--;
 
-        // Switch active layer with keys 1 and 2
-        if (IsKeyPressed(KEY_ONE))
-            activeLayer = 1;
-        if (IsKeyPressed(KEY_TWO))
-            activeLayer = 2;
+        // Switch layers: 1=Colliding, 2=Interactables, 3=Non-colliding
+        if (IsKeyPressed(KEY_ONE)) activeLayer = 1;
+        if (IsKeyPressed(KEY_TWO)) activeLayer = 2;
+        if (IsKeyPressed(KEY_THREE)) activeLayer = 3;
 
-        // Reload CSVs at runtime (press R)
+        // Reload CSVs
         if (IsKeyPressed(KEY_R)) {
-            LoadCSV("../assets/maps/map.csv", layer2);
-            LoadCSV("../assets/maps/interactables.csv", layer1);
-            printf("Reloaded both CSV files.\n");
+            LoadCSV("../assets/maps/map.csv", collidingLayer);
+            LoadCSV("../assets/maps/interactables.csv", interactablesLayer);
+            LoadCSV("../assets/maps/non_colliding.csv", nonCollidingLayer);
+            printf("Reloaded all CSV files.\n");
         }
 
-        // Save
-        if (IsKeyPressed(KEY_S))
-        {
-            // Save platforms (bottom layer) as map.csv to keep backwards compatibility
-            SaveCSV("../assets/maps/map.csv", layer2);
-        }
-
-        if (IsKeyPressed(KEY_I))
-        {
-            // Save interactables (top layer)
-            SaveCSV("../assets/maps/interactables.csv", layer1);
-        }
+        // Save layers
+        if (IsKeyPressed(KEY_S)) SaveCSV("../assets/maps/map.csv", collidingLayer);
+        if (IsKeyPressed(KEY_I)) SaveCSV("../assets/maps/interactables.csv", interactablesLayer);
+        if (IsKeyPressed(KEY_N)) SaveCSV("../assets/maps/non_colliding.csv", nonCollidingLayer);
 
         // Tile placement
         Vector2 mouse = GetMousePosition();
-
-        // Editor canvas area (left 750px)
         if (mouse.x < 750)
         {
             int tileX = (int)((mouse.x - cameraOffset.x) / TILE_SIZE);
             int tileY = (int)((mouse.y - cameraOffset.y) / TILE_SIZE);
-
             if (tileX >= 0 && tileX < MAP_WIDTH && tileY >= 0 && tileY < MAP_HEIGHT)
             {
                 int idx = tileY * MAP_WIDTH + tileX;
-
                 if (IsMouseButtonDown(MOUSE_LEFT_BUTTON))
                 {
-                    if (activeLayer == 1)
-                        layer1[idx] = selectedTile;
-                    else
-                        layer2[idx] = selectedTile;
+                    if (activeLayer == 1) collidingLayer[idx] = selectedTile;
+                    else if (activeLayer == 2) interactablesLayer[idx] = selectedTile;
+                    else nonCollidingLayer[idx] = selectedTile;
                 }
                 if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON))
                 {
-                    if (activeLayer == 1)
-                        layer1[idx] = 0;
-                    else
-                        layer2[idx] = 0;
+                    if (activeLayer == 1) collidingLayer[idx] = 0;
+                    else if (activeLayer == 2) interactablesLayer[idx] = 0;
+                    else nonCollidingLayer[idx] = 0;
                 }
             }
         }
 
-        // Tile palette click
+        // Tile palette selection
         if (mouse.x >= 750)
         {
             int px = (int)(mouse.x - 750);
             int py = (int)mouse.y;
-
             int pCols = tilesetCols;
             int pX = px / PALETTE_TILE_SIZE;
             int pY = py / PALETTE_TILE_SIZE;
-
             int index = pY * pCols + pX + 1;
-
-            if (index >= 1 && index <= totalTiles)
-            {
-                if (IsMouseButtonDown(MOUSE_LEFT_BUTTON))
-                {
-                    selectedTile = index;
-                }
-            }
+            if (index >= 1 && index <= totalTiles && IsMouseButtonDown(MOUSE_LEFT_BUTTON))
+                selectedTile = index;
         }
 
-        // Draw
+        // Drawing
         BeginDrawing();
         ClearBackground(RAYWHITE);
 
-        // Draw map canvas: draw bottom layer (platforms) first, then top layer (interactables)
+        // Draw layers: bottom → middle → top
         for (int y = 0; y < MAP_HEIGHT; y++)
         {
             for (int x = 0; x < MAP_WIDTH; x++)
             {
-                int id2 = layer2[y * MAP_WIDTH + x];
-                if (id2 > 0 && tileset.id != 0)
-                {
-                    int tileIndex = id2 - 1;
-                    Rectangle src = { (tileIndex % tilesetCols) * TILE_SIZE,
-                                      (tileIndex / tilesetCols) * TILE_SIZE,
-                                      TILE_SIZE, TILE_SIZE };
-                    DrawTextureRec(tileset, src,
-                                   (Vector2){x * TILE_SIZE + cameraOffset.x,
-                                             y * TILE_SIZE + cameraOffset.y},
-                                   WHITE);
+                int id = nonCollidingLayer[y * MAP_WIDTH + x];
+                if (id > 0 && tileset.id != 0) {
+                    int tileIndex = id - 1;
+                    Rectangle src = { (tileIndex % tilesetCols)*TILE_SIZE, (tileIndex/tilesetCols)*TILE_SIZE, TILE_SIZE, TILE_SIZE };
+                    DrawTextureRec(tileset, src, (Vector2){x*TILE_SIZE + cameraOffset.x, y*TILE_SIZE + cameraOffset.y}, WHITE);
                 }
-
-                int id1 = layer1[y * MAP_WIDTH + x];
-                if (id1 > 0 && tileset.id != 0)
-                {
-                    int tileIndex = id1 - 1;
-                    Rectangle src = { (tileIndex % tilesetCols) * TILE_SIZE,
-                                      (tileIndex / tilesetCols) * TILE_SIZE,
-                                      TILE_SIZE, TILE_SIZE };
-                    DrawTextureRec(tileset, src,
-                                   (Vector2){x * TILE_SIZE + cameraOffset.x,
-                                             y * TILE_SIZE + cameraOffset.y},
-                                   WHITE);
+                id = interactablesLayer[y * MAP_WIDTH + x];
+                if (id > 0 && tileset.id != 0) {
+                    int tileIndex = id - 1;
+                    Rectangle src = { (tileIndex % tilesetCols)*TILE_SIZE, (tileIndex/tilesetCols)*TILE_SIZE, TILE_SIZE, TILE_SIZE };
+                    DrawTextureRec(tileset, src, (Vector2){x*TILE_SIZE + cameraOffset.x, y*TILE_SIZE + cameraOffset.y}, WHITE);
+                }
+                id = collidingLayer[y * MAP_WIDTH + x];
+                if (id > 0 && tileset.id != 0) {
+                    int tileIndex = id - 1;
+                    Rectangle src = { (tileIndex % tilesetCols)*TILE_SIZE, (tileIndex/tilesetCols)*TILE_SIZE, TILE_SIZE, TILE_SIZE };
+                    DrawTextureRec(tileset, src, (Vector2){x*TILE_SIZE + cameraOffset.x, y*TILE_SIZE + cameraOffset.y}, WHITE);
                 }
             }
         }
 
-        // Draw grid (note: drawing 1000 vertical lines can be expensive; consider lowering MAP_WIDTH for editing)
+        // Draw grid
         for (int x = 0; x <= MAP_WIDTH; x++)
-        {
-            DrawLine(x * TILE_SIZE + cameraOffset.x, cameraOffset.y,
-                     x * TILE_SIZE + cameraOffset.x, MAP_HEIGHT * TILE_SIZE + cameraOffset.y,
-                     Fade(LIGHTGRAY, 0.3f));
-        }
+            DrawLine(x*TILE_SIZE + cameraOffset.x, cameraOffset.y, x*TILE_SIZE + cameraOffset.x, MAP_HEIGHT*TILE_SIZE + cameraOffset.y, Fade(LIGHTGRAY,0.3f));
         for (int y = 0; y <= MAP_HEIGHT; y++)
+            DrawLine(cameraOffset.x, y*TILE_SIZE + cameraOffset.y, MAP_WIDTH*TILE_SIZE + cameraOffset.x, y*TILE_SIZE + cameraOffset.y, Fade(LIGHTGRAY,0.3f));
+
+        // Palette background
+        DrawRectangle(750,0,screenWidth-750,screenHeight,GRAY);
+
+        for (int i=0;i<totalTiles;i++)
         {
-            DrawLine(cameraOffset.x, y * TILE_SIZE + cameraOffset.y,
-                     MAP_WIDTH * TILE_SIZE + cameraOffset.x, y * TILE_SIZE + cameraOffset.y,
-                     Fade(LIGHTGRAY, 0.3f));
-        }
-
-        // Draw palette background (fill right side)
-        DrawRectangle(750, 0, screenWidth - 750, screenHeight, GRAY);
-
-        int total = totalTiles;
-        for (int i = 0; i < total; i++)
-        {
-            Rectangle src = { (i % tilesetCols) * TILE_SIZE,
-                              (i / tilesetCols) * TILE_SIZE,
-                              TILE_SIZE, TILE_SIZE };
-
+            Rectangle src = { (i % tilesetCols)*TILE_SIZE, (i / tilesetCols)*TILE_SIZE, TILE_SIZE, TILE_SIZE };
             int px = i % tilesetCols;
             int py = i / tilesetCols;
-
-            Rectangle dest = { 750 + px * PALETTE_TILE_SIZE,
-                                py * PALETTE_TILE_SIZE,
-                                PALETTE_TILE_SIZE,
-                                PALETTE_TILE_SIZE };
-
-            if (tileset.id != 0) DrawTexturePro(tileset, src, dest, (Vector2){0, 0}, 0, WHITE);
-
-            if (i + 1 == selectedTile)
-            {
-                DrawRectangleLines(dest.x, dest.y, dest.width, dest.height, YELLOW);
-            }
+            Rectangle dest = { 750 + px*PALETTE_TILE_SIZE, py*PALETTE_TILE_SIZE, PALETTE_TILE_SIZE, PALETTE_TILE_SIZE };
+            if (tileset.id != 0) DrawTexturePro(tileset, src, dest, (Vector2){0,0}, 0, WHITE);
+            if (i+1 == selectedTile) DrawRectangleLines(dest.x,dest.y,dest.width,dest.height,YELLOW);
         }
 
         // HUD / instructions
-        DrawText("Palette, + to Zoom In, - to Zoom Out", screenWidth - 200, 10, 20, WHITE);
-        DrawText("Press S to save platforms -> ../assets/maps/map.csv", 10, 10, 20, BLACK);
-        DrawText("Press I to save interactables -> ../assets/maps/interactables.csv", 10, 40, 20, BLACK);
-        DrawText("Press 1 for Interactables (top layer), 2 for Platforms (bottom layer)", 10, 70, 20, BLACK);
-        DrawText("Press R to reload CSVs from disk", 10, 130, 20, BLACK);
-
-        // Active layer indicator
-        const char *layerName = (activeLayer == 1) ? "INTERACTABLES (Top)" : "PLATFORMS (Bottom)";
+        DrawText("Palette, + to Zoom In, - to Zoom Out", screenWidth-200, 10, 20, WHITE);
+        DrawText("S=Save Colliding, I=Save Interactables, N=Save Non-Colliding", 10, 10, 20, BLACK);
+        DrawText("1=Colliding (top), 2=Interactables, 3=Non-Colliding", 10, 40, 20, BLACK);
+        DrawText("R=Reload all CSVs", 10, 70, 20, BLACK);
+        const char *layerName = (activeLayer==1)?"COLLIDING":(activeLayer==2)?"INTERACTABLES":"NON-COLLIDING";
         DrawText(TextFormat("Active Layer: %s", layerName), 10, 100, 20, MAROON);
 
         EndDrawing();
