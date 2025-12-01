@@ -18,8 +18,8 @@
 
 GameManager::GameManager(int ID)
 {
-    map_collide.LoadMap("assets/maps/platforms.csv");
-    map_non_colliding.LoadMap("assets/maps/map.csv");
+    map_collide.LoadMap("assets/maps/map.csv");
+    map_non_colliding.LoadMap("assets/maps/non_colliding.csv");
     interactables.LoadMap("assets/maps/interactables.csv");
 
     // TODO(demon_slayer): a way to set the player entity to a selected charachter
@@ -159,9 +159,13 @@ void GameManager::Update()
 
 void GameManager::Draw()
 {
-    // interactables.DrawMap();
-    // map_collide.DrawMap();
-    // map_non_colliding.DrawMap();
+    map_collide.DrawMap();
+    interactables.DrawMap();
+    map_non_colliding.DrawMap();
+    
+    map_collide.LoadTileset("assets/maps/map.png", 32);
+    map_non_colliding.LoadTileset("assets/maps/map.png", 32);
+    interactables.LoadTileset("assets/maps/map.png", 32);
     animator.Draw(player);
 
     hud.Draw();
