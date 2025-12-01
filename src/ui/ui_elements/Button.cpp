@@ -1,5 +1,6 @@
 #include "Button.h"
 #include "Loader.h"
+#include "Audio.h"
 
 Button::Button()
 {
@@ -13,6 +14,7 @@ void Button::Draw(Color normalColor, Color hoverColor)
     if (CheckCollisionPointRec(GetMousePosition(), rect))
     {
         labelColor = labelHoverColor;
+        Audio::PlaySFx(BUTTON_CLICKED);
     }
     else
     {

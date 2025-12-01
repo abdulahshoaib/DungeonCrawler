@@ -412,10 +412,12 @@ void Loader::UnLoadHUDPotraits()
 void Loader::LoadMusic()
 {
     MainMenuBGM = LoadMusicStream("assets/audio/Menu_BG.mp3");
+    ButtonClickSFX = LoadSound("assets/audio/click.mp3");
 }
 void Loader::UnLoadMusic()
 {
     UnloadMusicStream(MainMenuBGM);
+    UnloadSound(ButtonClickSFX);
 }
 
 void Loader::UnloadAssets()

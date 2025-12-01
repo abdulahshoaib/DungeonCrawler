@@ -1,38 +1,58 @@
 #pragma once
 #include <raylib.h>
-#include <map>
-#include <string>
-#include <vector>
-#include <iostream>
+
+enum GMusic
+{
+    MAIN_MENU_MUSIC,
+    LEVEL_MUSIC
+};
+
+enum SFx
+{
+    HOVER_BUTTON,
+    BUTTON_CLICKED,
+
+    ATTACK_SFX,
+    HURT_SFX,
+    JUMP_SFX
+};
 
 class Audio
 {
 private:
-    static Music *MainMenuBGM;
+    // ======== MUSIC REFERENCES ========
+    inline static Music *MainMenuMusic = nullptr;
+    inline static Music *LevelMusic = nullptr;
 
-    inline static Music *m_currentMusic = nullptr;
-    inline static float m_masterVolume = 1.0f;
+    // ======== SFX REFERENCES ========
+    inline static Sound *HoverButton = nullptr;
+    inline static Sound *ButtonClicked = nullptr;
+    inline static Sound *AttackSFX = nullptr;
+    inline static Sound *HurtSFX = nullptr;
+    inline static Sound *JumpSFX = nullptr;
 
-    inline static bool m_fadingIn = false;
-    inline static float m_fadeSpeed = 1.0f;
-    inline static float m_currentMusicVol = 1.0f;
+    // ======== CURRENT STREAM ========
+    inline static Music *currentMusic = nullptr;
+
+    // ======== VOLUME + FADE ========
+    inline static float masterVolume = 1.0f;
+    inline static float sfxVolume = 1.0f;
+    inline static float musicVolume = 1.0f;
+
+    inline static float fadeSpeed = 1.0f;
+    inline static bool fadingIn = false;
 
 public:
-    Audio();
-    ~Audio();
-
+    static void Load();
     static void Init();
-    static void Clean();
     static void Update();
+    static void Clean();
 
-    // RENAMED: LoadSound -> LoadSFX
-    static void LoadSFX(std::string id, std::string fileName);
-    static void LoadMusic(std::string id, std::string fileName);
-
-    // RENAMED: PlaySound -> PlaySFX
-    static void PlaySFX();
-    static void PlayMusic(int);
+    static void Play(GMusic ref);
     static void StopMusic();
+    static void PlaySFx(SFx ref);
 
     static void SetMasterVolume(float vol);
+    static void SetSFxVolume(float vol);
+    static void SetMusicVolume(float vol);
 };

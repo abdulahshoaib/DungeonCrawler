@@ -8,6 +8,7 @@ class Loader
 public:
   // == Audios ==
   inline static Music MainMenuBGM;
+  inline static Sound ButtonClickSFX;
   static void LoadMusic();
   static void UnLoadMusic();
 

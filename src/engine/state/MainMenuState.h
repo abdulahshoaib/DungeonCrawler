@@ -9,6 +9,7 @@ private:
     MenuMain mainMenu;
 
 public:
+    void Enter(Engine &);
     void Update(Engine &);
     void Draw(Engine &);
 };

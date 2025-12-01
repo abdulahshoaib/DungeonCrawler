@@ -1,15 +1,18 @@
 #include "Audio.h"
 #include "Loader.h"
+#include <iostream>
 
-Audio::Audio()
+void Audio::Load()
 {
-    // Constructor is empty.
-    // We use Init() explicitly in Engine.cpp to ensure the device is ready.
-}
+    MainMenuMusic = &Loader::MainMenuBGM;
+    // LevelMusic = &Loader::LevelBGM;
 
-Audio::~Audio()
-{
-    Clean();
+    // AttackSFX = &Loader::AttackSFx;
+    // HurtSFX = &Loader::HurtSFx;
+    // JumpSFX = &Loader::JumpSFx;
+
+    ButtonClicked = &Loader::ButtonClickSFX;
+    // HoverButton = &Loader::HoverButtonSFx;
 }
 
 void Audio::Init()
@@ -18,140 +21,135 @@ void Audio::Init()
 
     if (!IsAudioDeviceReady())
     {
-        std::cerr << "Audio Error: Device failed to initialize!" << std::endl;
-    }
-    else
-    {
-        std::cout << "Audio System Initialized Successfully." << std::endl;
+        // TODO(demon_slayer): Handle audio device not ready
     }
 
-    MainMenuBGM = &Loader::MainMenuBGM;
-}
-
-void Audio::Clean()
-{
-    // // 1. Unload all Sounds
-    // for (auto const &[key, val] : m_sounds)
-    // {
-    //     UnloadSound(val);
-    // }
-    // m_sounds.clear();
-
-    // // 2. Unload all Music
-    // for (auto const &[key, val] : m_music)
-    // {
-    //     UnloadMusicStream(val);
-    // }
-    // m_music.clear();
-
-    CloseAudioDevice();
+    SetMasterVolume(masterVolume);
 }
 
 void Audio::Update()
 {
-    if (m_currentMusic != nullptr)
+    if (currentMusic != nullptr)
     {
-        UpdateMusicStream(*m_currentMusic);
-
-        // Handle Fade-In Logic
-        if (m_fadingIn)
+        UpdateMusicStream(*currentMusic);
+        if (fadingIn)
         {
-            m_currentMusicVol += m_fadeSpeed * GetFrameTime();
-
-            if (m_currentMusicVol >= 1.0f)
+            musicVolume += fadeSpeed * GetFrameTime();
+            if (musicVolume >= 1.0f)
             {
-                m_currentMusicVol = 1.0f;
-                m_fadingIn = false;
+                musicVolume = 1.0f;
+                fadingIn = false;
             }
-            SetMusicVolume(*m_currentMusic, m_currentMusicVol);
+            SetMusicVolume(musicVolume);
         }
     }
 }
 
-// --- LOADING ASSETS ---
-
-// // RENAMED: LoadSound -> LoadSFX
-// void Audio::LoadSFX(std::string id, std::string fileName)
-// {
-//     Sound sound = ::LoadSound(fileName.c_str());
-
-//     if (sound.stream.buffer != nullptr)
-//     {
-//         m_sounds[id] = sound;
-//     }
-//     else
-//     {
-//         std::cerr << "Failed to load SFX: " << fileName << std::endl;
-//     }
-// }
-
-// void Audio::LoadMusic(std::string id, std::string fileName)
-// {
-//     // Music music =
-
-//     // if (music.stream.buffer != nullptr)
-//     // {
-//     //     m_music[id] = music;
-//     // }
-//     // else
-//     // {
-//     //     std::cerr << "Failed to load Music: " << fileName << std::endl;
-//     // }
-// }
-
-// --- PLAYBACK CONTROLS ---
-
-// RENAMED: PlaySound -> PlaySFX
-void Audio::PlaySFX(int ID)
+void Audio::Clean()
 {
-    // if (ID == 1)
-    // {
-    //     ::PlaySound(m_sounds[id]);
-    // }
-    // else
-    // {
-    //     std::cerr << "Warning: SFX ID not found -> " << id << std::endl;
-    // }
+    CloseAudioDevice();
 }
 
-void Audio::PlayMusic(int ID)
+void Audio::Play(GMusic ref)
 {
-    if (ID = 1)
-        m_currentMusic = MainMenuBGM;
+    if (currentMusic)
+        StopMusicStream(*currentMusic);
 
-    if (m_currentMusic != nullptr)
+    switch (ref)
     {
-        StopMusicStream(*m_currentMusic);
+    case MAIN_MENU_MUSIC:
+        currentMusic = MainMenuMusic;
+        break;
+
+    case LEVEL_MUSIC:
+        currentMusic = LevelMusic;
+        break;
+
+    default:
+        break;
+    }
+    if (!currentMusic)
+    {
+        std::cerr << "Audio::Play(): Music reference was nullptr!\n";
+        return;
     }
 
-    // m_currentMusic->looping = loop;
-    m_currentMusic->looping = true;
+    currentMusic->looping = true;
 
-    if (true /*fadeIn*/)
-    {
-        m_currentMusicVol = 0.0f;
-        m_fadingIn = true;
-    }
-    else
-    {
-        m_currentMusicVol = 1.0f;
-        m_fadingIn = false;
-    }
+    // Fade-in logic
+    musicVolume = 0.0f;
+    fadingIn = true;
 
-    SetMusicVolume(*m_currentMusic, m_currentMusicVol);
-    PlayMusicStream(*m_currentMusic);
+    SetMusicVolume(musicVolume);
+    PlayMusicStream(*currentMusic);
 }
 
 void Audio::StopMusic()
 {
-    if (m_currentMusic != nullptr)
+    if (currentMusic)
+        StopMusicStream(*currentMusic);
+    currentMusic = nullptr;
+}
+
+void Audio::PlaySFx(SFx ref)
+{
+    Sound *sound = nullptr;
+
+    switch (ref)
     {
-        StopMusicStream(*m_currentMusic);
+    case BUTTON_CLICKED:
+        sound = ButtonClicked;
+        break;
+
+    case ATTACK_SFX:
+        sound = AttackSFX;
+        break;
+
+    case HURT_SFX:
+        sound = HurtSFX;
+        break;
+
+    case JUMP_SFX:
+        sound = JumpSFX;
+        break;
+
+    default:
+        // std::cerr << "Audio::PlaySFx(): Invalid SFx enum!\n";
+        return;
     }
+
+    if (!sound)
+    {
+        // std::cerr << "Audio::PlaySFx(): SFX reference was nullptr!\n";
+        return;
+    }
+
+    SetSoundVolume(*sound, sfxVolume);
+    PlaySound(*sound);
 }
 
 void Audio::SetMasterVolume(float vol)
 {
-    m_masterVolume = vol;
+    masterVolume = vol;
     ::SetMasterVolume(vol);
+}
+
+void Audio::SetSFxVolume(float vol)
+{
+    sfxVolume = vol;
+
+    if (AttackSFX)
+        SetSoundVolume(*AttackSFX, vol);
+    if (HurtSFX)
+        SetSoundVolume(*HurtSFX, vol);
+    if (JumpSFX)
+        SetSoundVolume(*JumpSFX, vol);
+}
+
+void Audio::SetMusicVolume(float vol)
+{
+    musicVolume = vol;
+
+    if (currentMusic)
+        ::SetMusicVolume(*currentMusic, vol);
 }

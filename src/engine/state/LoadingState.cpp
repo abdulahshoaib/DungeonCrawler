@@ -1,5 +1,6 @@
 #include "LoadingState.h"
 #include "Loader.h"
+#include "Audio.h"
 #include "MainMenuState.h"
 
 #define TOTAL_STEPS 17
@@ -10,7 +11,7 @@ void LoadingState::Update(Engine &engine)
     switch (step)
     {
     case 0:
-        Loader::LoadSkeletonArcher();
+        Loader::LoadSpecialItems();
         break;
 
     case 1:
@@ -70,13 +71,18 @@ void LoadingState::Update(Engine &engine)
         break;
 
     case 15:
-        Loader::LoadSpecialItems();
+        Loader::LoadMusic();
+        Loader::LoadSkeletonArcher();
         break;
 
     case 16:
+    {
+        Audio::Load();
         break;
+    }
 
     default:
+        Audio::Update();
         engine.ChangeState(new MainMenuState());
         return;
     }
