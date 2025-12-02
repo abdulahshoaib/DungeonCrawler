@@ -20,12 +20,9 @@ public:
   Engine();
   ~Engine();
 
-  // TODO(demon_slayer): initialization of Window, loading
-  // game assets and setting up the game state machine
-  void init(Screen);
+  // TODO(demon_slayer): 
+    void init(Screen);
 
-  // TODO(demon_slayer): game loop and the updation of the
-  // game logic
   void run();
 
   void ChangeState(GameState*);
