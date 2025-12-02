@@ -207,5 +207,8 @@ public:
   static void LoadHUDPotraits();
   static void UnLoadHUDPotraits();
 
+  // == Maps ==
+  inline static Texture2D TileSet;
+
   static void UnloadAssets();
 };

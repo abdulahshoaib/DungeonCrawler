@@ -16,14 +16,9 @@ private:
 
 public:
     Map();
-    ~Map();
 
-    // load CSV of integers (comma separated)
+    // load CSV of integers
     void LoadMap(const char *filename);
-
-    // optional: set/load tileset used by DrawMap
-    void LoadTileset(const char *tilesetPath, int tileSize = 32);
-    void UnloadTileset();
 
     void DrawMap();
 };

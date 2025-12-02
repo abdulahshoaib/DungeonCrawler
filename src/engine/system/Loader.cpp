@@ -1,4 +1,3 @@
-
 #include "Loader.h"
 
 void Loader::LoadSkeletonSpearman()
@@ -325,6 +324,7 @@ void Loader::LoadBackgrounds()
     MainMenuBackground = LoadTexture("assets/images/menu_bg.png");
     LoadMenuBackground = LoadTexture("assets/images/loadmenu_bg.jpeg");
     SelectionMenuBackground = LoadTexture("assets/images/selection.png");
+    TileSet = LoadTexture("assets/maps/map.png");
 }
 
 void Loader::UnLoadBackgrounds()
