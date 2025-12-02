@@ -23,15 +23,11 @@ MenuNewGame::~MenuNewGame()
 void MenuNewGame::Draw()
 {
     DrawTextureEx(Loader::SelectionMenuBackground, {0, 0}, 0, 0.45f, WHITE);
-    selectcharacter.text = "SELECT CHARACTER";
-    selectcharacter.position = {398, 10};
-    selectcharacter.fontSize = 40;
-    selectcharacter.Draw(YELLOW);
-    
+
     int screenWidth = 1100;
     int screenHeight = 700;
 
-    float scale = 0.12f;
+    float scale = 0.10f;
 
     float itemW = Loader::Knight1Potrait.width * scale;
     float itemH = Loader::Knight1Potrait.height * scale;
@@ -43,10 +39,93 @@ void MenuNewGame::Draw()
     float totalContentHeight = (itemH * 2) + (paddingY);
 
     float startX = (screenWidth - totalContentWidth) / 2.0f;
-    float startY = (screenHeight - totalContentHeight) / 2.0f;
+    float startY = (screenHeight - totalContentHeight) / 2.0f + 30.0f;
 
     float stepX = itemW + paddingX;
     float stepY = itemH + paddingY;
+
+    // In MenuNewGame::Draw(), replace the "SELECT CHARACTER" drawing code with this:
+
+// Draw "SELECT CHARACTER" title with prominent, classy styling
+const char* titleText = "SELECT CHARACTER";
+float titleFontSize = 50.0f;
+Vector2 titleSize = MeasureTextEx(Loader::TitleFont, titleText, titleFontSize, 2.0f);
+
+float titleX = (screenWidth - titleSize.x) / 2.0f;
+float titleY = 40.0f;
+
+// Decorative background panel for title
+Rectangle titlePanel = {titleX - 40, titleY - 15, titleSize.x + 80, titleSize.y + 30};
+
+// Outer shadow for depth
+DrawRectangleRec((Rectangle){titlePanel.x + 5, titlePanel.y + 5, titlePanel.width, titlePanel.height}, 
+                 (Color){20, 15, 10, 200});
+
+// Main stone border
+DrawRectangleRec(titlePanel, (Color){45, 38, 32, 255});
+
+// Inner ornate border
+DrawRectangleRec((Rectangle){titlePanel.x + 4, titlePanel.y + 4, titlePanel.width - 8, titlePanel.height - 8}, 
+                 (Color){65, 55, 45, 255});
+
+// Top highlight
+DrawRectangle(titlePanel.x + 4, titlePanel.y + 4, titlePanel.width - 8, 3, 
+              (Color){100, 85, 70, 150});
+
+// Corner decorative elements
+float cornerSize = 20.0f;
+Color cornerGold = (Color){200, 160, 80, 255};
+
+// Top-left corner
+DrawTriangle((Vector2){titlePanel.x, titlePanel.y},
+            (Vector2){titlePanel.x + cornerSize, titlePanel.y},
+            (Vector2){titlePanel.x, titlePanel.y + cornerSize},
+            cornerGold);
+
+// Top-right corner
+DrawTriangle((Vector2){titlePanel.x + titlePanel.width, titlePanel.y},
+            (Vector2){titlePanel.x + titlePanel.width, titlePanel.y + cornerSize},
+            (Vector2){titlePanel.x + titlePanel.width - cornerSize, titlePanel.y},
+            cornerGold);
+
+// Bottom-left corner
+DrawTriangle((Vector2){titlePanel.x, titlePanel.y + titlePanel.height},
+            (Vector2){titlePanel.x, titlePanel.y + titlePanel.height - cornerSize},
+            (Vector2){titlePanel.x + cornerSize, titlePanel.y + titlePanel.height},
+            cornerGold);
+
+// Bottom-right corner
+DrawTriangle((Vector2){titlePanel.x + titlePanel.width, titlePanel.y + titlePanel.height},
+            (Vector2){titlePanel.x + titlePanel.width - cornerSize, titlePanel.y + titlePanel.height},
+            (Vector2){titlePanel.x + titlePanel.width, titlePanel.y + titlePanel.height - cornerSize},
+            cornerGold);
+
+// Decorative side ornaments (small diamonds/rhombus)
+float midY = titlePanel.y + titlePanel.height / 2;
+float ornamentSize = 8.0f;
+
+// Left ornament
+DrawPoly((Vector2){titlePanel.x - 15, midY}, 4, ornamentSize, 45, cornerGold);
+DrawPoly((Vector2){titlePanel.x - 15, midY}, 4, ornamentSize - 3, 45, (Color){255, 220, 120, 255});
+
+// Right ornament
+DrawPoly((Vector2){titlePanel.x + titlePanel.width + 15, midY}, 4, ornamentSize, 45, cornerGold);
+DrawPoly((Vector2){titlePanel.x + titlePanel.width + 15, midY}, 4, ornamentSize - 3, 45, (Color){255, 220, 120, 255});
+
+// Draw the text with shadow for depth
+DrawTextEx(Loader::TitleFont, titleText, 
+           {titleX + 3, titleY + 3}, titleFontSize, 2.0f, 
+           (Color){20, 15, 10, 220});
+
+// Main title text in glowing amber/gold
+DrawTextEx(Loader::TitleFont, titleText, 
+           {titleX, titleY}, titleFontSize, 2.0f, 
+           (Color){255, 200, 100, 255});
+
+// Subtle top highlight on text for extra shine
+DrawTextEx(Loader::TitleFont, titleText, 
+           {titleX, titleY - 1}, titleFontSize, 2.0f, 
+           (Color){255, 230, 150, 80});
 
     // Helper function to make card prominent on hover
     auto DrawCardWithEffects = [&](Texture2D tex, float x, float y, bool isHovered)
