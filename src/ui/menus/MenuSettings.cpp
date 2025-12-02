@@ -3,6 +3,7 @@
 #include "Engine.h"
 #include "MainMenuState.h"
 #include "Loader.h"
+#include "Audio.h"
 #include <string>
 
 static int masterVolume = 50;
@@ -127,28 +128,41 @@ void MenuSettings::HandleInput(Engine &engine)
     // Handle Volume Adjustments (Clamped 0-100)
     // TODO: Hook these into your Audio System (e.g. Audio::SetMasterVolume(masterVolume / 100.0f))
     if (clicked && CheckCollisionPointRec(mousePoint, MasterMinus_btn.rect))
-        if (masterVolume >= 10)
+        if (masterVolume >= 10){
             masterVolume -= 10;
+            Audio::SetMasterVolume(masterVolume / 100.0f);
+
+        }
 
     if (clicked && CheckCollisionPointRec(mousePoint, MasterPlus_btn.rect))
-        if (masterVolume <= 90)
+        if (masterVolume <= 90){
             masterVolume += 10;
+            Audio::SetMasterVolume(masterVolume / 100.0f);
+        }
 
     if (clicked && CheckCollisionPointRec(mousePoint, MusicMinus_btn.rect))
-        if (musicVolume >= 10)
+        if (musicVolume >= 10){
             musicVolume -= 10;
+            Audio::SetMusicVolume(musicVolume / 100.0f);
+        }
 
     if (clicked && CheckCollisionPointRec(mousePoint, MusicPlus_btn.rect))
-        if (musicVolume <= 90)
+        if (musicVolume <= 90){
             musicVolume += 10;
+            Audio::SetMusicVolume(musicVolume / 100.0f);
+        }
 
     if (clicked && CheckCollisionPointRec(mousePoint, SFXMinus_btn.rect))
-        if (sfxVolume >= 10)
+        if (sfxVolume >= 10){
             sfxVolume -= 10;
+            Audio::SetSFxVolume(sfxVolume / 100.0f);
+        }
 
     if (clicked && CheckCollisionPointRec(mousePoint, SFXPlus_btn.rect))
-        if (sfxVolume <= 90)
+        if (sfxVolume <= 90){
             sfxVolume += 10;
+            Audio::SetSFxVolume(sfxVolume / 100.0f);
+        }
 
     if (clicked && CheckCollisionPointRec(mousePoint, Back_btn.rect))
     {
