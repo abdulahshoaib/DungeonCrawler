@@ -34,7 +34,7 @@ GameManager::GameManager(int ID)
     // Setup camera defaults
     camera.offset = {(float)GetScreenWidth() * 0.5f, (float)GetScreenHeight() * 0.5f};
     camera.rotation = 0.0f;
-    camera.zoom = 1.0f;
+    camera.zoom = 2.00f;
 
 
 
