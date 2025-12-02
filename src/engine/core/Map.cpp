@@ -86,7 +86,7 @@ void Map::DrawMap()
                 int id = tiles[y][x];
                 if (id <= 0)
                     continue;
-                int tileIndex = id - 1; // editor uses 1-based tile ids
+                int tileIndex = id -1 ; // editor uses 1-based tile ids
                 Rectangle src = {
                     (float)((tileIndex % tilesetCols) * tileSize),
                     (float)((tileIndex / tilesetCols) * tileSize),
@@ -157,21 +157,15 @@ bool Map::GetFirstCollisionTile(const Rectangle &rect, int &tx, int &ty) const
     {
         for (int x = left; x <= right; ++x)
         {
-            if (IsSolidTile(tx, ty))
+            if (IsSolidTile(x, y))
             {
-                // compute the tile solid rect with top margin
-                int tileX = tx * tileSize;
-                int tileY = ty * tileSize + collisionTopMargin;
-                int tW = tileSize;
-                int tH = tileSize - collisionTopMargin;
-                Rectangle solid{(float)tileX, (float)tileY, (float)tW, (float)tH};
-                if (CheckCollisionRecs(rect, solid))
-                    return true;
+                // Compute the tile solid rect with top margin
                 int tileX = x * tileSize;
                 int tileY = y * tileSize + collisionTopMargin;
                 int tW = tileSize;
                 int tH = tileSize - collisionTopMargin;
                 Rectangle solid{(float)tileX, (float)tileY, (float)tW, (float)tH};
+
                 if (CheckCollisionRecs(rect, solid))
                 {
                     tx = x;
@@ -183,5 +177,3 @@ bool Map::GetFirstCollisionTile(const Rectangle &rect, int &tx, int &ty) const
     }
     return false;
 }
-
-// Note: GetWidth/GetHeight are inline in Map.h

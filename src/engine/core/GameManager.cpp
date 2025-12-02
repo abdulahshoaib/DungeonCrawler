@@ -287,100 +287,93 @@ void GameManager::Update(Engine &engine)
 
 void GameManager::Draw()
 {
-    // Draw world using 2D camera
+    // WORLD RENDERING WITH CAMERA
     BeginMode2D(camera);
+
+    // --- Draw tilemaps ---
     map_collide.DrawMap();
     interactables.DrawMap();
     map_non_colliding.DrawMap();
 
-    animator.Draw(player);
+    // --- Draw player properly inside camera ---
+    if (player)
+        animator.Draw(player);
 
-    EndMode2D();
-
-    // HUD drawn in screen-space
-    EndMode2D();
-
-    // HUD drawn in screen-space
-    hud.Draw();
-
-    // debug overlay on HUD
-    if (debugDrawCollision && player)
-    {
-        std::string text = "HitboxOffsetY: " + std::to_string(player->GetHitboxOffsetY()) + "  OffsetX: " + std::to_string(player->hitboxOffsetX);
-        DrawText(text.c_str(), 20, 20, 12, WHITE);
-
-        std::string marginText = "TileCollisionTopMargin: " + std::to_string(map_collide.GetCollisionTopMargin());
-        DrawText(marginText.c_str(), 20, 36, 12, WHITE);
-    }
-
-    // debug: draw hitbox and colliding tiles
+    // --- DEBUG DRAW (inside camera) ---
     if (debugDrawCollision)
     {
-        // draw all collidable tiles (outline)
-        int w = map_collide.GetWidth();
-        int h = map_collide.GetHeight();
-        for (int ty = 0; ty < h; ++ty)
+        int tileSize = map_collide.GetTileSize();
+
+        // Collidable tiles
+        for (int y = 0; y < map_collide.GetHeight(); y++)
         {
-            for (int tx = 0; tx < w; ++tx)
+            for (int x = 0; x < map_collide.GetWidth(); x++)
             {
-                if (map_collide.IsSolidTile(tx, ty))
+                if (map_collide.IsSolidTile(x, y))
                 {
-                    DrawRectangleLines(tx * map_collide.GetTileSize(), ty * map_collide.GetTileSize(), map_collide.GetTileSize(), map_collide.GetTileSize(), GREEN);
-                    // draw the reduced solid area inside the tile
-                    int tileX = tx * map_collide.GetTileSize();
-                    int tileY = ty * map_collide.GetTileSize() + map_collide.GetCollisionTopMargin();
-                    int tW = map_collide.GetTileSize();
-                    int tH = map_collide.GetTileSize() - map_collide.GetCollisionTopMargin();
+                    DrawRectangleLines(x * tileSize, y * tileSize, tileSize, tileSize, GREEN);
+
+                    int tileX = x * tileSize;
+                    int tileY = y * tileSize + map_collide.GetCollisionTopMargin();
+                    int tW    = tileSize;
+                    int tH    = tileSize - map_collide.GetCollisionTopMargin();
+
                     DrawRectangleLines(tileX, tileY, tW, tH, RED);
                 }
             }
         }
 
-        // draw interactable tiles outline in blue
-        int iw = interactables.GetWidth();
-        int ih = interactables.GetHeight();
-        for (int ty = 0; ty < ih; ++ty)
-        {
-            for (int tx = 0; tx < iw; ++tx)
-            {
-                if (interactables.IsSolidTile(tx, ty))
-                {
-                    DrawRectangleLines(tx * interactables.GetTileSize(), ty * interactables.GetTileSize(), interactables.GetTileSize(), interactables.GetTileSize(), SKYBLUE);
-                }
-            }
-        }
+        // Interactables
+        for (int y = 0; y < interactables.GetHeight(); y++)
+        for (int x = 0; x < interactables.GetWidth(); x++)
+            if (interactables.IsSolidTile(x,y))
+                DrawRectangleLines(
+                    x * interactables.GetTileSize(),
+                    y * interactables.GetTileSize(),
+                    interactables.GetTileSize(),
+                    interactables.GetTileSize(),
+                    SKYBLUE);
 
-        // draw non-colliding tiles outline in gray (visual only)
-        int nw = map_non_colliding.GetWidth();
-        int nh = map_non_colliding.GetHeight();
-        for (int ty = 0; ty < nh; ++ty)
-        {
-            for (int tx = 0; tx < nw; ++tx)
-            {
-                if (map_non_colliding.IsSolidTile(tx, ty))
-                {
-                    DrawRectangleLines(tx * map_non_colliding.GetTileSize(), ty * map_non_colliding.GetTileSize(), map_non_colliding.GetTileSize(), map_non_colliding.GetTileSize(), GRAY);
-                }
-            }
-        }
+        // Non-colliding
+        for (int y = 0; y < map_non_colliding.GetHeight(); y++)
+        for (int x = 0; x < map_non_colliding.GetWidth(); x++)
+            if (map_non_colliding.IsSolidTile(x,y))
+                DrawRectangleLines(
+                    x * map_non_colliding.GetTileSize(),
+                    y * map_non_colliding.GetTileSize(),
+                    map_non_colliding.GetTileSize(),
+                    map_non_colliding.GetTileSize(),
+                    GRAY);
 
-        // draw hitbox for player
+        // Player hitbox
         if (player)
         {
             Rectangle hb = player->GetHitboxRect();
             DrawRectangleLinesEx(hb, 2, RED);
-            // display current hitbox offset Y
-            std::string text = "HitboxOffsetY: " + std::to_string(player->GetHitboxOffsetY());
-            DrawText(text.c_str(), 20, 20, 12, WHITE);
         }
 
-        // draw hitboxes for all entities
+        // Entity hitboxes
         for (auto e : entities)
         {
-            if (!e)
-                continue;
-            Rectangle eh = e->GetHitboxRect();
-            DrawRectangleLinesEx(eh, 1, YELLOW);
+            if (e)
+                DrawRectangleLinesEx(e->GetHitboxRect(), 1, YELLOW);
         }
+    }
+
+    EndMode2D(); // exit camera
+
+    // HUD drawing (screen-space)
+    hud.Draw();
+
+    // DEBUG TEXT (screen-space)
+    if (debugDrawCollision && player)
+    {
+        DrawText(
+            ("HitboxOffsetY: " + std::to_string(player->GetHitboxOffsetY())).c_str(),
+            20, 20, 12, WHITE);
+
+        DrawText(
+            ("TileCollisionTopMargin: " + std::to_string(map_collide.GetCollisionTopMargin())).c_str(),
+            20, 36, 12, WHITE);
     }
 }
