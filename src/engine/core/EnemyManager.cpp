@@ -172,3 +172,83 @@ void EnemyManager::RemoveEnemy(size_t index)
         enemies.erase(enemies.begin() + index);
     }
 }
+
+void EnemyManager::LoadPathsFromCSV(const char *filename)
+{
+    FILE *file = fopen(filename, "r");
+    if (!file)
+    {
+        // File doesn't exist yet, that's okay
+        return;
+    }
+
+    char line[65536];
+    int pathCount = 0;
+
+    // Read number of paths
+    if (fgets(line, sizeof(line), file))
+    {
+        pathCount = atoi(line);
+    }
+
+    // Read each path
+    for (int p = 0; p < pathCount; p++)
+    {
+        if (fgets(line, sizeof(line), file))
+        {
+            EnemyPath *path = CreatePath();
+            int pathIndex, nodeCount, isLooping;
+
+            // Parse first three values
+            sscanf(line, "%d,%d,%d", &pathIndex, &nodeCount, &isLooping);
+            path->SetLooping(isLooping != 0);
+
+            // Parse remaining values (coordinates and pause times)
+            char *ptr = line;
+            int commaCount = 0;
+            while (*ptr && commaCount < 3)
+            {
+                if (*ptr == ',')
+                    commaCount++;
+                ptr++;
+            }
+
+            // Parse nodes
+            for (int n = 0; n < nodeCount; n++)
+            {
+                int x, y;
+                float pauseTime;
+                int result = sscanf(ptr, "%d,%d,%f", &x, &y, &pauseTime);
+                if (result == 3)
+                {
+                    path->AddNode({(float)x * 32.0f, (float)y * 32.0f}, pauseTime);
+
+                    // Skip to next triplet
+                    while (*ptr && *ptr != ',')
+                        ptr++;
+                    if (*ptr)
+                        ptr++; // skip comma
+                    while (*ptr && *ptr != ',')
+                        ptr++;
+                    if (*ptr)
+                        ptr++; // skip comma
+                    while (*ptr && *ptr != ',')
+                        ptr++;
+                    if (*ptr)
+                        ptr++; // skip comma
+                }
+            }
+        }
+    }
+
+    fclose(file);
+}
+
+EnemyPath *EnemyManager::GetPath(size_t index)
+{
+    if (index < paths.size())
+    {
+        return paths[index].get();
+    }
+    return nullptr;
+}

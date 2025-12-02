@@ -70,6 +70,9 @@ public:
     // ===== PATH MANAGEMENT =====
     void AddPathNode(EnemyPath *path, Vector2 pos, float pauseTime = 0.0f);
     void SetPathLooping(EnemyPath *path, bool looping);
+    void LoadPathsFromCSV(const char *filename);
+    EnemyPath *GetPath(size_t index);
+    size_t GetPathCount() const { return paths.size(); }
 
     // ===== ENEMY MANAGEMENT =====
     void Update(float dt);

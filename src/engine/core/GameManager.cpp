@@ -99,46 +99,64 @@ GameManager::GameManager(int ID)
     enemyManager.SetCollisionMapReference(&map_collide);
     enemyManager.SetDebugDraw(debugDrawCollision);
 
-    // --- Spawn diverse enemies with patrol paths ---
-    // Create patrol path 1 (left side of map) - Skeleton Warrior
-    EnemyPath *path1 = enemyManager.CreatePath();
-    enemyManager.AddPathNode(path1, {100.0f, 400.0f}, 1.0f);
-    enemyManager.AddPathNode(path1, {300.0f, 400.0f}, 0.5f);
-    enemyManager.AddPathNode(path1, {100.0f, 400.0f}, 1.0f);
-    enemyManager.SetPathLooping(path1, true);
-    enemyManager.SpawnEnemyTypeWithPath<EnemySkeletonWarrior>({100.0f, 400.0f}, path1, 200.0f, 80.0f);
+    // --- Load enemy paths from CSV and spawn enemies ---
+    enemyManager.LoadPathsFromCSV("assets/maps/enemy_paths.csv");
 
-    // Create patrol path 2 (middle-left of map) - Skeleton Archer
-    EnemyPath *path2 = enemyManager.CreatePath();
-    enemyManager.AddPathNode(path2, {500.0f, 350.0f}, 0.8f);
-    enemyManager.AddPathNode(path2, {700.0f, 350.0f}, 0.5f);
-    enemyManager.AddPathNode(path2, {500.0f, 350.0f}, 0.8f);
-    enemyManager.SetPathLooping(path2, true);
-    enemyManager.SpawnEnemyTypeWithPath<EnemySkeletonArcher>({500.0f, 350.0f}, path2, 200.0f, 80.0f);
+    // For now, spawn diverse enemies with loaded paths if available
+    // Path 0 - Skeleton Warrior
+    if (enemyManager.GetPathCount() > 0)
+    {
+        EnemyPath *path = enemyManager.GetPath(0);
+        if (path && path->IsValid())
+        {
+            Vector2 startPos = path->GetNode(0);
+            enemyManager.SpawnEnemyTypeWithPath<EnemySkeletonWarrior>(startPos, path, 200.0f, 80.0f);
+        }
+    }
 
-    // Create patrol path 3 (middle-right of map) - Skeleton Spearman
-    EnemyPath *path3 = enemyManager.CreatePath();
-    enemyManager.AddPathNode(path3, {900.0f, 300.0f}, 1.0f);
-    enemyManager.AddPathNode(path3, {1100.0f, 300.0f}, 0.5f);
-    enemyManager.AddPathNode(path3, {900.0f, 300.0f}, 1.0f);
-    enemyManager.SetPathLooping(path3, true);
-    enemyManager.SpawnEnemyTypeWithPath<EnemySkeletonSpearman>({900.0f, 300.0f}, path3, 200.0f, 80.0f);
+    // Path 1 - Skeleton Archer
+    if (enemyManager.GetPathCount() > 1)
+    {
+        EnemyPath *path = enemyManager.GetPath(1);
+        if (path && path->IsValid())
+        {
+            Vector2 startPos = path->GetNode(0);
+            enemyManager.SpawnEnemyTypeWithPath<EnemySkeletonArcher>(startPos, path, 200.0f, 80.0f);
+        }
+    }
 
-    // Create patrol path 4 (right side of map) - Karasu Tengu
-    EnemyPath *path4 = enemyManager.CreatePath();
-    enemyManager.AddPathNode(path4, {1300.0f, 380.0f}, 0.8f);
-    enemyManager.AddPathNode(path4, {1500.0f, 380.0f}, 0.6f);
-    enemyManager.AddPathNode(path4, {1300.0f, 380.0f}, 0.8f);
-    enemyManager.SetPathLooping(path4, true);
-    enemyManager.SpawnEnemyTypeWithPath<EnemyKarasuTengu>({1300.0f, 380.0f}, path4, 200.0f, 80.0f);
+    // Path 2 - Skeleton Spearman
+    if (enemyManager.GetPathCount() > 2)
+    {
+        EnemyPath *path = enemyManager.GetPath(2);
+        if (path && path->IsValid())
+        {
+            Vector2 startPos = path->GetNode(0);
+            enemyManager.SpawnEnemyTypeWithPath<EnemySkeletonSpearman>(startPos, path, 200.0f, 80.0f);
+        }
+    }
 
-    // Create patrol path 5 (far right of map) - Yamabushi Tengu
-    EnemyPath *path5 = enemyManager.CreatePath();
-    enemyManager.AddPathNode(path5, {1650.0f, 350.0f}, 0.7f);
-    enemyManager.AddPathNode(path5, {1850.0f, 350.0f}, 0.5f);
-    enemyManager.AddPathNode(path5, {1650.0f, 350.0f}, 0.7f);
-    enemyManager.SetPathLooping(path5, true);
-    enemyManager.SpawnEnemyTypeWithPath<EnemyYamabushiTengu>({1650.0f, 350.0f}, path5, 200.0f, 80.0f);
+    // Path 3 - Karasu Tengu
+    if (enemyManager.GetPathCount() > 3)
+    {
+        EnemyPath *path = enemyManager.GetPath(3);
+        if (path && path->IsValid())
+        {
+            Vector2 startPos = path->GetNode(0);
+            enemyManager.SpawnEnemyTypeWithPath<EnemyKarasuTengu>(startPos, path, 200.0f, 80.0f);
+        }
+    }
+
+    // Path 4 - Yamabushi Tengu
+    if (enemyManager.GetPathCount() > 4)
+    {
+        EnemyPath *path = enemyManager.GetPath(4);
+        if (path && path->IsValid())
+        {
+            Vector2 startPos = path->GetNode(0);
+            enemyManager.SpawnEnemyTypeWithPath<EnemyYamabushiTengu>(startPos, path, 200.0f, 80.0f);
+        }
+    }
 
     // --- Spawn coins here ---
     for (int y = 0; y < interactables.GetHeight(); y++)
