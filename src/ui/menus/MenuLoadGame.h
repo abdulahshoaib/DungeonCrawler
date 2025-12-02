@@ -15,10 +15,16 @@ private:
     Label titleLabel;
     Button backButton;
     Button loadButton;
+    Button confirmButton;
+    Button cancelButton;
+
+    bool showConfirmDialog = false;
+    int confirmSlot = -1;
 
     void InitializeSaveSlots();
     std::string GetSaveSlotInfo(int slot);
     bool SaveSlotExists(int slot);
+    int GetCharacterIDFromSlot(int slot);
 
 public:
     MenuLoadGame();

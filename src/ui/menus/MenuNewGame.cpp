@@ -263,29 +263,67 @@ void MenuNewGame::Draw()
         DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), (Color){0, 0, 0, 150});
 
         // Dialog panel
-        int dialogWidth = 400;
-        int dialogHeight = 350;
+        int dialogWidth = 450;
+        int dialogHeight = 380;
         float dialogX = (GetScreenWidth() - dialogWidth) / 2;
         float dialogY = (GetScreenHeight() - dialogHeight) / 2;
 
-        // Draw dialog background
+        // Outer shadow for depth
+        DrawRectangleRec((Rectangle){dialogX + 8, dialogY + 8, (float)dialogWidth, (float)dialogHeight},
+                         (Color){20, 15, 10, 200});
+
+        // Main stone border (dark weathered stone)
         DrawRectangleRec((Rectangle){dialogX, dialogY, (float)dialogWidth, (float)dialogHeight},
                          (Color){45, 38, 32, 255});
-        DrawRectangleLinesEx((Rectangle){dialogX, dialogY, (float)dialogWidth, (float)dialogHeight},
-                             3, (Color){200, 160, 80, 255});
+
+        // Inner darker groove
+        DrawRectangleRec((Rectangle){dialogX + 4, dialogY + 4, (float)dialogWidth - 8, (float)dialogHeight - 8},
+                         (Color){28, 22, 18, 255});
+
+        // Main panel interior
+        DrawRectangleRec((Rectangle){dialogX + 8, dialogY + 8, (float)dialogWidth - 16, (float)dialogHeight - 16},
+                         (Color){65, 55, 45, 255});
+
+        // Top highlight edge (simulates worn stone catching light)
+        DrawRectangle((int)(dialogX + 8), (int)(dialogY + 8), dialogWidth - 16, 3,
+                      (Color){100, 85, 70, 150});
+
+        // Bottom shadow groove (depth effect)
+        DrawRectangle((int)(dialogX + 8), (int)(dialogY + dialogHeight - 11), dialogWidth - 16, 3,
+                      (Color){20, 15, 10, 180});
+
+        // Decorative corner ornaments
+        float cornerOrnamentSize = 12.0f;
+        Color cornerColor = (Color){200, 160, 80, 220};
+
+        // Top-left
+        DrawRectangle((int)dialogX, (int)dialogY, (int)cornerOrnamentSize, (int)cornerOrnamentSize, cornerColor);
+        DrawRectangle((int)(dialogX + 2), (int)(dialogY + 2), (int)(cornerOrnamentSize - 4), (int)(cornerOrnamentSize - 4), (Color){255, 220, 150, 200});
+
+        // Top-right
+        DrawRectangle((int)(dialogX + dialogWidth - cornerOrnamentSize), (int)dialogY, (int)cornerOrnamentSize, (int)cornerOrnamentSize, cornerColor);
+        DrawRectangle((int)(dialogX + dialogWidth - cornerOrnamentSize + 2), (int)(dialogY + 2), (int)(cornerOrnamentSize - 4), (int)(cornerOrnamentSize - 4), (Color){255, 220, 150, 200});
+
+        // Bottom-left
+        DrawRectangle((int)dialogX, (int)(dialogY + dialogHeight - cornerOrnamentSize), (int)cornerOrnamentSize, (int)cornerOrnamentSize, cornerColor);
+        DrawRectangle((int)(dialogX + 2), (int)(dialogY + dialogHeight - cornerOrnamentSize + 2), (int)(cornerOrnamentSize - 4), (int)(cornerOrnamentSize - 4), (Color){255, 220, 150, 200});
+
+        // Bottom-right
+        DrawRectangle((int)(dialogX + dialogWidth - cornerOrnamentSize), (int)(dialogY + dialogHeight - cornerOrnamentSize), (int)cornerOrnamentSize, (int)cornerOrnamentSize, cornerColor);
+        DrawRectangle((int)(dialogX + dialogWidth - cornerOrnamentSize + 2), (int)(dialogY + dialogHeight - cornerOrnamentSize + 2), (int)(cornerOrnamentSize - 4), (int)(cornerOrnamentSize - 4), (Color){255, 220, 150, 200});
 
         // Title
         Label dialogTitle;
         dialogTitle.text = "SELECT SAVE SLOT";
         dialogTitle.fontSize = 28;
         Vector2 titleSize = MeasureTextEx(Loader::TitleFont, dialogTitle.text.c_str(), dialogTitle.fontSize, 2);
-        dialogTitle.position = {dialogX + (dialogWidth - titleSize.x) / 2, dialogY + 20};
+        dialogTitle.position = {dialogX + (dialogWidth - titleSize.x) / 2, dialogY + 25};
         dialogTitle.Draw(WHITE);
 
         // Draw slot buttons in dialog
         for (int i = 0; i < 3; i++)
         {
-            slotButtons[i].rect = {dialogX + 50, dialogY + 80 + (i * 70), 300, 50};
+            slotButtons[i].rect = {dialogX + 35, dialogY + 90 + (i * 75), 380, 60};
             slotButtons[i].label.text = "SLOT " + std::to_string(i + 1);
             slotButtons[i].Draw(GRAY, ORANGE);
         }
