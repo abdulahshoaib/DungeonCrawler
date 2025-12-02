@@ -34,10 +34,48 @@ void MenuEnterName::Draw()
         border = YELLOW;
 
     // DrawRectangleLinesEx(inputBox, 3, border);
-    //  Draw input box background
-    DrawRectangleRec(inputBox, BLACK);
+    // Draw retro dungeon-style input box with layered stone effect
+    // Outer shadow for depth
+    DrawRectangleRec((Rectangle){inputBox.x + 4, inputBox.y + 4, inputBox.width, inputBox.height}, 
+                     (Color){20, 15, 10, 180});
 
-        // Draw text inside
+    // Main stone border (dark weathered stone)
+    DrawRectangleRec(inputBox, (Color){45, 38, 32, 255});
+
+    // Inner darker groove
+    DrawRectangleRec((Rectangle){inputBox.x + 3, inputBox.y + 3, 
+                     inputBox.width - 6, inputBox.height - 6}, 
+                     (Color){28, 22, 18, 255});
+
+    // Actual input area (aged parchment/stone interior)
+    DrawRectangleRec((Rectangle){inputBox.x + 6, inputBox.y + 6, 
+                     inputBox.width - 12, inputBox.height - 12}, 
+                     (Color){65, 55, 45, 255});
+
+    // Top highlight edge (simulates worn stone catching light)
+    DrawRectangle(inputBox.x + 6, inputBox.y + 6, inputBox.width - 12, 2, 
+                  (Color){85, 75, 60, 120});
+
+    // Bottom shadow groove (depth effect)
+    DrawRectangle(inputBox.x + 6, inputBox.y + inputBox.height - 8, 
+                  inputBox.width - 12, 2, (Color){20, 15, 10, 160});
+
+    // Corner accent stones (left top and right bottom)
+    DrawRectangle(inputBox.x, inputBox.y, 8, 8, (Color){60, 50, 40, 255});
+    DrawRectangle(inputBox.x + inputBox.width - 8, inputBox.y + inputBox.height - 8, 
+                  8, 8, (Color){35, 28, 22, 255});
+
+    // Decorative rivets/bolts in corners
+    DrawCircle(inputBox.x + 10, inputBox.y + 10, 3, (Color){40, 35, 30, 255});
+    DrawCircle(inputBox.x + 10, inputBox.y + 10, 2, (Color){55, 48, 40, 255});
+    DrawCircle(inputBox.x + inputBox.width - 10, inputBox.y + 10, 3, (Color){40, 35, 30, 255});
+    DrawCircle(inputBox.x + inputBox.width - 10, inputBox.y + 10, 2, (Color){55, 48, 40, 255});
+    DrawCircle(inputBox.x + 10, inputBox.y + inputBox.height - 10, 3, (Color){40, 35, 30, 255});
+    DrawCircle(inputBox.x + 10, inputBox.y + inputBox.height - 10, 2, (Color){55, 48, 40, 255});
+    DrawCircle(inputBox.x + inputBox.width - 10, inputBox.y + inputBox.height - 10, 3, (Color){40, 35, 30, 255});
+    DrawCircle(inputBox.x + inputBox.width - 10, inputBox.y + inputBox.height - 10, 2, (Color){55, 48, 40, 255});
+
+    // Draw text inside
     // 1. Measure the text width first
     // (We use the same Font, Text, Font Size, and Spacing as the Draw call)
     Vector2 textSize = MeasureTextEx(Loader::TitleFont, typedName.c_str(), 32, 1);
@@ -58,7 +96,7 @@ void MenuEnterName::Draw()
         if (((int)(GetTime() * 2)) % 2 == 0)
         {
             // Using DrawTextEx for the cursor ensures it matches the height/style of your font
-            DrawTextEx(Loader::TitleFont, "|", (Vector2){cursorX, inputBox.y + 15}, 32, 1, GREEN);
+            DrawTextEx(Loader::TitleFont, "|", (Vector2){cursorX, inputBox.y + 15}, 32, 1, YELLOW);
         }
     }
 
