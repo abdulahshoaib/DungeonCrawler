@@ -16,6 +16,7 @@ class Engine
 {
   GameState *gameState;
   GameState *previousState;
+  bool exitRequested = false;
 
 public:
   Engine();
@@ -25,6 +26,8 @@ public:
   void init(Screen);
 
   void run();
+
+  void RequestExit() { exitRequested = true; }
 
   void ChangeState(GameState *);
   void PopState(); // Add this method

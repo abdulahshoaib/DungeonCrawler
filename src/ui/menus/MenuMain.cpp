@@ -68,7 +68,7 @@ void MenuMain::HandleInput(Engine &engine)
             CheckCollisionPointRec(mousePoint, Settings_btn.rect) ||
             CheckCollisionPointRec(mousePoint, Quit_btn.rect))
         {
-            //Loader::udioSys.PlaySFX("Click"); // Ensure you loaded "Click" in Loader
+            // Loader::udioSys.PlaySFX("Click"); // Ensure you loaded "Click" in Loader
         }
     }
 
@@ -83,5 +83,5 @@ void MenuMain::HandleInput(Engine &engine)
         engine.ChangeState(new SettingsState());
 
     if (clicked && CheckCollisionPointRec(mousePoint, Quit_btn.rect))
-        CloseWindow();
+        engine.RequestExit();
 }

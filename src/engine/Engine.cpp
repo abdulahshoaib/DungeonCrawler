@@ -30,7 +30,7 @@ void Engine::init(Screen screen)
 
 void Engine::run()
 {
-  while (!WindowShouldClose())
+  while (!WindowShouldClose() && !exitRequested)
   {
     Audio::Update();
     gameState->Update(*this);
@@ -40,7 +40,13 @@ void Engine::run()
     gameState->Draw(*this);
     EndDrawing();
   }
-  CloseWindow();
+  // Only close the window if it is still ready. Some UI code may call
+  // CloseWindow() (e.g., quit button) which would make a second call
+  // here and produce GLFW "not initialized" warnings. Guard to avoid that.
+  if (IsWindowReady())
+  {
+    CloseWindow();
+  }
 }
 
 void Engine::ChangeState(GameState *newGameState)

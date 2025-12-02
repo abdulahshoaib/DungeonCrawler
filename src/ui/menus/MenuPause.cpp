@@ -199,8 +199,8 @@ void MenuPause::HandleInput(Engine &engine)
         Audio::PlaySFx(BUTTON_HOVER);
         // Save progress before quitting
         GameProgress::SaveProgress();
-        // Close the window (Engine::run() will handle cleanup)
-        CloseWindow();
+        // Request the engine to exit so cleanup happens in the main loop.
+        engine.RequestExit();
     }
 
     // ESC key to resume game
