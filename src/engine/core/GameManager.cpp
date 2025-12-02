@@ -91,6 +91,52 @@ GameManager::GameManager(int ID)
     }
     }
 
+    // --- Initialize enemy manager ---
+    enemyManager.SetPlayerReference(player);
+    enemyManager.SetCollisionMapReference(&map_collide);
+    enemyManager.SetDebugDraw(debugDrawCollision);
+
+    // --- Spawn example enemies with patrol paths (spread far apart on map) ---
+    // Create patrol path 1 (left side of map)
+    EnemyPath *path1 = enemyManager.CreatePath();
+    enemyManager.AddPathNode(path1, {100.0f, 400.0f}, 1.0f);
+    enemyManager.AddPathNode(path1, {300.0f, 400.0f}, 0.5f);
+    enemyManager.AddPathNode(path1, {100.0f, 400.0f}, 1.0f);
+    enemyManager.SetPathLooping(path1, true);
+
+    // Spawn enemy 1 with path (left side)
+    enemyManager.SpawnEnemyWithPath({100.0f, 400.0f}, path1, 200.0f, 80.0f);
+
+    // Create patrol path 2 (middle-left of map)
+    EnemyPath *path2 = enemyManager.CreatePath();
+    enemyManager.AddPathNode(path2, {500.0f, 350.0f}, 0.8f);
+    enemyManager.AddPathNode(path2, {700.0f, 350.0f}, 0.5f);
+    enemyManager.AddPathNode(path2, {500.0f, 350.0f}, 0.8f);
+    enemyManager.SetPathLooping(path2, true);
+
+    // Spawn enemy 2 with path (middle-left)
+    enemyManager.SpawnEnemyWithPath({500.0f, 350.0f}, path2, 200.0f, 80.0f);
+
+    // Create patrol path 3 (middle-right of map)
+    EnemyPath *path3 = enemyManager.CreatePath();
+    enemyManager.AddPathNode(path3, {900.0f, 300.0f}, 1.0f);
+    enemyManager.AddPathNode(path3, {1100.0f, 300.0f}, 0.5f);
+    enemyManager.AddPathNode(path3, {900.0f, 300.0f}, 1.0f);
+    enemyManager.SetPathLooping(path3, true);
+
+    // Spawn enemy 3 with path (middle-right)
+    enemyManager.SpawnEnemyWithPath({900.0f, 300.0f}, path3, 200.0f, 80.0f);
+
+    // Create patrol path 4 (right side of map)
+    EnemyPath *path4 = enemyManager.CreatePath();
+    enemyManager.AddPathNode(path4, {1300.0f, 380.0f}, 0.8f);
+    enemyManager.AddPathNode(path4, {1500.0f, 380.0f}, 0.6f);
+    enemyManager.AddPathNode(path4, {1300.0f, 380.0f}, 0.8f);
+    enemyManager.SetPathLooping(path4, true);
+
+    // Spawn enemy 4 with path (right side)
+    enemyManager.SpawnEnemyWithPath({1300.0f, 380.0f}, path4, 200.0f, 80.0f);
+
     // --- Spawn coins here ---
     for (int y = 0; y < interactables.GetHeight(); y++)
     {
@@ -109,6 +155,7 @@ GameManager::GameManager(int ID)
 GameManager::~GameManager()
 {
     // NOTE(demon_slayer): Cleanup resources if any
+    enemyManager.Clear();
 }
 
 void GameManager::Update(Engine &engine)
@@ -415,6 +462,11 @@ void GameManager::Update(Engine &engine)
     player->anim();
     animator.Update(player, dt);
 
+    // =========================================================
+    //     UPDATE ENEMIES
+    // =========================================================
+    enemyManager.Update(dt);
+
     // Update coins animation
     for (auto &coin : coins)
     {
@@ -451,6 +503,9 @@ void GameManager::Draw()
     map_collide.DrawMap();
     interactables.DrawMap();
     map_non_colliding.DrawMap();
+
+    // --- Draw enemies ---
+    enemyManager.Draw(animator);
 
     // --- Draw player properly inside camera ---
     if (player)
@@ -508,6 +563,9 @@ void GameManager::Draw()
             Rectangle hb = player->GetHitboxRect();
             DrawRectangleLinesEx(hb, 2, RED);
         }
+
+        // Enemy detection and attack ranges
+        enemyManager.DebugDraw();
 
         // Entity hitboxes
         for (auto e : entities)

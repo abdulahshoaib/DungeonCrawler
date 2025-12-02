@@ -6,6 +6,7 @@
 #include "Animation.h"
 #include "Animator.h"
 #include "Coin.h"
+#include "EnemyManager.h"
 #include "system/GameProgress.h"
 using std::vector;
 
@@ -35,6 +36,9 @@ private:
     Camera2D camera;
     std::vector<CoinObject> coins;
 
+    // Enemy system
+    EnemyManager enemyManager;
+
     // Attack combo tracking
     int currentComboStep = 0;
     float comboTimer = 0.0f;
@@ -47,4 +51,7 @@ public:
 
     void Update(Engine &);
     void Draw();
+
+    // ===== ENEMY MANAGEMENT =====
+    EnemyManager &GetEnemyManager() { return enemyManager; }
 };
