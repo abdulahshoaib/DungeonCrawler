@@ -24,13 +24,13 @@ Enemy::Enemy() : Character()
     hp = 30.0f;
     damage = 8.0f;
     speed = 120.0f;
-    
+
     // Hitbox for enemy (adjust as needed)
     hitboxW = 48.0f;
     hitboxH = 80.0f;
     hitboxOffsetX = 40.0f;
     hitboxOffsetY = 48.0f;
-    
+
     animState = AnimState::IDLE;
 }
 
@@ -82,21 +82,36 @@ void Enemy::Update(float dt, Map &collisionMap)
     }
 
     // Check for player detection and state transitions
+    // Don't interrupt ATTACKING state unless player is out of range
     if (targetPlayer && aiState != EnemyAIState::KNOCKBACK && aiState != EnemyAIState::DEAD)
     {
         float distToPlayer = GetDistanceToPlayer();
 
         if (distToPlayer < attackRange)
         {
-            // Close enough to attack
-            aiState = EnemyAIState::ATTACKING;
-            velocityX = 0; // Stop moving
+            // Close enough to attack - transition to attacking state
+            if (aiState != EnemyAIState::ATTACKING)
+            {
+                aiState = EnemyAIState::ATTACKING;
+                velocityX = 0;
+            }
         }
         else if (distToPlayer < detectionRange)
         {
-            // Player detected - start chasing
-            aiState = EnemyAIState::CHASING;
-            chaseTimer = chaseTimeMax;
+            // Player detected - start chasing (but not if already attacking)
+            if (aiState != EnemyAIState::ATTACKING)
+            {
+                aiState = EnemyAIState::CHASING;
+                chaseTimer = chaseTimeMax;
+            }
+        }
+        else
+        {
+            // Player out of range - go back to patrol if not attacking
+            if (aiState == EnemyAIState::CHASING)
+            {
+                aiState = EnemyAIState::PATROLLING;
+            }
         }
     }
 
@@ -153,13 +168,13 @@ void Enemy::UpdatePatrol(float dt, Map &collisionMap)
     {
         // Reached waypoint - decrement pause timer
         pathPauseTimer -= dt;
-        
+
         if (pathPauseTimer <= 0)
         {
             // Pause time expired, move to next waypoint
             pathPauseTimer = 0;
             currentPathNode++;
-            
+
             if (currentPathNode >= patrolPath->GetNodeCount())
             {
                 if (patrolPath->IsLooping())
@@ -175,7 +190,7 @@ void Enemy::UpdatePatrol(float dt, Map &collisionMap)
                     return;
                 }
             }
-            
+
             // Set pause time for the new waypoint we just advanced to
             pathPauseTimer = patrolPath->GetPauseTime(currentPathNode);
         }

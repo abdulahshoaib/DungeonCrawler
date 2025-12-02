@@ -56,16 +56,16 @@ void Loader::UnLoadKarasuTengu()
 void Loader::LoadSkeletonWarrior()
 {
     int frameSize = 128;
-    SkeletonWarriorAttack1 = {LoadTexture("assets/Skeleton/Skeleton_Warrior/Attack_1.png"), frameSize, frameSize, 5, 22};
-    SkeletonWarriorAttack2 = {LoadTexture("assets/Skeleton/Skeleton_Warrior/Attack_2.png"), frameSize, frameSize, 6, 26};
-    SkeletonWarriorAttack3 = {LoadTexture("assets/Skeleton/Skeleton_Warrior/Attack_3.png"), frameSize, frameSize, 4, 26};
-    SkeletonWarriorDead = {LoadTexture("assets/Skeleton/Skeleton_Warrior/Dead.png"), frameSize, frameSize, 4, 14};
-    SkeletonWarriorHurt = {LoadTexture("assets/Skeleton/Skeleton_Warrior/Hurt.png"), frameSize, frameSize, 2, 18};
-    SkeletonWarriorIdle = {LoadTexture("assets/Skeleton/Skeleton_Warrior/Idle.png"), frameSize, frameSize, 7, 14};
-    SkeletonWarriorProtect = {LoadTexture("assets/Skeleton/Skeleton_Warrior/Protect.png"), frameSize, frameSize, 1, 18};
-    SkeletonWarriorRun = {LoadTexture("assets/Skeleton/Skeleton_Warrior/Run.png"), frameSize, frameSize, 8, 24};
-    SkeletonWarriorRunAttack = {LoadTexture("assets/Skeleton/Skeleton_Warrior/Run+Attack.png"), frameSize, frameSize, 7, 22};
-    SkeletonWarriorWalk = {LoadTexture("assets/Skeleton/Skeleton_Warrior/Walk.png"), frameSize, frameSize, 7, 14};
+    SkeletonWarriorAttack1 = {LoadTexture("assets/Skeleton/Skeleton_Warrior/Attack_1.png"), frameSize, frameSize, 5, 11};
+    SkeletonWarriorAttack2 = {LoadTexture("assets/Skeleton/Skeleton_Warrior/Attack_2.png"), frameSize, frameSize, 6, 13};
+    SkeletonWarriorAttack3 = {LoadTexture("assets/Skeleton/Skeleton_Warrior/Attack_3.png"), frameSize, frameSize, 4, 13};
+    SkeletonWarriorDead = {LoadTexture("assets/Skeleton/Skeleton_Warrior/Dead.png"), frameSize, frameSize, 4, 7};
+    SkeletonWarriorHurt = {LoadTexture("assets/Skeleton/Skeleton_Warrior/Hurt.png"), frameSize, frameSize, 2, 9};
+    SkeletonWarriorIdle = {LoadTexture("assets/Skeleton/Skeleton_Warrior/Idle.png"), frameSize, frameSize, 7, 7};
+    SkeletonWarriorProtect = {LoadTexture("assets/Skeleton/Skeleton_Warrior/Protect.png"), frameSize, frameSize, 1, 9};
+    SkeletonWarriorRun = {LoadTexture("assets/Skeleton/Skeleton_Warrior/Run.png"), frameSize, frameSize, 8, 8};
+    SkeletonWarriorRunAttack = {LoadTexture("assets/Skeleton/Skeleton_Warrior/Run+Attack.png"), frameSize, frameSize, 7, 11};
+    SkeletonWarriorWalk = {LoadTexture("assets/Skeleton/Skeleton_Warrior/Walk.png"), frameSize, frameSize, 7, 5};
 }
 void Loader::UnLoadSkeletonWarrior()
 {

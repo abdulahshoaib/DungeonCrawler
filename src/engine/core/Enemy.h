@@ -8,12 +8,12 @@
 // Enemy AI states
 enum class EnemyAIState
 {
-    IDLE,        // Waiting at a waypoint
-    PATROLLING,  // Moving along patrol path
-    CHASING,     // Player within detection range - moving toward player
-    ATTACKING,   // In combat range - attacking player
-    KNOCKBACK,   // Hit by player attack
-    DEAD         // Enemy defeated
+    IDLE,       // Waiting at a waypoint
+    PATROLLING, // Moving along patrol path
+    CHASING,    // Player within detection range - moving toward player
+    ATTACKING,  // In combat range - attacking player
+    KNOCKBACK,  // Hit by player attack
+    DEAD        // Enemy defeated
 };
 
 class Enemy : public Character
@@ -26,14 +26,14 @@ private:
     float pathPauseTimer = 0.0f;
 
     // ===== DETECTION & COMBAT =====
-    float detectionRange = 200.0f;      // Distance at which to start chasing player
-    float attackRange = 80.0f;           // Distance at which to attack player
-    float attackCooldown = 0.0f;         // Cooldown between attacks
-    float attackCooldownMax = 1.2f;      // Max cooldown time
+    float detectionRange = 200.0f;  // Distance at which to start chasing player
+    float attackRange = 80.0f;      // Distance at which to attack player
+    float attackCooldown = 0.0f;    // Cooldown between attacks
+    float attackCooldownMax = 1.2f; // Max cooldown time
 
     // ===== COMBAT TRACKING =====
-    Character *targetPlayer = nullptr;   // Reference to player
-    float chaseTimeMax = 5.0f;           // Max time to chase before returning to patrol
+    Character *targetPlayer = nullptr; // Reference to player
+    float chaseTimeMax = 5.0f;         // Max time to chase before returning to patrol
     float chaseTimer = 0.0f;
 
     // ===== KNOCKBACK =====

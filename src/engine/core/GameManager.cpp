@@ -467,6 +467,16 @@ void GameManager::Update(Engine &engine)
     // =========================================================
     enemyManager.Update(dt);
 
+    // Update animator for all enemies
+    for (size_t i = 0; i < enemyManager.GetEnemyCount(); i++)
+    {
+        Enemy *enemy = enemyManager.GetEnemy(i);
+        if (enemy)
+        {
+            animator.Update(enemy, dt);
+        }
+    }
+
     // Update coins animation
     for (auto &coin : coins)
     {
