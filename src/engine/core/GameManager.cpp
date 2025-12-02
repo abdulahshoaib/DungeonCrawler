@@ -124,6 +124,18 @@ void GameManager::Update(Engine &engine)
         return;
     }
 
+    // Update combo timer
+    if (currentComboStep > 0)
+    {
+        comboTimer -= dt;
+        if (comboTimer <= 0.0f)
+        {
+            // Combo timeout - reset
+            currentComboStep = 0;
+            comboTimer = 0.0f;
+        }
+    }
+
     // Toggle debug draw
     if (IsKeyPressed(KEY_F1))
     {
@@ -233,7 +245,33 @@ void GameManager::Update(Engine &engine)
 
     if (attackPressed && player->IsAnimationLocked() == false)
     {
-        player->ChangeAnimState(AnimState::ATTACK1);
+        // Combo system
+        AnimState nextAttack = AnimState::ATTACK1;
+        
+        if (currentComboStep == 0)
+        {
+            nextAttack = AnimState::ATTACK1;
+            currentComboStep = 1;
+        }
+        else if (currentComboStep == 1)
+        {
+            nextAttack = AnimState::ATTACK2;
+            currentComboStep = 2;
+        }
+        else if (currentComboStep == 2)
+        {
+            nextAttack = AnimState::ATTACK3;
+            currentComboStep = 3;
+        }
+        else
+        {
+            // Combo complete, restart
+            nextAttack = AnimState::ATTACK1;
+            currentComboStep = 1;
+        }
+        
+        player->ChangeAnimState(nextAttack);
+        comboTimer = COMBO_TIMEOUT;
     }
 
     // TEST KEYS

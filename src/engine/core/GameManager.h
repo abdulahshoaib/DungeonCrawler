@@ -35,6 +35,11 @@ private:
     Camera2D camera;
     std::vector<CoinObject> coins;
 
+    // Attack combo tracking
+    int currentComboStep = 0;
+    float comboTimer = 0.0f;
+    const float COMBO_TIMEOUT = 1.5f; // Time window for next attack in combo
+
 public:
     // NOTE(demon_slayer): the int here is for the ID passed to identify the charachter selected
     GameManager(int);
