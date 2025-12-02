@@ -21,12 +21,13 @@
 #
 #**************************************************************************************************
 
-.PHONY: all clean
+.PHONY: all clean run
 
 # Define required raylib variables
 PROJECT_NAME       ?= DungeonCrawler
+BUILD_DIR          ?= build
 RAYLIB_VERSION     ?= 4.5.0
-RAYLIB_PATH        ?= ..\..
+RAYLIB_PATH        ?= ..\..\.
 
 # Define compiler path on Windows
 COMPILER_PATH      ?= C:/raylib/w64devkit/bin
@@ -364,8 +365,7 @@ endif
 rwildcard=$(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2) $(filter $(subst *,%,$2),$d))
 
 SRC = $(call rwildcard, src/, *.cpp) $(wildcard test/*.cpp)
-# OBJS = $(patsubst %.cpp, build/%.o, $(SRC))
-OBJS = $(SRC:.cpp=.o)
+OBJS = $(patsubst %.cpp, $(BUILD_DIR)/%.o, $(SRC))
 
 # For Android platform we call a custom Makefile.Android
 ifeq ($(PLATFORM),PLATFORM_ANDROID)
@@ -384,33 +384,41 @@ all:
 # Project target defined by PROJECT_NAME
 $(PROJECT_NAME): $(OBJS)
 	$(CC) -o $(PROJECT_NAME)$(EXT) $(OBJS) $(CFLAGS) $(INCLUDE_PATHS) $(LDFLAGS) $(LDLIBS) -D$(PLATFORM)
-    #./build/$(PROJECT_NAME)$(EXT)
+
+# Run target - build and execute the game
+run: $(PROJECT_NAME)
+	./$(PROJECT_NAME)$(EXT)
 
 # Compile source files
 # NOTE: This pattern will compile every module defined on $(OBJS)
-%.o: %.cpp
-    #@mkdir -p $(dir $@)
+$(BUILD_DIR)/%.o: %.cpp
+	@mkdir -p $(dir $@)
 	$(CC) -c $< -o $@ $(CFLAGS) $(INCLUDE_PATHS) -D$(PLATFORM)
 
 # Clean everything
 clean:
 ifeq ($(PLATFORM),PLATFORM_DESKTOP)
+	rm -rf $(BUILD_DIR)
+	rm -f *.exe
     ifeq ($(PLATFORM_OS),WINDOWS)
-		del *.o *.exe /s
+		del /s /q $(BUILD_DIR) 2>nul || true
+		del *.exe 2>nul || true
     endif
     ifeq ($(PLATFORM_OS),LINUX)
-	find -type f -executable | xargs file -i | grep -E 'x-object|x-archive|x-sharedlib|x-executable' | rev | cut -d ':' -f 2- | rev | xargs rm -fv
+	rm -rf $(BUILD_DIR)
+	find . -name "*.exe" -delete
     endif
     ifeq ($(PLATFORM_OS),OSX)
-		find . -type f -perm +ugo+x -delete
-		rm -f *.o
+	rm -rf $(BUILD_DIR)
+	rm -f *.exe
     endif
 endif
 ifeq ($(PLATFORM),PLATFORM_RPI)
-	find . -type f -executable -delete
-	rm -fv *.o
+	rm -rf $(BUILD_DIR)
+	find . -name "*.exe" -delete
 endif
 ifeq ($(PLATFORM),PLATFORM_WEB)
-	del *.o *.html *.js
+	rm -rf $(BUILD_DIR)
+	rm -f *.html *.js
 endif
 	@echo Cleaning done
