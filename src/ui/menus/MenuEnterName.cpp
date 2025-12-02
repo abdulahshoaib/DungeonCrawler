@@ -3,6 +3,7 @@
 #include "Engine.h"
 #include "PlayState.h"
 #include "NewGameState.h"
+#include "GameProgress.h"
 
 // Shared variables for both Draw() and HandleInput()
 static Rectangle inputBox = {(1100 - 400) / 2, (700 - 60) / 2, 400, 60};
@@ -133,6 +134,7 @@ void MenuEnterName::HandleInput(Engine &engine)
         // ENTER → go to next screen
         if (IsKeyPressed(KEY_ENTER) && !typedName.empty())
         {
+            GameProgress::SetUsername(typedName);
             engine.ChangeState(new NewGameState());
         }
     }
