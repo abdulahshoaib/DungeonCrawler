@@ -65,6 +65,9 @@ void Character::ChangeAnimState(AnimState newState)
     if (newState == AnimState::ATTACK1 ||
         newState == AnimState::ATTACK2 ||
         newState == AnimState::ATTACK3 ||
+        newState == AnimState::SHOT1 ||
+        newState == AnimState::SHOT2 ||
+        newState == AnimState::RUN_ATTACK ||
         /* Exclude JUMP from lock so physics/controls keep updating while in-air */
         newState == AnimState::HURT ||
         newState == AnimState::DEAD)

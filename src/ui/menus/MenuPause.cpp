@@ -95,7 +95,6 @@ void MenuPause::DrawPlayerInfo()
     float textX = GetScreenWidth() / 2;
     Color infoColor = (Color){235, 220, 195, 255};
 
-    // Draw centered text
     Vector2 usernameSize = MeasureTextEx(Loader::TitleFont, usernameText.c_str(), fontSize, 1.0f);
     DrawTextEx(Loader::TitleFont, usernameText.c_str(),
                {textX - usernameSize.x / 2, infoY}, fontSize, 1.0f, infoColor);
@@ -118,27 +117,19 @@ void MenuPause::Draw()
     DrawPauseHeader();
     DrawPlayerInfo();
 
-    // Draw all buttons with dungeon style
     for (Button *button : buttons)
     {
-        // Draw button background with stone effect
         Rectangle btnRect = button->rect;
 
-        // Outer shadow
         DrawRectangleRec((Rectangle){btnRect.x + 4, btnRect.y + 4, btnRect.width, btnRect.height},
                          (Color){20, 15, 10, 180});
-        // Main stone border
         DrawRectangleRec(btnRect, (Color){45, 38, 32, 255});
-        // Inner groove
         DrawRectangleRec((Rectangle){btnRect.x + 3, btnRect.y + 3, btnRect.width - 6, btnRect.height - 6},
                          (Color){28, 22, 18, 255});
-        // Interior
         DrawRectangleRec((Rectangle){btnRect.x + 6, btnRect.y + 6, btnRect.width - 12, btnRect.height - 12},
                          (Color){65, 55, 45, 255});
 
-        // Top highlight
         DrawRectangle(btnRect.x + 6, btnRect.y + 6, btnRect.width - 12, 2, (Color){85, 75, 60, 120});
-        // Bottom shadow
         DrawRectangle(btnRect.x + 6, btnRect.y + btnRect.height - 8, btnRect.width - 12, 2,
                       (Color){20, 15, 10, 160});
 
@@ -155,11 +146,10 @@ void MenuPause::Draw()
 
 void MenuPause::HandleInput(Engine &engine)
 {
-    // Resume Button - Return to previous state (game)
     if (CheckCollisionPointRec(GetMousePosition(), resumeButton.rect) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
         Audio::PlaySFx(BUTTON_HOVER);
-        engine.PopState(); // You'll need to add this method to Engine
+        engine.PopState();
     }
 
     // Save Game Button
@@ -170,7 +160,6 @@ void MenuPause::HandleInput(Engine &engine)
         if (GameProgress::SaveProgress())
         {
             TraceLog(LOG_INFO, "Game saved successfully from pause menu!");
-            // Optional: You could add a visual feedback here (flash the button green, show "SAVED!" text, etc.)
         }
         else
         {

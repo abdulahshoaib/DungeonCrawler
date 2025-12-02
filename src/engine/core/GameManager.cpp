@@ -241,13 +241,14 @@ void GameManager::Update(Engine &engine)
     // =========================================================
 
     bool attackPressed = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
+    bool shootPressed = IsMouseButtonPressed(MOUSE_RIGHT_BUTTON);
     bool jumpPressed = IsKeyPressed(KEY_SPACE);
 
     if (attackPressed && player->IsAnimationLocked() == false)
     {
         // Combo system
         AnimState nextAttack = AnimState::ATTACK1;
-        
+
         if (currentComboStep == 0)
         {
             nextAttack = AnimState::ATTACK1;
@@ -269,9 +270,18 @@ void GameManager::Update(Engine &engine)
             nextAttack = AnimState::ATTACK1;
             currentComboStep = 1;
         }
-        
+
         player->ChangeAnimState(nextAttack);
         comboTimer = COMBO_TIMEOUT;
+    }
+
+    // Right-click: Shoot arrow (for archers)
+    if (shootPressed && player->IsAnimationLocked() == false)
+    {
+        // Archers have SHOT animations available
+        player->ChangeAnimState(AnimState::SHOT1);
+        currentComboStep = 0; // Reset combo when shooting
+        comboTimer = 0.0f;
     }
 
     // TEST KEYS
@@ -294,6 +304,17 @@ void GameManager::Update(Engine &engine)
     bool movingRight = IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT);
     bool movingLeft = IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT);
     bool runKey = IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT);
+
+    // Check if player is running
+    bool isRunning = (movingRight || movingLeft) && runKey;
+
+    // If running and attack pressed, do run attack instead
+    if (isRunning && attackPressed && player->IsAnimationLocked() == false)
+    {
+        player->ChangeAnimState(AnimState::RUN_ATTACK);
+        currentComboStep = 0; // Reset normal combo when doing run attack
+        comboTimer = 0.0f;
+    }
 
     player->velocityX = 0;
 
@@ -324,17 +345,17 @@ void GameManager::Update(Engine &engine)
         else
             player->ChangeAnimState(AnimState::FALL);
     }
-    else if (player->velocityX != 0)
+    else if (player->velocityX != 0 && !player->IsAnimationLocked())
     {
-        // Running or walking
+        // Running or walking (only if not in a locked animation)
         if (runKey)
             player->ChangeAnimState(AnimState::RUN);
         else
             player->ChangeAnimState(AnimState::WALK);
     }
-    else
+    else if (player->velocityX == 0 && !player->IsAnimationLocked())
     {
-        // No movement
+        // No movement (only if not in a locked animation)
         player->ChangeAnimState(AnimState::IDLE);
     }
 
