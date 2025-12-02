@@ -5,13 +5,13 @@ void Audio::Load()
 {
     // --- MUSIC ---
     MainMenuMusic = LoadMusicStream("assets/audio/music.mp3");
-    // LevelMusic    = LoadMusicStream("assets/audio/music/level_theme.mp3");
+    LevelMusic = LoadMusicStream("assets/audio/music/level_theme.mp3");
 
-    // MainMenuMusic.looping = true;
-    // LevelMusic.looping = true;
+    MainMenuMusic.looping = true;
+    LevelMusic.looping = true;
 
     // // --- SFX ---
-    // HoverButton  = LoadSound("assets/audio/sfx/hover.wav");
+    HoverButton = LoadSound("assets/audio/sfx/hover.wav");
     ButtonClicked = LoadSound("assets/audio/click.mp3");
 
     // AttackSFX = LoadSound("assets/audio/sfx/attack.wav");
@@ -38,7 +38,6 @@ void Audio::Clean()
 {
     UnloadMusicStream(MainMenuMusic);
     UnloadMusicStream(LevelMusic);
-
     UnloadSound(HoverButton);
     UnloadSound(ButtonClicked);
     UnloadSound(AttackSFX);
@@ -50,6 +49,12 @@ void Audio::Clean()
 
 void Audio::Play(GMusic ref)
 {
+    // stop currently playing music (if any) before switching
+    if (currentMusic.stream.buffer != nullptr)
+    {
+        StopMusicStream(currentMusic);
+    }
+
     switch (ref)
     {
     case MAIN_MENU_MUSIC:
@@ -61,12 +66,15 @@ void Audio::Play(GMusic ref)
         break;
     }
 
+    // ensure the new music has the correct volume and start it
+    ::SetMusicVolume(currentMusic, musicVolume);
     PlayMusicStream(currentMusic);
 }
 
 void Audio::Update()
 {
-    UpdateMusicStream(currentMusic);
+    if (currentMusic.stream.buffer != nullptr)
+        UpdateMusicStream(currentMusic);
 }
 
 void Audio::StopMusic()

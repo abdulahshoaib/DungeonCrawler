@@ -409,11 +409,14 @@ void GameManager::Update(Engine &engine)
     if (IsKeyPressed(KEY_Q))
         player->ChangeAnimState(AnimState::DEAD);
 
-    if (player->IsAnimationLocked())
+    bool inputLocked = player->IsAnimationLocked();
+    if (inputLocked)
     {
+        // Advance animation even while locked, but do NOT return —
+        // allow physics (gravity) and collision resolution to continue so
+        // the player doesn't freeze mid-air during attack animations.
         player->anim();
         animator.Update(player, dt);
-        return;
     }
 
     bool movingRight = IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT);
@@ -431,21 +434,27 @@ void GameManager::Update(Engine &engine)
         comboTimer = 0.0f;
     }
 
-    player->velocityX = 0;
+    // If the player's animation has locked input (e.g., attack), skip processing
+    // movement/jump inputs here so the character cannot be controlled during
+    // the locked animation. We still allow physics to run below.
+    if (!inputLocked)
+    {
+        player->velocityX = 0;
 
-    if (movingRight)
-    {
-        player->velocityX = runKey ? player->speed * 1.8f : player->speed;
-        player->SetFacingLeft(false); // Face right when moving right
-    }
-    else if (movingLeft)
-    {
-        player->velocityX = runKey ? -player->speed * 1.8f : -player->speed;
-        player->SetFacingLeft(true); // Face left when moving left
+        if (movingRight)
+        {
+            player->velocityX = runKey ? player->speed * 1.8f : player->speed;
+            player->SetFacingLeft(false); // Face right when moving right
+        }
+        else if (movingLeft)
+        {
+            player->velocityX = runKey ? -player->speed * 1.8f : -player->speed;
+            player->SetFacingLeft(true); // Face left when moving left
+        }
     }
     // When not moving, don't change facing - character remembers last direction
 
-    if (jumpPressed && player->isGrounded)
+    if (!inputLocked && jumpPressed && player->isGrounded)
     {
         player->velocityY = player->jumpForce;
         player->isGrounded = false;
@@ -525,6 +534,22 @@ void GameManager::Update(Engine &engine)
         }
         // Stop vertical motion
         player->velocityY = 0;
+    }
+    else
+    {
+        // No direct vertical collision at the player's hitbox.
+        // Check a small area just below the player's feet to detect if ground exists.
+        Rectangle feetCheck = {player->Pos.x + player->hitboxOffsetX, player->Pos.y + player->hitboxOffsetY + player->hitboxH + 1, player->hitboxW, 2};
+        if (map_collide.CheckCollisionRect(feetCheck))
+        {
+            // Ground is right below (e.g., standing on thin tile); keep grounded
+            player->isGrounded = true;
+        }
+        else
+        {
+            // No ground below — player should be in the air and subject to gravity
+            player->isGrounded = false;
+        }
     }
 
     player->anim();
