@@ -22,6 +22,7 @@ Enemy::Enemy() : Character()
 
     // Default enemy stats
     hp = 30.0f;
+    maxHp = hp;
     damage = 8.0f;
     speed = 180.0f; // Increased walking speed for more engaging gameplay
 

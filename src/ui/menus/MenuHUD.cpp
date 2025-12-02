@@ -1,12 +1,23 @@
 
 #include "MenuHUD.h"
 #include "system/GameProgress.h"
+#include "characters/Character.h"
 MenuHUD::MenuHUD()
 {
   playerName = "Haris";
   currentHealth = 100;
   maxHealth = 100;
   coins = 0;
+}
+
+void MenuHUD::SetPlayer(Character *p)
+{
+  playerRef = p;
+  if (playerRef)
+  {
+    maxHealth = (int)playerRef->maxHp;
+    currentHealth = (int)playerRef->hp;
+  }
 }
 
 void MenuHUD::Draw()
@@ -40,7 +51,18 @@ void MenuHUD::Draw()
   int barW = 200;
   int barH = 15;
 
+  // Read live health from player reference if available
+  if (playerRef)
+  {
+    currentHealth = (int)playerRef->hp;
+    maxHealth = (int)playerRef->maxHp;
+    if (maxHealth <= 0)
+      maxHealth = 1;
+  }
+
   float healthPercent = (float)currentHealth / maxHealth;
+  if (healthPercent < 0)
+    healthPercent = 0;
   int healthWidth = (int)(barW * healthPercent);
 
   // Health

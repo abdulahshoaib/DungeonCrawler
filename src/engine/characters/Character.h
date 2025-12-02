@@ -56,6 +56,7 @@ public:
     Character();
 
     float hp;
+    float maxHp;
     float damage;
     float speed = 200.0f;
 
@@ -86,6 +87,13 @@ public:
     // ADD THESE TWO METHODS:
     void SetFacingLeft(bool left) { facingLeft = left; }
     bool IsFacingLeft() const { return facingLeft; }
+
+    // Attack trigger set by Animator when attack animation reaches hit frame
+    bool attackTriggered = false;
+
+    // Called by Animator when attack 'hit' frame is reached. Override in
+    // subclasses to implement attack effects (default does nothing).
+    virtual void OnAttackHit() {}
 
     virtual void anim() = 0;
     void ApplyPhysics(float);

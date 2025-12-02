@@ -24,17 +24,31 @@ void Animator::Update(Character *c, float delta)
     
     anim->frameTimer += delta;
     float frameTime = 1.0f / anim->fps;
-    
+
     if (anim->frameTimer >= frameTime)
     {
         anim->frameTimer -= frameTime;
+        int prevFrame = anim->currentFrame;
         anim->currentFrame++;
-        
+
+        // Check for attack hit trigger: call OnAttackHit() once when
+        // animation reaches its midpoint for attack animations.
+        int hitFrame = anim->frameCount / 2;
+        bool isAttackState = (c->animState == AnimState::ATTACK1 || c->animState == AnimState::ATTACK2 ||
+                              c->animState == AnimState::ATTACK3 || c->animState == AnimState::RUN_ATTACK);
+
+        if (isAttackState && prevFrame < hitFrame && anim->currentFrame >= hitFrame)
+        {
+            // Mark the character as having triggered an attack this cycle.
+            c->attackTriggered = true;
+            c->OnAttackHit();
+        }
+
         // Check if animation completed
         if (anim->currentFrame >= anim->frameCount)
         {
             anim->currentFrame = 0;
-            
+
             // Unlock character when non-looping animations complete
             if (c->IsAnimationLocked())
             {

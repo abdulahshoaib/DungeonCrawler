@@ -8,6 +8,7 @@ class MenuHUD : public Menu
   int currentHealth;
   int maxHealth;
   int coins;
+  class Character *playerRef = nullptr;
 
 public:
   std::string playerName;
@@ -16,4 +17,5 @@ public:
   MenuHUD();
   void Draw();
   void HandleInput(Engine &);
+  void SetPlayer(class Character *p);
 };

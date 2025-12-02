@@ -1,5 +1,6 @@
 #include "GameManager.h"
 #include "PauseState.h"
+#include "state/DeathState.h"
 
 #include "characters/Knight1.h"
 #include "characters/Knight2.h"
@@ -98,6 +99,9 @@ GameManager::GameManager(int ID)
     enemyManager.SetPlayerReference(player);
     enemyManager.SetCollisionMapReference(&map_collide);
     enemyManager.SetDebugDraw(debugDrawCollision);
+
+    // Connect HUD to player so it can display live HP
+    hud.SetPlayer(player);
 
     // --- Load enemy paths from CSV and spawn enemies ---
     enemyManager.LoadPathsFromCSV("assets/maps/enemy_paths.csv");
@@ -555,6 +559,22 @@ void GameManager::Update(Engine &engine)
     player->anim();
     animator.Update(player, dt);
 
+    // If player attack just triggered, damage nearby enemies
+    if (player->attackTriggered)
+    {
+        player->attackTriggered = false;
+
+        Vector2 playerCenter = {player->Pos.x + player->hitboxOffsetX + player->hitboxW * 0.5f,
+                                player->Pos.y + player->hitboxOffsetY + player->hitboxH * 0.5f};
+
+        float attackRange = 80.0f; // reasonable default melee range
+        auto hitEnemies = enemyManager.GetEnemiesInRange(playerCenter, attackRange);
+        for (size_t idx : hitEnemies)
+        {
+            enemyManager.DamageEnemy(idx, player->damage, {player->velocityX >= 0 ? 1.0f : -1.0f, -0.2f}, 200.0f);
+        }
+    }
+
     // =========================================================
     //     UPDATE ENEMIES
     // =========================================================
@@ -568,6 +588,47 @@ void GameManager::Update(Engine &engine)
         {
             enemy->anim();
             animator.Update(enemy, dt);
+        }
+    }
+
+    // Handle enemy attack triggers (apply damage to player)
+    for (size_t i = 0; i < enemyManager.GetEnemyCount(); i++)
+    {
+        Enemy *enemy = enemyManager.GetEnemy(i);
+        if (!enemy)
+            continue;
+
+        if (enemy->attackTriggered)
+        {
+            enemy->attackTriggered = false;
+            // Check range and facing - simple proximity check
+            if (player)
+            {
+                Vector2 enemyCenter = {enemy->Pos.x + enemy->hitboxOffsetX + enemy->hitboxW * 0.5f,
+                                       enemy->Pos.y + enemy->hitboxOffsetY + enemy->hitboxH * 0.5f};
+                Vector2 playerCenter = {player->Pos.x + player->hitboxOffsetX + player->hitboxW * 0.5f,
+                                        player->Pos.y + player->hitboxOffsetY + player->hitboxH * 0.5f};
+                float dx = playerCenter.x - enemyCenter.x;
+                float dy = playerCenter.y - enemyCenter.y;
+                float dist = sqrt(dx * dx + dy * dy);
+                if (dist <= enemy->GetAttackRange() * 1.2f)
+                {
+                    // Apply damage to player
+                    player->hp -= enemy->damage;
+                    if (player->hp <= 0)
+                    {
+                        player->hp = 0;
+                        player->ChangeAnimState(AnimState::DEAD);
+                        // Push the DeathState to show overlay while keeping the play state
+                        engine.PushState(new DeathState());
+                        return;
+                    }
+                    else
+                    {
+                        player->ChangeAnimState(AnimState::HURT);
+                    }
+                }
+            }
         }
     }
 

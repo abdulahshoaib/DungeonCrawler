@@ -85,6 +85,23 @@ void EnemyManager::Draw(Animator &animator)
         if (enemy)
         {
             animator.Draw(enemy.get());
+            // Draw a small sleek health bar above the enemy
+            float pct = 0.0f;
+            if (enemy->maxHp > 0)
+                pct = enemy->hp / enemy->maxHp;
+
+            // bar dimensions
+            float bw = 48.0f;
+            float bh = 6.0f;
+            Vector2 center = {enemy->Pos.x + enemy->hitboxOffsetX + enemy->hitboxW * 0.5f,
+                              enemy->Pos.y + enemy->hitboxOffsetY - 10.0f};
+
+            float bx = center.x - bw * 0.5f;
+            float by = center.y - bh * 0.5f;
+
+            DrawRectangle(bx, by, bw, bh, DARKGRAY);
+            DrawRectangle(bx, by, bw * pct, bh, RED);
+            DrawRectangleLines(bx, by, bw, bh, BLACK);
         }
     }
 }

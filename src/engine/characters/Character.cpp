@@ -16,6 +16,7 @@ Character::Character()
     Pos.x = 100;
     Pos.y = 500;
     hp = 100;
+    maxHp = hp;
     // Start on ground by default so player can jump immediately
     isGrounded = true;
     // Ensure velocities are initialized to zero

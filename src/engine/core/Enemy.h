@@ -72,6 +72,8 @@ public:
     // ===== COMBAT =====
     void TakeDamage(float damage);
     void ApplyKnockback(Vector2 direction, float force);
+    // expose max HP for HUD
+    float maxHp = 30.0f;
 
     // ===== ANIMATION =====
     void anim() override; // Implement from Character
