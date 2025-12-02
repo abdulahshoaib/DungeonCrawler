@@ -55,8 +55,34 @@ public:
     // subject to change in each derived class
     float hp;
     float damage;
-    float speed;
+    // Movement speed (pixels/second). Raised for visible in-game movement.
+    float speed = 200.0f;
+
+    // ===== MOVEMENT =====
+    float velocityX = 0.0f;
+    float velocityY = 0.0f;
+
+    float gravity = 1200.0f;
+    float jumpForce = -500.0f;
+
+    bool isGrounded = false;
+
+    // hitbox (relative to sprite top-left)
+    float hitboxW = 64.0f;
+    float hitboxH = 96.0f;
+    float hitboxOffsetX = 32.0f;
+    float hitboxOffsetY = 32.0f;
+
+    Rectangle GetHitboxRect() const
+    {
+        return Rectangle{Pos.x + hitboxOffsetX, Pos.y + hitboxOffsetY, hitboxW, hitboxH};
+    }
+
+    void SetHitboxOffsetY(float y) { hitboxOffsetY = y; }
+    void ChangeHitboxOffsetY(float dy) { hitboxOffsetY += dy; }
+    float GetHitboxOffsetY() const { return hitboxOffsetY; }
 
     virtual void anim() = 0;
+    void ApplyPhysics(float);
     void ChangeAnimState(AnimState);
 };

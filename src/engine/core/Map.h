@@ -13,6 +13,8 @@ private:
     // optional tileset for rendering
     Texture2D tileset;
     int tileSize;
+    // How many pixels from the top of a tile to ignore for collision.
+    int collisionTopMargin;
 
 public:
     Map();
@@ -21,4 +23,14 @@ public:
     void LoadMap(const char *filename);
 
     void DrawMap();
+
+    int GetTileSize() const { return tileSize; }
+    bool IsSolidTile(int tx, int ty) const;
+    bool CheckCollisionRect(const Rectangle &rect) const;
+
+    bool GetFirstCollisionTile(const Rectangle &rect, int &tx, int &ty) const;
+    void SetCollisionTopMargin(int margin) { collisionTopMargin = margin; }
+    int GetCollisionTopMargin() const { return collisionTopMargin; }
+    int GetWidth() const { return width; }
+    int GetHeight() const { return height; }
 };

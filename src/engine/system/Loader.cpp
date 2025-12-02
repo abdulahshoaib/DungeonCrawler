@@ -300,7 +300,7 @@ void Loader::LoadSamuraiCommander()
     SamuraiCommanderDead = {LoadTexture("assets/Samurai_Char/Samurai_commander/Dead.png"), frameSize, frameSize, 6, 14};
     SamuraiCommanderHurt = {LoadTexture("assets/Samurai_Char/Samurai_commander/Hurt.png"), frameSize, frameSize, 2, 18};
     SamuraiCommanderIdle = {LoadTexture("assets/Samurai_Char/Samurai_commander/Idle.png"), frameSize, frameSize, 5, 14};
-    SamuraiCommanderJump = {LoadTexture("assets/Samurai_Char/Samurai_commander/Jump.png"), frameSize, frameSize, 7, 20};
+    SamuraiCommanderJump = {LoadTexture("assets/Samurai_Char/Samurai_commander/Jump.png"), frameSize, frameSize, 7, 10};
     SamuraiCommanderRun = {LoadTexture("assets/Samurai_Char/Samurai_commander/Run.png"), frameSize, frameSize, 8, 26};
     SamuraiCommanderWalk = {LoadTexture("assets/Samurai_Char/Samurai_commander/Walk.png"), frameSize, frameSize, 9, 14};
     SamuraiCommanderProtect = {LoadTexture("assets/Samurai_Char/Samurai_commander/Protection.png"), frameSize, frameSize, 2, 12};

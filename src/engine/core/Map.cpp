@@ -3,10 +3,12 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <cmath>
 
 Map::Map() : width(0), height(0), tileset({0}), tileSize(32)
 {
     tileset = LoadTexture("assets/maps/map.png");
+    collisionTopMargin = 0; // by default full tile collision
 }
 
 void Map::LoadMap(const char *filename)
@@ -111,3 +113,75 @@ void Map::DrawMap()
         }
     }
 }
+
+bool Map::IsSolidTile(int tx, int ty) const
+{
+    if (tx < 0 || ty < 0 || ty >= (int)tiles.size() || tx >= (int)tiles[ty].size())
+        return false;
+    int id = tiles[ty][tx];
+    return id != 0;
+}
+
+bool Map::CheckCollisionRect(const Rectangle &rect) const
+{
+    if (tiles.empty())
+        return false;
+
+    int left = (int)std::floor(rect.x / tileSize);
+    int right = (int)std::floor((rect.x + rect.width - 1) / tileSize);
+    int top = (int)std::floor(rect.y / tileSize);
+    int bottom = (int)std::floor((rect.y + rect.height - 1) / tileSize);
+
+    for (int ty = top; ty <= bottom; ++ty)
+    {
+        for (int tx = left; tx <= right; ++tx)
+        {
+            if (IsSolidTile(tx, ty))
+                return true;
+        }
+    }
+    return false;
+}
+
+bool Map::GetFirstCollisionTile(const Rectangle &rect, int &tx, int &ty) const
+{
+    if (tiles.empty())
+        return false;
+
+    int left = (int)std::floor(rect.x / tileSize);
+    int right = (int)std::floor((rect.x + rect.width - 1) / tileSize);
+    int top = (int)std::floor(rect.y / tileSize);
+    int bottom = (int)std::floor((rect.y + rect.height - 1) / tileSize);
+
+    for (int y = top; y <= bottom; ++y)
+    {
+        for (int x = left; x <= right; ++x)
+        {
+            if (IsSolidTile(tx, ty))
+            {
+                // compute the tile solid rect with top margin
+                int tileX = tx * tileSize;
+                int tileY = ty * tileSize + collisionTopMargin;
+                int tW = tileSize;
+                int tH = tileSize - collisionTopMargin;
+                Rectangle solid{(float)tileX, (float)tileY, (float)tW, (float)tH};
+                if (CheckCollisionRecs(rect, solid))
+                    return true;
+                int tileX = x * tileSize;
+                int tileY = y * tileSize + collisionTopMargin;
+                int tW = tileSize;
+                int tH = tileSize - collisionTopMargin;
+                Rectangle solid{(float)tileX, (float)tileY, (float)tW, (float)tH};
+                if (CheckCollisionRecs(rect, solid))
+                {
+                    tx = x;
+                    ty = y;
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+// Note: GetWidth/GetHeight are inline in Map.h

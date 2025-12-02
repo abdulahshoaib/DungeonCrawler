@@ -12,6 +12,8 @@ class GameManager
 {
 private:
     bool blink = true;
+    // By default draw all hitboxes as outlines. Toggle with F1.
+    bool debugDrawCollision = true;
     // Layer 0: Interactables
     Map interactables;
 
@@ -27,14 +29,15 @@ private:
 
     // Layer 4: HUD + UI Overlays
     MenuHUD hud;
-    
+
     Animator animator;
- 
+    Camera2D camera;
+
 public:
     // NOTE(demon_slayer): the int here is for the ID passed to identify the charachter selected
     GameManager(int);
     ~GameManager();
 
-    void Update(Engine&);
+    void Update(Engine &);
     void Draw();
 };

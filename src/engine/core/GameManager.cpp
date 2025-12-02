@@ -10,6 +10,9 @@
 
 #include "characters/AnimStates.h"
 
+#include <cmath>
+#include <string>
+
 #define KNIGHT1 1
 #define KNIGHT2 2
 #define KNIGHT3 3
@@ -19,9 +22,18 @@
 
 GameManager::GameManager(int ID)
 {
+    // layer order: interactables, non-colliding visuals, collidable map
     interactables.LoadMap("assets/maps/interactables.csv");
+    map_non_colliding.LoadMap("assets/maps/non_colliding.csv");
     map_collide.LoadMap("assets/maps/map.csv");
-    interactables.LoadMap("assets/maps/non_colliding.csv");
+
+    // Reduce collidable region by a few pixels from top for better visuals
+    map_collide.SetCollisionTopMargin(6);
+
+    // Setup camera defaults
+    camera.offset = {(float)GetScreenWidth() * 0.5f, (float)GetScreenHeight() * 0.5f};
+    camera.rotation = 0.0f;
+    camera.zoom = 1.0f;
 
     switch (ID)
     {
@@ -32,6 +44,15 @@ GameManager::GameManager(int ID)
         player = new Knight1();
         break;
     }
+
+        // Set player hitbox to match sprite/frame size if available
+        if (player && player->currentAnim)
+        {
+            player->hitboxW = player->currentAnim->frameWidth * 0.5f;   // half width
+            player->hitboxH = player->currentAnim->frameHeight * 0.75f; // use lower 75% of sprite
+            player->hitboxOffsetX = (player->currentAnim->frameWidth - player->hitboxW) * 0.5f;
+            player->hitboxOffsetY = player->currentAnim->frameHeight - player->hitboxH; // align to bottom
+        }
     case KNIGHT2:
     {
         hud.playerName = "Van Gaurd";
@@ -79,97 +100,287 @@ void GameManager::Update(Engine &engine)
 {
     float dt = GetFrameTime();
 
-    // Update animation first
-    animator.Update(player, dt);
-
-    // In your PlayState or GameState, when player presses ESC:
+    // =========================================================
+    //     ESC → PAUSE MENU
+    // =========================================================
     if (IsKeyPressed(KEY_ESCAPE))
     {
         engine.PushState(new PauseState());
-    }
-
-    // Don't process input if animation is locked
-    if (player->IsAnimationLocked())
-    {
-        player->anim();
         return;
     }
 
-    // --- MOVEMENT INPUT ---
-    bool movingRight = IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT);
-    bool movingLeft = IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT);
-    bool isMoving = movingLeft || movingRight;
-    bool runKey = IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT);
+    // Toggle debug draw
+    if (IsKeyPressed(KEY_F1))
+    {
+        debugDrawCollision = !debugDrawCollision;
+    }
 
-    // --- ACTION INPUTS ---
+    // Update camera to center on player
+    if (player)
+    {
+        // center the camera on the player's hitbox center
+        Vector2 hitCenter = {player->Pos.x + player->hitboxOffsetX + player->hitboxW * 0.5f,
+                             player->Pos.y + player->hitboxOffsetY + player->hitboxH * 0.5f};
+        camera.target = hitCenter;
+    }
+
+    // runtime control for tile collision top margin
+    if (IsKeyPressed(KEY_F4)) // increase margin
+    {
+        int delta = (IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT)) ? 4 : 1;
+        map_collide.SetCollisionTopMargin(map_collide.GetCollisionTopMargin() + delta);
+    }
+    if (IsKeyPressed(KEY_F5)) // decrease margin
+    {
+        int delta = (IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT)) ? 4 : 1;
+        int newm = map_collide.GetCollisionTopMargin() - delta;
+        if (newm < 0)
+            newm = 0;
+        map_collide.SetCollisionTopMargin(newm);
+    }
+
+    // Adjust hitbox vertical offset at runtime (F2/F3) for fine tuning
+    if (player)
+    {
+        float offsetDelta = (IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT)) ? 5.0f : 1.0f;
+        if (IsKeyPressed(KEY_F2)) // move hitbox down
+        {
+            player->ChangeHitboxOffsetY(offsetDelta);
+        }
+        if (IsKeyPressed(KEY_F3)) // move hitbox up
+        {
+            player->ChangeHitboxOffsetY(-offsetDelta);
+        }
+    }
+
+    // =========================================================
+    //     ACTION INPUTS (attacks, test keys)
+    // =========================================================
+
     bool attackPressed = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
     bool jumpPressed = IsKeyPressed(KEY_SPACE);
 
-    // ************************************************************
-    // 1. PRIORITY ACTIONS (highest priority → lowest)
-    // ************************************************************
-
-    // --- ATTACK ---
-    if (attackPressed)
+    if (attackPressed && player->IsAnimationLocked() == false)
     {
         player->ChangeAnimState(AnimState::ATTACK1);
     }
 
-    // --- JUMP ---
-    else if (jumpPressed)
+    // TEST KEYS
+    if (IsKeyPressed(KEY_H))
+        player->ChangeAnimState(AnimState::HURT);
+    if (IsKeyPressed(KEY_P))
+        player->ChangeAnimState(AnimState::PROTECT);
+    if (IsKeyPressed(KEY_R))
+        player->ChangeAnimState(AnimState::RUN_ATTACK);
+    if (IsKeyPressed(KEY_Q))
+        player->ChangeAnimState(AnimState::DEAD);
+
+    if (player->IsAnimationLocked())
     {
+        player->anim();
+        animator.Update(player, dt);
+        return;
+    }
+
+    bool movingRight = IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT);
+    bool movingLeft = IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT);
+    bool runKey = IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT);
+
+    player->velocityX = 0;
+
+    if (movingRight)
+    {
+        player->velocityX = runKey ? player->speed * 1.8f : player->speed;
+        // player->FlipX = false;
+    }
+    else if (movingLeft)
+    {
+        player->velocityX = runKey ? -player->speed * 1.8f : -player->speed;
+        // player->FlipX = true;
+    }
+
+    if (jumpPressed && player->isGrounded)
+    {
+        player->velocityY = player->jumpForce;
+        player->isGrounded = false;
         player->ChangeAnimState(AnimState::JUMP);
     }
 
-    // --- TEST ANIMATIONS (your debug keys) ---
-    else if (IsKeyPressed(KEY_H))
+    if (!player->isGrounded)
     {
-        player->ChangeAnimState(AnimState::HURT);
+        // In air
+        if (player->velocityY < 0)
+            player->ChangeAnimState(AnimState::JUMP);
+        else
+            player->ChangeAnimState(AnimState::FALL);
     }
-    else if (IsKeyPressed(KEY_P))
+    else if (player->velocityX != 0)
     {
-        player->ChangeAnimState(AnimState::PROTECT);
-    }
-    else if (IsKeyPressed(KEY_R))
-    {
-        player->ChangeAnimState(AnimState::RUN_ATTACK);
-    }
-    else if (IsKeyPressed(KEY_Q))
-    {
-        player->ChangeAnimState(AnimState::DEAD);
-    }
-
-    // ************************************************************
-    // 2. MOVEMENT ANIMATIONS
-    // ************************************************************
-    else if (isMoving)
-    {
+        // Running or walking
         if (runKey)
             player->ChangeAnimState(AnimState::RUN);
         else
             player->ChangeAnimState(AnimState::WALK);
     }
-
-    // ************************************************************
-    // 3. NO INPUT → IDLE
-    // ************************************************************
     else
     {
+        // No movement
         player->ChangeAnimState(AnimState::IDLE);
     }
 
-    // --- UPDATE ANIMATION & FRAME ---
+    player->ApplyPhysics(dt);
+
+    // Resolve collisions between player and world tiles.
+    // Keep a copy of previous position
+    Vector2 prevPos = {player->Pos.x - player->velocityX * dt, player->Pos.y - player->velocityY * dt};
+
+    // Use player's hitbox rect for collision checks
+    // previous hitbox rect is available as needed via prevPos/hitbox offsets
+    Rectangle rectX = Rectangle{player->Pos.x + player->hitboxOffsetX, prevPos.y + player->hitboxOffsetY, player->hitboxW, player->hitboxH};
+    if (map_collide.CheckCollisionRect(rectX))
+    {
+        // Resolve horizontal collision by snapping to tile boundary
+        int tx = 0, ty = 0;
+        if (map_collide.GetFirstCollisionTile(rectX, tx, ty))
+        {
+            if (player->velocityX > 0)
+            {
+                // moving right: place player left of tile
+                player->Pos.x = tx * map_collide.GetTileSize() - (player->hitboxOffsetX + player->hitboxW);
+            }
+            else if (player->velocityX < 0)
+            {
+                // moving left: place player right of tile
+                player->Pos.x = (tx + 1) * map_collide.GetTileSize() - player->hitboxOffsetX;
+            }
+        }
+        player->velocityX = 0;
+    }
+
+    // Vertical collision check: move vertically (with possibly corrected X)
+    Rectangle rectY = {player->Pos.x + player->hitboxOffsetX, player->Pos.y + player->hitboxOffsetY, player->hitboxW, player->hitboxH};
+    if (map_collide.CheckCollisionRect(rectY))
+    {
+        // we collided vertically, try to get the colliding tile to compute a resolution
+        int tx = 0, ty = 0;
+        if (map_collide.GetFirstCollisionTile(rectY, tx, ty))
+        {
+            if (player->velocityY > 0)
+            {
+                // moving down: place hitbox on top of the tile
+                player->Pos.y = ty * map_collide.GetTileSize() - (player->hitboxOffsetY + player->hitboxH);
+                player->isGrounded = true;
+            }
+            else
+            {
+                // moving up: place below the tile
+                player->Pos.y = (ty + 1) * map_collide.GetTileSize() - player->hitboxOffsetY;
+            }
+        }
+        // Stop vertical motion
+        player->velocityY = 0;
+    }
+
     player->anim();
     animator.Update(player, dt);
 }
 
 void GameManager::Draw()
 {
+    // Draw world using 2D camera
+    BeginMode2D(camera);
     map_collide.DrawMap();
     interactables.DrawMap();
     map_non_colliding.DrawMap();
 
     animator.Draw(player);
 
+    EndMode2D();
+
+    // HUD drawn in screen-space
+    EndMode2D();
+
+    // HUD drawn in screen-space
     hud.Draw();
+
+    // debug overlay on HUD
+    if (debugDrawCollision && player)
+    {
+        std::string text = "HitboxOffsetY: " + std::to_string(player->GetHitboxOffsetY()) + "  OffsetX: " + std::to_string(player->hitboxOffsetX);
+        DrawText(text.c_str(), 20, 20, 12, WHITE);
+
+        std::string marginText = "TileCollisionTopMargin: " + std::to_string(map_collide.GetCollisionTopMargin());
+        DrawText(marginText.c_str(), 20, 36, 12, WHITE);
+    }
+
+    // debug: draw hitbox and colliding tiles
+    if (debugDrawCollision)
+    {
+        // draw all collidable tiles (outline)
+        int w = map_collide.GetWidth();
+        int h = map_collide.GetHeight();
+        for (int ty = 0; ty < h; ++ty)
+        {
+            for (int tx = 0; tx < w; ++tx)
+            {
+                if (map_collide.IsSolidTile(tx, ty))
+                {
+                    DrawRectangleLines(tx * map_collide.GetTileSize(), ty * map_collide.GetTileSize(), map_collide.GetTileSize(), map_collide.GetTileSize(), GREEN);
+                    // draw the reduced solid area inside the tile
+                    int tileX = tx * map_collide.GetTileSize();
+                    int tileY = ty * map_collide.GetTileSize() + map_collide.GetCollisionTopMargin();
+                    int tW = map_collide.GetTileSize();
+                    int tH = map_collide.GetTileSize() - map_collide.GetCollisionTopMargin();
+                    DrawRectangleLines(tileX, tileY, tW, tH, RED);
+                }
+            }
+        }
+
+        // draw interactable tiles outline in blue
+        int iw = interactables.GetWidth();
+        int ih = interactables.GetHeight();
+        for (int ty = 0; ty < ih; ++ty)
+        {
+            for (int tx = 0; tx < iw; ++tx)
+            {
+                if (interactables.IsSolidTile(tx, ty))
+                {
+                    DrawRectangleLines(tx * interactables.GetTileSize(), ty * interactables.GetTileSize(), interactables.GetTileSize(), interactables.GetTileSize(), SKYBLUE);
+                }
+            }
+        }
+
+        // draw non-colliding tiles outline in gray (visual only)
+        int nw = map_non_colliding.GetWidth();
+        int nh = map_non_colliding.GetHeight();
+        for (int ty = 0; ty < nh; ++ty)
+        {
+            for (int tx = 0; tx < nw; ++tx)
+            {
+                if (map_non_colliding.IsSolidTile(tx, ty))
+                {
+                    DrawRectangleLines(tx * map_non_colliding.GetTileSize(), ty * map_non_colliding.GetTileSize(), map_non_colliding.GetTileSize(), map_non_colliding.GetTileSize(), GRAY);
+                }
+            }
+        }
+
+        // draw hitbox for player
+        if (player)
+        {
+            Rectangle hb = player->GetHitboxRect();
+            DrawRectangleLinesEx(hb, 2, RED);
+            // display current hitbox offset Y
+            std::string text = "HitboxOffsetY: " + std::to_string(player->GetHitboxOffsetY());
+            DrawText(text.c_str(), 20, 20, 12, WHITE);
+        }
+
+        // draw hitboxes for all entities
+        for (auto e : entities)
+        {
+            if (!e)
+                continue;
+            Rectangle eh = e->GetHitboxRect();
+            DrawRectangleLinesEx(eh, 1, YELLOW);
+        }
+    }
 }

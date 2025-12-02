@@ -7,7 +7,6 @@
 class MenuNewGame
 {
 private:
-    Label selectcharacter;
     Rectangle rectKnight1, rectKnight2, rectKnight3;
     Rectangle rectSamurai1, rectSamurai2, rectSamurai3;
     
