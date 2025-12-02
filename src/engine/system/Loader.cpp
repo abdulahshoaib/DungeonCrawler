@@ -338,7 +338,7 @@ void Loader::UnLoadBackgrounds()
 void Loader::LoadCollectables()
 {
     int frameSize = 120;
-    CoinAnim = {LoadTexture("assets/images/coin_anim.png"), frameSize, frameSize, 8, 30};
+    CoinAnim = {LoadTexture("assets/images/coin_anim.png"), frameSize, frameSize, 8, 10};
     Coin = LoadTexture("assets/images/coin.png");
 }
 

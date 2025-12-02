@@ -1,5 +1,6 @@
 
 #include "MenuHUD.h"
+#include "system/GameProgress.h"
 MenuHUD::MenuHUD()
 {
   playerName = "Haris";
@@ -63,7 +64,7 @@ void MenuHUD::Draw()
 
   DrawTextEx(
       Loader::TitleFont,
-      TextFormat("%d", coins),
+      TextFormat("%d", GameProgress::GetCoinsCollected()),
       {(float)(barX + 45), (float)(coinY + 4)},
       fontSize,
       1.0f,

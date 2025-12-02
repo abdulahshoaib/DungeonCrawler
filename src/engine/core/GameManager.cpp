@@ -377,7 +377,8 @@ void GameManager::Update(Engine &engine)
             // Update interactables map to remove the coin
             interactables.SetTile(tileX, tileY, 0);
 
-            // Optional: play sound or add score
+            // Track coin collection in global state
+            GameProgress::AddCoins(1);
         }
     }
 }

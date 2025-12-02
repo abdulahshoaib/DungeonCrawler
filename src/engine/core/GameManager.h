@@ -6,6 +6,7 @@
 #include "Animation.h"
 #include "Animator.h"
 #include "Coin.h"
+#include "system/GameProgress.h"
 using std::vector;
 
 class GameManager

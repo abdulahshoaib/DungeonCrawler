@@ -12,6 +12,7 @@ int GameProgress::currentLevel = 1;
 bool GameProgress::dataLoaded = false;
 int GameProgress::currentSlot = 0;
 int GameProgress::characterID = 1;
+int GameProgress::coinsCollected = 0;
 
 // Setters
 void GameProgress::SetUsername(const std::string &name)
@@ -55,6 +56,11 @@ void GameProgress::SetCharacterID(int id)
     characterID = id;
 }
 
+void GameProgress::AddCoins(int coinsToAdd)
+{
+    coinsCollected += coinsToAdd;
+}
+
 // Getters
 std::string GameProgress::GetUsername()
 {
@@ -84,6 +90,11 @@ int GameProgress::GetCurrentSlot()
 int GameProgress::GetCharacterID()
 {
     return characterID;
+}
+
+int GameProgress::GetCoinsCollected()
+{
+    return coinsCollected;
 }
 
 // Helper functions

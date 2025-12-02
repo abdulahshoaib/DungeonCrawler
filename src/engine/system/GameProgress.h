@@ -20,6 +20,7 @@ private:
     static bool dataLoaded;
     static int currentSlot;
     static int characterID;
+    static int coinsCollected;
 
     // Helper functions for file operations
     static std::string GetSaveFilePath(int slot = -1);
@@ -35,6 +36,7 @@ public:
     static void SetCurrentLevel(int level);
     static void SetCurrentSlot(int slot);
     static void SetCharacterID(int id);
+    static void AddCoins(int coinsToAdd);
 
     // Getters
     static std::string GetUsername();
@@ -43,6 +45,7 @@ public:
     static int GetCurrentLevel();
     static int GetCurrentSlot();
     static int GetCharacterID();
+    static int GetCoinsCollected();
 
     // Save/Load operations
     static bool SaveProgress(int slot = -1);
