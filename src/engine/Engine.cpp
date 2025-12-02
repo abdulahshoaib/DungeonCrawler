@@ -23,6 +23,8 @@ void Engine::init(Screen screen)
   Audio::Load();
   Audio::Play(MAIN_MENU_MUSIC);
 
+  SetExitKey(KEY_NULL);
+
   gameState = new LoadingState();
 }
 
@@ -51,18 +53,18 @@ void Engine::ChangeState(GameState *newGameState)
 void Engine::PopState()
 {
   if (previousState != nullptr)
-    {
-        delete gameState;
-        gameState = previousState;
-        previousState = nullptr;
-        // Note: Don't call Enter() again, just resume
-    }
+  {
+    delete gameState;
+    gameState = previousState;
+    previousState = nullptr;
+    // Note: Don't call Enter() again, just resume
+  }
 }
 
 void Engine::PushState(GameState *newGameState)
 {
   // Store current state as previous
-    previousState = gameState;
-    gameState = newGameState;
-    gameState->Enter(*this);
+  previousState = gameState;
+  gameState = newGameState;
+  gameState->Enter(*this);
 }
