@@ -66,12 +66,11 @@ void MenuPause::DrawPauseHeader()
 
 void MenuPause::DrawPlayerInfo()
 {
-    float fontSize = 24.0f;
-    float infoY = 160;
-    float lineSpacing = 35;
+    float fontSize = 28.0f;
+    float infoY = 180;
 
-    // Player info box background
-    Rectangle infoBox = {(float)(GetScreenWidth() / 2) - 200, infoY - 10, 400, 120};
+    // Slim player info box (only name + score)
+    Rectangle infoBox = {(float)(GetScreenWidth() / 2) - 180, infoY - 10, 360, 80};
 
     // Outer shadow
     DrawRectangleRec((Rectangle){infoBox.x + 3, infoBox.y + 3, infoBox.width, infoBox.height},
@@ -82,16 +81,9 @@ void MenuPause::DrawPlayerInfo()
     DrawRectangleRec((Rectangle){infoBox.x + 4, infoBox.y + 4, infoBox.width - 8, infoBox.height - 8},
                      (Color){65, 55, 45, 255});
 
-    // Player information
-    std::string usernameText = "Player: " + GameProgress::GetUsername();
-    std::string pointsText = "Points: " + std::to_string(GameProgress::GetPoints());
-    std::string levelText = "Level: " + std::to_string(GameProgress::GetCurrentLevel());
-    std::string coinsText = "Coins: " + std::to_string(GameProgress::GetCoinsCollected());
-
-    Vector2 pos = GameProgress::GetMapPosition();
-    std::string positionText = "Position: (" +
-                               std::to_string((int)pos.x) + ", " +
-                               std::to_string((int)pos.y) + ")";
+    // Player information (only name and score)
+    std::string usernameText = GameProgress::GetUsername();
+    std::string pointsText = "Score: " + std::to_string(GameProgress::GetPoints());
 
     float textX = GetScreenWidth() / 2;
     Color infoColor = (Color){235, 220, 195, 255};
@@ -100,17 +92,9 @@ void MenuPause::DrawPlayerInfo()
     DrawTextEx(Loader::TitleFont, usernameText.c_str(),
                {textX - usernameSize.x / 2, infoY}, fontSize, 1.0f, infoColor);
 
-    Vector2 pointsSize = MeasureTextEx(Loader::TitleFont, pointsText.c_str(), fontSize, 1.0f);
+    Vector2 pointsSize = MeasureTextEx(Loader::TitleFont, pointsText.c_str(), fontSize * 0.9f, 1.0f);
     DrawTextEx(Loader::TitleFont, pointsText.c_str(),
-               {textX - pointsSize.x / 2, infoY + lineSpacing}, fontSize, 1.0f, infoColor);
-
-    Vector2 levelSize = MeasureTextEx(Loader::TitleFont, levelText.c_str(), fontSize, 1.0f);
-    DrawTextEx(Loader::TitleFont, levelText.c_str(),
-               {textX - levelSize.x / 2, infoY + lineSpacing * 2}, fontSize, 1.0f, infoColor);
-
-    Vector2 coinsSize = MeasureTextEx(Loader::TitleFont, coinsText.c_str(), fontSize, 1.0f);
-    DrawTextEx(Loader::TitleFont, coinsText.c_str(),
-               {textX - coinsSize.x / 2, infoY + lineSpacing * 3}, fontSize, 1.0f, infoColor);
+               {textX - pointsSize.x / 2, infoY + 36}, fontSize * 0.9f, 1.0f, infoColor);
 }
 
 void MenuPause::Draw()

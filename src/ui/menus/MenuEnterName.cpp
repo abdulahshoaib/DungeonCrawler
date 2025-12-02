@@ -4,6 +4,7 @@
 #include "PlayState.h"
 #include "NewGameState.h"
 #include "GameProgress.h"
+#include "MainMenuState.h"
 
 // Shared variables for both Draw() and HandleInput()
 static Rectangle inputBox = {(1100 - 400) / 2, (700 - 60) / 2, 400, 60};
@@ -37,33 +38,33 @@ void MenuEnterName::Draw()
     // DrawRectangleLinesEx(inputBox, 3, border);
     // Draw retro dungeon-style input box with layered stone effect
     // Outer shadow for depth
-    DrawRectangleRec((Rectangle){inputBox.x + 4, inputBox.y + 4, inputBox.width, inputBox.height}, 
+    DrawRectangleRec((Rectangle){inputBox.x + 4, inputBox.y + 4, inputBox.width, inputBox.height},
                      (Color){20, 15, 10, 180});
 
     // Main stone border (dark weathered stone)
     DrawRectangleRec(inputBox, (Color){45, 38, 32, 255});
 
     // Inner darker groove
-    DrawRectangleRec((Rectangle){inputBox.x + 3, inputBox.y + 3, 
-                     inputBox.width - 6, inputBox.height - 6}, 
+    DrawRectangleRec((Rectangle){inputBox.x + 3, inputBox.y + 3,
+                                 inputBox.width - 6, inputBox.height - 6},
                      (Color){28, 22, 18, 255});
 
     // Actual input area (aged parchment/stone interior)
-    DrawRectangleRec((Rectangle){inputBox.x + 6, inputBox.y + 6, 
-                     inputBox.width - 12, inputBox.height - 12}, 
+    DrawRectangleRec((Rectangle){inputBox.x + 6, inputBox.y + 6,
+                                 inputBox.width - 12, inputBox.height - 12},
                      (Color){65, 55, 45, 255});
 
     // Top highlight edge (simulates worn stone catching light)
-    DrawRectangle(inputBox.x + 6, inputBox.y + 6, inputBox.width - 12, 2, 
+    DrawRectangle(inputBox.x + 6, inputBox.y + 6, inputBox.width - 12, 2,
                   (Color){85, 75, 60, 120});
 
     // Bottom shadow groove (depth effect)
-    DrawRectangle(inputBox.x + 6, inputBox.y + inputBox.height - 8, 
+    DrawRectangle(inputBox.x + 6, inputBox.y + inputBox.height - 8,
                   inputBox.width - 12, 2, (Color){20, 15, 10, 160});
 
     // Corner accent stones (left top and right bottom)
     DrawRectangle(inputBox.x, inputBox.y, 8, 8, (Color){60, 50, 40, 255});
-    DrawRectangle(inputBox.x + inputBox.width - 8, inputBox.y + inputBox.height - 8, 
+    DrawRectangle(inputBox.x + inputBox.width - 8, inputBox.y + inputBox.height - 8,
                   8, 8, (Color){35, 28, 22, 255});
 
     // Decorative rivets/bolts in corners
@@ -103,6 +104,10 @@ void MenuEnterName::Draw()
 
     // Store values for HandleInput
     // No pointers — just static references
+    // Back button (bottom-left)
+    backButton.rect = {(float)20, (float)(GetScreenHeight() - 80), 120.0f, 50.0f};
+    backButton.label.text = "BACK";
+    backButton.Draw(GRAY, RED);
 }
 void MenuEnterName::HandleInput(Engine &engine)
 {
@@ -136,6 +141,12 @@ void MenuEnterName::HandleInput(Engine &engine)
         {
             GameProgress::SetUsername(typedName);
             engine.ChangeState(new NewGameState());
+        }
+
+        // Back button handling
+        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && CheckCollisionPointRec(mouse, backButton.rect))
+        {
+            engine.ChangeState(new MainMenuState());
         }
     }
 }

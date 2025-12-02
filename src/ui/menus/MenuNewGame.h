@@ -28,6 +28,7 @@ private:
     std::vector<Button> slotButtons;
     int selectedSlot = -1;
     bool showSlotSelection = false;
+    Button backButton;
 
 public:
     MenuNewGame();

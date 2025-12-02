@@ -4,6 +4,7 @@
 #include "PlayState.h"
 #include "Audio.h"
 #include "GameProgress.h"
+#include "EnterNameState.h"
 #include <string>
 #include <vector>
 
@@ -328,6 +329,11 @@ void MenuNewGame::Draw()
             slotButtons[i].Draw(GRAY, ORANGE);
         }
     }
+
+    // Back button (bottom-left)
+    backButton.rect = {(float)20, (float)(GetScreenHeight() - 80), 120.0f, 50.0f};
+    backButton.label.text = "BACK";
+    backButton.Draw(GRAY, RED);
 }
 
 void MenuNewGame::HandleInput(Engine &engine)
@@ -392,6 +398,21 @@ void MenuNewGame::HandleInput(Engine &engine)
         {
             showSlotSelection = false;
             selectedCharacter = 0;
+        }
+
+        // Back button: in slot selection cancel and go to character selection
+        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && CheckCollisionPointRec(mouse, backButton.rect))
+        {
+            if (showSlotSelection)
+            {
+                showSlotSelection = false;
+                selectedCharacter = 0;
+            }
+            else
+            {
+                // Not in slot selection: go back to Enter Name screen
+                engine.ChangeState(new EnterNameState());
+            }
         }
     }
 }
