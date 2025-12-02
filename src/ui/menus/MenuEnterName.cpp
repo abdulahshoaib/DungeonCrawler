@@ -38,8 +38,16 @@ void MenuEnterName::Draw()
     DrawRectangleRec(inputBox, BLACK);
 
         // Draw text inside
-    DrawText(typedName.c_str(), inputBox.x + 15, inputBox.y + 15, 32, YELLOW); // was 100 → 32
+// 1. Measure the text width first
+// (We use the same Font, Text, Font Size, and Spacing as the Draw call)
+Vector2 textSize = MeasureTextEx(Loader::TitleFont, typedName.c_str(), 32, 1);
 
+// 2. Calculate the X coordinate
+// Formula: Box_X + (Box_Width / 2) - (Text_Width / 2)
+float centerPosX = inputBox.x + (inputBox.width / 2) - (textSize.x / 2);
+
+// 3. Draw the text at the new calculated X position
+DrawTextEx(Loader::TitleFont, typedName.c_str(), (Vector2){centerPosX, inputBox.y + 15}, 32, 1, YELLOW);
     // Blinking cursor if active
     if (typingActive)
     {
