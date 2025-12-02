@@ -11,4 +11,5 @@ public:
     PlayState(int);
     void Update(Engine &);
     void Draw(Engine &);
+    GameManager &GetGameManager() { return gameManager; }
 };

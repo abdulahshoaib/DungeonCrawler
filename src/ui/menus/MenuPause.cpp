@@ -1,6 +1,7 @@
 // MenuPause.cpp
 #include "MenuPause.h"
 #include "GameProgress.h"
+#include "../../engine/state/PlayState.h"
 #include "Loader.h"
 #include "Audio.h"
 #include "MainMenuState.h" // You'll need to include your main menu state
@@ -156,6 +157,18 @@ void MenuPause::HandleInput(Engine &engine)
     if (CheckCollisionPointRec(GetMousePosition(), saveGameButton.rect) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
         Audio::PlaySFx(BUTTON_HOVER);
+
+        // If underlying state is a PlayState, capture current coin positions before saving
+        GameState *prev = engine.GetPreviousState();
+        if (prev)
+        {
+            PlayState *ps = dynamic_cast<PlayState *>(prev);
+            if (ps)
+            {
+                auto coins = ps->GetGameManager().GetCoinPositions();
+                GameProgress::SetRemainingCoins(coins);
+            }
+        }
 
         if (GameProgress::SaveProgress())
         {

@@ -14,18 +14,21 @@ struct Screen
 
 class Engine
 {
-  GameState* gameState;
-  GameState* previousState;
+  GameState *gameState;
+  GameState *previousState;
+
 public:
   Engine();
   ~Engine();
 
-  // TODO(demon_slayer): 
-    void init(Screen);
+  // TODO(demon_slayer):
+  void init(Screen);
 
   void run();
 
-  void ChangeState(GameState*);
+  void ChangeState(GameState *);
   void PopState(); // Add this method
-  void PushState(GameState*);
+  void PushState(GameState *);
+  // Expose previous state (used by pause menu to access underlying playstate)
+  GameState *GetPreviousState() const { return previousState; }
 };

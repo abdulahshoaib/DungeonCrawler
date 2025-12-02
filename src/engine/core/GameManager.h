@@ -52,6 +52,10 @@ public:
     void Update(Engine &);
     void Draw();
 
+    // Coin helpers for saving/loading
+    std::vector<Vector2> GetCoinPositions() const;
+    void SetCoinsFromPositions(const std::vector<Vector2> &positions);
+
     // ===== ENEMY MANAGEMENT =====
     EnemyManager &GetEnemyManager() { return enemyManager; }
 };

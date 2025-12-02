@@ -277,28 +277,10 @@ void MenuLoadGame::HandleInput(Engine &engine)
             std::string filename = "savegame_slot" + std::to_string(confirmSlot) + ".dat";
             std::ifstream file(filename);
 
-            if (file.is_open())
+            if (GameProgress::LoadProgress(confirmSlot))
             {
-                std::string playerName;
-                int characterID;
-                int points;
-                float mapX, mapY;
-                int level;
-
-                std::getline(file, playerName);
-                file >> characterID >> points >> mapX >> mapY >> level;
-                file.close();
-
-                // Set game progress from loaded save
-                GameProgress::SetUsername(playerName);
-                GameProgress::SetCharacterID(characterID);
-                GameProgress::SetPoints(points);
-                GameProgress::SetMapPosition(mapX, mapY);
-                GameProgress::SetCurrentLevel(level);
-                GameProgress::SetCurrentSlot(confirmSlot);
-
                 Audio::PlaySFx(BUTTON_HOVER);
-                engine.ChangeState(new PlayState(characterID));
+                engine.ChangeState(new PlayState(GameProgress::GetCharacterID()));
             }
         }
         return;

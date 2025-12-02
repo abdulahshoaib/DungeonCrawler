@@ -68,3 +68,5 @@ void Engine::PushState(GameState *newGameState)
   gameState = newGameState;
   gameState->Enter(*this);
 }
+
+// GetPreviousState is implemented inline in the header

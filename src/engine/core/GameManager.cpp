@@ -109,7 +109,11 @@ GameManager::GameManager(int ID)
         EnemyPath *path = enemyManager.GetPath(0);
         if (path && path->IsValid())
         {
-            Vector2 startPos = path->GetNode(0);
+            Vector2 nodePos = path->GetNode(0);
+            // Adjust spawn position so hitbox center aligns with path node
+            // Hitbox offset is (32, 32), hitbox size is (64, 96)
+            // Hitbox center offset from Pos: (32 + 32, 32 + 48) = (64, 80)
+            Vector2 startPos = {nodePos.x - 64.0f, nodePos.y - 80.0f};
             enemyManager.SpawnEnemyTypeWithPath<EnemySkeletonWarrior>(startPos, path, 200.0f, 80.0f);
         }
     }
@@ -120,7 +124,8 @@ GameManager::GameManager(int ID)
         EnemyPath *path = enemyManager.GetPath(1);
         if (path && path->IsValid())
         {
-            Vector2 startPos = path->GetNode(0);
+            Vector2 nodePos = path->GetNode(0);
+            Vector2 startPos = {nodePos.x - 64.0f, nodePos.y - 80.0f};
             enemyManager.SpawnEnemyTypeWithPath<EnemySkeletonArcher>(startPos, path, 200.0f, 80.0f);
         }
     }
@@ -131,7 +136,8 @@ GameManager::GameManager(int ID)
         EnemyPath *path = enemyManager.GetPath(2);
         if (path && path->IsValid())
         {
-            Vector2 startPos = path->GetNode(0);
+            Vector2 nodePos = path->GetNode(0);
+            Vector2 startPos = {nodePos.x - 64.0f, nodePos.y - 80.0f};
             enemyManager.SpawnEnemyTypeWithPath<EnemySkeletonSpearman>(startPos, path, 200.0f, 80.0f);
         }
     }
@@ -142,7 +148,8 @@ GameManager::GameManager(int ID)
         EnemyPath *path = enemyManager.GetPath(3);
         if (path && path->IsValid())
         {
-            Vector2 startPos = path->GetNode(0);
+            Vector2 nodePos = path->GetNode(0);
+            Vector2 startPos = {nodePos.x - 64.0f, nodePos.y - 80.0f};
             enemyManager.SpawnEnemyTypeWithPath<EnemyKarasuTengu>(startPos, path, 200.0f, 80.0f);
         }
     }
@@ -153,7 +160,8 @@ GameManager::GameManager(int ID)
         EnemyPath *path = enemyManager.GetPath(4);
         if (path && path->IsValid())
         {
-            Vector2 startPos = path->GetNode(0);
+            Vector2 nodePos = path->GetNode(0);
+            Vector2 startPos = {nodePos.x - 64.0f, nodePos.y - 80.0f};
             enemyManager.SpawnEnemyTypeWithPath<EnemyYamabushiTengu>(startPos, path, 200.0f, 80.0f);
         }
     }
@@ -168,6 +176,34 @@ GameManager::GameManager(int ID)
                 float posX = x * interactables.GetTileSize();
                 float posY = y * interactables.GetTileSize();
                 coins.emplace_back(posX, posY);
+            }
+        }
+    }
+
+    // If a save was loaded and it contains coin positions, override the default spawn
+    if (GameProgress::IsDataLoaded())
+    {
+        const auto &saved = GameProgress::GetRemainingCoins();
+        if (!saved.empty())
+        {
+            // Clear current coins and reset interactable coin tiles
+            coins.clear();
+            // Clear all coin tiles first
+            for (int y = 0; y < interactables.GetHeight(); y++)
+                for (int x = 0; x < interactables.GetWidth(); x++)
+                    if (interactables.GetTile(x, y) == 397)
+                        interactables.SetTile(x, y, 0);
+
+            int tileSize = interactables.GetTileSize();
+            for (const auto &p : saved)
+            {
+                coins.emplace_back(p.x, p.y);
+                int tx = (int)(p.x / tileSize);
+                int ty = (int)(p.y / tileSize);
+                if (tx >= 0 && ty >= 0 && tx < interactables.GetWidth() && ty < interactables.GetHeight())
+                {
+                    interactables.SetTile(tx, ty, 397);
+                }
             }
         }
     }
@@ -532,10 +568,10 @@ void GameManager::Draw()
     BeginMode2D(camera);
 
     // --- Draw tilemaps ---
-    
+
     map_non_colliding.DrawMap();
     interactables.DrawMap();
-    
+
     map_collide.DrawMap();
 
     // --- Draw enemies ---
@@ -630,5 +666,34 @@ void GameManager::Draw()
         DrawText(
             ("TileCollisionTopMargin: " + std::to_string(map_collide.GetCollisionTopMargin())).c_str(),
             20, 36, 12, WHITE);
+    }
+}
+
+std::vector<Vector2> GameManager::GetCoinPositions() const
+{
+    std::vector<Vector2> out;
+    out.reserve(coins.size());
+    for (const auto &c : coins)
+        out.push_back(c.pos);
+    return out;
+}
+
+void GameManager::SetCoinsFromPositions(const std::vector<Vector2> &positions)
+{
+    coins.clear();
+    int tileSize = interactables.GetTileSize();
+    // Clear existing coin tiles
+    for (int y = 0; y < interactables.GetHeight(); y++)
+        for (int x = 0; x < interactables.GetWidth(); x++)
+            if (interactables.GetTile(x, y) == 397)
+                interactables.SetTile(x, y, 0);
+
+    for (const auto &p : positions)
+    {
+        coins.emplace_back(p.x, p.y);
+        int tx = (int)(p.x / tileSize);
+        int ty = (int)(p.y / tileSize);
+        if (tx >= 0 && ty >= 0 && tx < interactables.GetWidth() && ty < interactables.GetHeight())
+            interactables.SetTile(tx, ty, 397);
     }
 }
