@@ -12,6 +12,7 @@
 
 #include <cmath>
 #include <string>
+#include <algorithm>
 
 #define KNIGHT1 1
 #define KNIGHT2 2
@@ -141,6 +142,41 @@ void GameManager::Update(Engine &engine)
         Vector2 hitCenter = {player->Pos.x + player->hitboxOffsetX + player->hitboxW * 0.5f,
                              player->Pos.y + player->hitboxOffsetY + player->hitboxH * 0.5f};
         camera.target = hitCenter;
+
+        // -------------------------------------------------------------------------
+        // CLAMP CAMERA TO LEVEL BOUNDS
+        // -------------------------------------------------------------------------
+
+        // half of the visible area in world units (account for zoom)
+        float halfViewW = camera.offset.x / camera.zoom;
+        float halfViewH = camera.offset.y / camera.zoom;
+
+        // world size based on your collision tilemap
+        int tileSize = map_collide.GetTileSize();
+        float worldW = map_collide.GetWidth()  * (float)tileSize;
+        float worldH = map_collide.GetHeight() * (float)tileSize;
+
+        // allowed min/max camera center positions
+        float minX = halfViewW;
+        float maxX = worldW - halfViewW;
+        float minY = halfViewH;
+        float maxY = worldH - halfViewH;
+
+        // If the world is smaller than the screen, center instead of clamping
+        if (maxX < minX) { minX = maxX = worldW * 0.5f; }
+        if (maxY < minY) { minY = maxY = worldH * 0.5f; }
+
+    #if __cplusplus >= 201703L
+        // Use std::clamp for C++17+
+        camera.target.x = std::clamp(camera.target.x, minX, maxX);
+        camera.target.y = std::clamp(camera.target.y, minY, maxY);
+    #else
+        // Fallback for older C++
+        camera.target.x = fmax(minX, fmin(maxX, camera.target.x));
+        camera.target.y = fmax(minY, fmin(maxY, camera.target.y));
+    #endif
+
+        // -------------------------------------------------------------------------
     }
 
     // runtime control for tile collision top margin
@@ -322,8 +358,6 @@ void GameManager::Update(Engine &engine)
             // Optional: play sound or add score
         }
     }
-
-
 
 }
 
