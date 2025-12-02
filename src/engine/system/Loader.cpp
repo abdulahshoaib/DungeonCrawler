@@ -29,7 +29,7 @@ void Loader::UnLoadSkeletonSpearman()
 
 void Loader::LoadKarasuTengu()
 {
-    int frameSize = 96;  // Smaller than skeletons (128) to make them appropriately sized
+    int frameSize = 96; // Smaller than skeletons (128) to make them appropriately sized
     KarasuTenguAttack1 = {LoadTexture("assets/Yokai/Karasu_tengu/Attack_1.png"), frameSize, frameSize, 6, 13};
     KarasuTenguAttack2 = {LoadTexture("assets/Yokai/Karasu_tengu/Attack_2.png"), frameSize, frameSize, 4, 13};
     KarasuTenguAttack3 = {LoadTexture("assets/Yokai/Karasu_tengu/Attack_3.png"), frameSize, frameSize, 3, 13};
@@ -209,7 +209,7 @@ void Loader::UnLoadKnight3()
 
 void Loader::LoadYamabushiTengu()
 {
-    int frameSize = 96;  // Smaller than skeletons (128) to make them appropriately sized
+    int frameSize = 96; // Smaller than skeletons (128) to make them appropriately sized
 
     YamabushiTenguAttack1 = {LoadTexture("assets/Yokai/Yamabushi_tengu/Attack_1.png"), frameSize, frameSize, 3, 13};
     YamabushiTenguAttack2 = {LoadTexture("assets/Yokai/Yamabushi_tengu/Attack_2.png"), frameSize, frameSize, 6, 13};
