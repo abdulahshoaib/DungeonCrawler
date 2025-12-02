@@ -5,7 +5,7 @@
 #include "MenuHUD.h"
 #include "Animation.h"
 #include "Animator.h"
-
+#include "Coin.h"
 using std::vector;
 
 class GameManager
@@ -32,6 +32,7 @@ private:
 
     Animator animator;
     Camera2D camera;
+    std::vector<CoinObject> coins;
 
 public:
     // NOTE(demon_slayer): the int here is for the ID passed to identify the charachter selected

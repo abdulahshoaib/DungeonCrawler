@@ -11,6 +11,21 @@ Map::Map() : width(0), height(0), tileset({0}), tileSize(32)
     collisionTopMargin = 0; // by default full tile collision
 }
 
+int Map::GetTile(int x, int y) const
+{
+    // Safety check
+    if (x < 0 || x >= width || y < 0 || y >= height)
+        return -1; // invalid
+    return tiles[y][x];
+}
+
+void Map::SetTile(int x, int y, int value)
+{
+    // Safety check
+    if (x < 0 || x >= width || y < 0 || y >= height)
+        return;
+    tiles[y][x] = value;
+}
 void Map::LoadMap(const char *filename)
 {
     tiles.clear();

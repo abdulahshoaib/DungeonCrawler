@@ -33,4 +33,6 @@ public:
     int GetCollisionTopMargin() const { return collisionTopMargin; }
     int GetWidth() const { return width; }
     int GetHeight() const { return height; }
+    int GetTile(int x, int y) const;      // return tile ID at (x, y)
+    void SetTile(int x, int y, int value); // set tile ID at (x, y)
 };

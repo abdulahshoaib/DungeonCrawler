@@ -35,6 +35,8 @@ GameManager::GameManager(int ID)
     camera.rotation = 0.0f;
     camera.zoom = 1.0f;
 
+
+
     switch (ID)
     {
     case KNIGHT1:
@@ -89,6 +91,23 @@ GameManager::GameManager(int ID)
         break;
     }
     }
+
+    // --- Spawn coins here ---
+    for (int y = 0; y < interactables.GetHeight(); y++)
+    {
+        for (int x = 0; x < interactables.GetWidth(); x++)
+        {
+            if (interactables.GetTile(x, y) == 397) // coin
+            {
+                float posX = x * interactables.GetTileSize();
+                float posY = y * interactables.GetTileSize();
+                coins.emplace_back(posX, posY);
+            }
+        }
+    }
+
+
+
 }
 
 GameManager::~GameManager()
@@ -284,6 +303,28 @@ void GameManager::Update(Engine &engine)
 
     player->anim();
     animator.Update(player, dt);
+
+    for (size_t i = 0; i < coins.size(); i++)
+    {
+        if (CheckCollisionRecs(coins[i].hitbox, player->GetHitboxRect()))
+        {
+            // Compute tile coordinates BEFORE erasing coin
+            int tileX = (int)(coins[i].pos.x / interactables.GetTileSize());
+            int tileY = (int)(coins[i].pos.y / interactables.GetTileSize());
+
+            // Remove coin from vector
+            coins.erase(coins.begin() + i);
+            i--;
+
+            // Update interactables map to remove the coin
+            interactables.SetTile(tileX, tileY, 0);
+
+            // Optional: play sound or add score
+        }
+    }
+
+
+
 }
 
 void GameManager::Draw()
@@ -377,4 +418,8 @@ void GameManager::Draw()
             ("TileCollisionTopMargin: " + std::to_string(map_collide.GetCollisionTopMargin())).c_str(),
             20, 36, 12, WHITE);
     }
+
+    for (auto& coin : coins)
+        {coin.Draw();}
+
 }
