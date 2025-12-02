@@ -9,8 +9,8 @@ private:
     // Private constructor to prevent instantiation
     GameProgress() = delete;
     ~GameProgress() = delete;
-    GameProgress(const GameProgress&) = delete;
-    GameProgress& operator=(const GameProgress&) = delete;
+    GameProgress(const GameProgress &) = delete;
+    GameProgress &operator=(const GameProgress &) = delete;
 
     // Internal data storage
     static std::string username;
@@ -18,32 +18,39 @@ private:
     static Vector2 mapPosition;
     static int currentLevel;
     static bool dataLoaded;
+    static int currentSlot;
+    static int characterID;
 
     // Helper functions for file operations
-    static std::string GetSaveFilePath();
-    static bool FileExists(const std::string& filepath);
+    static std::string GetSaveFilePath(int slot = -1);
+    static bool FileExists(const std::string &filepath);
 
 public:
     // Setters
-    static void SetUsername(const std::string& name);
+    static void SetUsername(const std::string &name);
     static void SetPoints(int newPoints);
     static void AddPoints(int pointsToAdd);
     static void SetMapPosition(Vector2 position);
     static void SetMapPosition(float x, float y);
     static void SetCurrentLevel(int level);
+    static void SetCurrentSlot(int slot);
+    static void SetCharacterID(int id);
 
     // Getters
     static std::string GetUsername();
     static int GetPoints();
     static Vector2 GetMapPosition();
     static int GetCurrentLevel();
+    static int GetCurrentSlot();
+    static int GetCharacterID();
 
     // Save/Load operations
-    static bool SaveProgress();
-    static bool LoadProgress();
+    static bool SaveProgress(int slot = -1);
+    static bool LoadProgress(int slot = -1);
     static void ResetProgress();
 
     // Utility
     static bool HasSaveData();
+    static bool HasSaveDataInSlot(int slot);
     static void Initialize();
 };

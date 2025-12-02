@@ -10,9 +10,11 @@ int GameProgress::points = 0;
 Vector2 GameProgress::mapPosition = {0.0f, 0.0f};
 int GameProgress::currentLevel = 1;
 bool GameProgress::dataLoaded = false;
+int GameProgress::currentSlot = 0;
+int GameProgress::characterID = 1;
 
 // Setters
-void GameProgress::SetUsername(const std::string& name)
+void GameProgress::SetUsername(const std::string &name)
 {
     username = name;
 }
@@ -43,6 +45,16 @@ void GameProgress::SetCurrentLevel(int level)
     currentLevel = level;
 }
 
+void GameProgress::SetCurrentSlot(int slot)
+{
+    currentSlot = slot;
+}
+
+void GameProgress::SetCharacterID(int id)
+{
+    characterID = id;
+}
+
 // Getters
 std::string GameProgress::GetUsername()
 {
@@ -64,68 +76,92 @@ int GameProgress::GetCurrentLevel()
     return currentLevel;
 }
 
-// Helper functions
-std::string GameProgress::GetSaveFilePath()
+int GameProgress::GetCurrentSlot()
 {
-    return "savegame.dat";
+    return currentSlot;
 }
 
-bool GameProgress::FileExists(const std::string& filepath)
+int GameProgress::GetCharacterID()
+{
+    return characterID;
+}
+
+// Helper functions
+std::string GameProgress::GetSaveFilePath(int slot)
+{
+    if (slot < 0)
+        slot = currentSlot;
+    return "savegame_slot" + std::to_string(slot) + ".dat";
+}
+
+bool GameProgress::FileExists(const std::string &filepath)
 {
     std::ifstream file(filepath);
     return file.good();
 }
 
 // Save progress to file
-bool GameProgress::SaveProgress()
+bool GameProgress::SaveProgress(int slot)
 {
-    std::ofstream saveFile(GetSaveFilePath());
-    
+    if (slot < 0)
+        slot = currentSlot;
+
+    std::string filepath = GetSaveFilePath(slot);
+    std::ofstream saveFile(filepath);
+
     if (!saveFile.is_open())
     {
-        std::cerr << "Failed to open save file for writing!" << std::endl;
+        std::cerr << "Failed to open save file for writing: " << filepath << std::endl;
         return false;
     }
 
     // Write data in a structured format
     saveFile << username << std::endl;
+    saveFile << characterID << std::endl;
     saveFile << points << std::endl;
     saveFile << mapPosition.x << " " << mapPosition.y << std::endl;
     saveFile << currentLevel << std::endl;
 
     saveFile.close();
-    
-    std::cout << "Progress saved successfully!" << std::endl;
+
+    std::cout << "Progress saved to slot " << slot << " successfully!" << std::endl;
     return true;
 }
 
 // Load progress from file
-bool GameProgress::LoadProgress()
+bool GameProgress::LoadProgress(int slot)
 {
-    if (!FileExists(GetSaveFilePath()))
+    if (slot < 0)
+        slot = currentSlot;
+
+    std::string filepath = GetSaveFilePath(slot);
+
+    if (!FileExists(filepath))
     {
-        std::cout << "No save file found. Starting fresh." << std::endl;
+        std::cout << "No save file found in slot " << slot << ". Starting fresh." << std::endl;
         return false;
     }
 
-    std::ifstream saveFile(GetSaveFilePath());
-    
+    std::ifstream saveFile(filepath);
+
     if (!saveFile.is_open())
     {
-        std::cerr << "Failed to open save file for reading!" << std::endl;
+        std::cerr << "Failed to open save file for reading: " << filepath << std::endl;
         return false;
     }
 
     // Read data
     std::getline(saveFile, username);
+    saveFile >> characterID;
     saveFile >> points;
     saveFile >> mapPosition.x >> mapPosition.y;
     saveFile >> currentLevel;
 
     saveFile.close();
     dataLoaded = true;
-    
-    std::cout << "Progress loaded successfully!" << std::endl;
+    currentSlot = slot;
+
+    std::cout << "Progress loaded from slot " << slot << " successfully!" << std::endl;
     std::cout << "Welcome back, " << username << "!" << std::endl;
     return true;
 }
@@ -138,14 +174,25 @@ void GameProgress::ResetProgress()
     mapPosition = {0.0f, 0.0f};
     currentLevel = 1;
     dataLoaded = false;
-    
+
     std::cout << "Progress reset to defaults." << std::endl;
 }
 
 // Check if save data exists
 bool GameProgress::HasSaveData()
 {
-    return FileExists(GetSaveFilePath());
+    for (int i = 0; i < 3; i++)
+    {
+        if (FileExists(GetSaveFilePath(i)))
+            return true;
+    }
+    return false;
+}
+
+// Check if save data exists in specific slot
+bool GameProgress::HasSaveDataInSlot(int slot)
+{
+    return FileExists(GetSaveFilePath(slot));
 }
 
 // Initialize the system (call at game start)
@@ -153,7 +200,7 @@ void GameProgress::Initialize()
 {
     if (HasSaveData())
     {
-        LoadProgress();
+        std::cout << "Save data found. Can load from main menu." << std::endl;
     }
     else
     {
