@@ -125,8 +125,6 @@ void MenuSettings::HandleInput(Engine &engine)
     bool clicked = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
     Vector2 mousePoint = GetMousePosition();
 
-    // Handle Volume Adjustments (Clamped 0-100)
-    // TODO: Hook these into your Audio System (e.g. Audio::SetMasterVolume(masterVolume / 100.0f))
     if (clicked && CheckCollisionPointRec(mousePoint, MasterMinus_btn.rect))
         if (masterVolume >= 10){
             masterVolume -= 10;
