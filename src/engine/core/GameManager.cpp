@@ -19,6 +19,10 @@
 
 GameManager::GameManager(int ID)
 {
+    interactables.LoadMap("assets/maps/interactables.csv");
+    map_collide.LoadMap("assets/maps/map.csv");
+    interactables.LoadMap("assets/maps/non_colliding.csv");
+
     switch (ID)
     {
     case KNIGHT1:
@@ -164,7 +168,7 @@ void GameManager::Draw()
     map_collide.DrawMap();
     interactables.DrawMap();
     map_non_colliding.DrawMap();
-    
+
     animator.Draw(player);
 
     hud.Draw();
