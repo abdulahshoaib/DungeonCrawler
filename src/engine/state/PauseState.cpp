@@ -1,5 +1,7 @@
+// PauseState.cpp
 #include "PauseState.h"
 #include "Audio.h"
+#include "GameProgress.h"
 
 void PauseState::Enter(Engine &)
 {
@@ -13,5 +15,8 @@ void PauseState::Update(Engine &engine)
 
 void PauseState::Draw(Engine &engine)
 {
+    // Draw semi-transparent overlay over the game
+    DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), (Color){0, 0, 0, 180});
+    
     pauseMenu.Draw();
 }

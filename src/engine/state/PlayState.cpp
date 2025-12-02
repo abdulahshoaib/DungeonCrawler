@@ -8,7 +8,7 @@ PlayState::PlayState(int ID)
 
 void PlayState::Update(Engine &engine)
 {
-    gameManager.Update();
+    gameManager.Update(engine);
 }
 
 void PlayState::Draw(Engine &engine)

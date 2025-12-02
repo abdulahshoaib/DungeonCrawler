@@ -35,6 +35,6 @@ public:
     GameManager(int);
     ~GameManager();
 
-    void Update();
+    void Update(Engine&);
     void Draw();
 };

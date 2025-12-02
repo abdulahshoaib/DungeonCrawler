@@ -47,3 +47,22 @@ void Engine::ChangeState(GameState *newGameState)
   this->gameState = newGameState;
   gameState->Enter(*this);
 }
+
+void Engine::PopState()
+{
+  if (previousState != nullptr)
+    {
+        delete gameState;
+        gameState = previousState;
+        previousState = nullptr;
+        // Note: Don't call Enter() again, just resume
+    }
+}
+
+void Engine::PushState(GameState *newGameState)
+{
+  // Store current state as previous
+    previousState = gameState;
+    gameState = newGameState;
+    gameState->Enter(*this);
+}

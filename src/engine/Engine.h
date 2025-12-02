@@ -14,7 +14,8 @@ struct Screen
 
 class Engine
 {
-
+  GameState* gameState;
+  GameState* previousState;
 public:
   Engine();
   ~Engine();
@@ -27,7 +28,7 @@ public:
   // game logic
   void run();
 
-  GameState *gameState;
-
-  void ChangeState(GameState *gameState);
+  void ChangeState(GameState*);
+  void PopState(); // Add this method
+  void PushState(GameState*);
 };

@@ -1,4 +1,5 @@
 #include "GameManager.h"
+#include "PauseState.h"
 
 #include "characters/Knight1.h"
 #include "characters/Knight2.h"
@@ -70,12 +71,18 @@ GameManager::~GameManager()
     // NOTE(demon_slayer): Cleanup resources if any
 }
 
-void GameManager::Update()
+void GameManager::Update(Engine &engine)
 {
     float dt = GetFrameTime();
 
     // Update animation first
     animator.Update(player, dt);
+
+    // In your PlayState or GameState, when player presses ESC:
+    if (IsKeyPressed(KEY_ESCAPE))
+    {
+        engine.PushState(new PauseState());
+    }
 
     // Don't process input if animation is locked
     if (player->IsAnimationLocked())
