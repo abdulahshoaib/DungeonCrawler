@@ -2,19 +2,32 @@
 #include "Loader.h"
 #include "Engine.h"
 #include "PlayState.h"
+#include "Audio.h"
 
 MenuNewGame::MenuNewGame()
 {
+    // Initialize hover tracking for all characters
+    hoveredKnight1 = false;
+    hoveredKnight2 = false;
+    hoveredKnight3 = false;
+    hoveredSamurai1 = false;
+    hoveredSamurai2 = false;
+    hoveredSamurai3 = false;
+}
+
+MenuNewGame::~MenuNewGame()
+{
+    // Empty destructor
 }
 
 void MenuNewGame::Draw()
 {
     DrawTextureEx(Loader::SelectionMenuBackground, {0, 0}, 0, 0.45f, WHITE);
     selectcharacter.text = "SELECT CHARACTER";
-    // int size = GetMeasurement
     selectcharacter.position = {398, 10};
     selectcharacter.fontSize = 40;
     selectcharacter.Draw(YELLOW);
+    
     int screenWidth = 1100;
     int screenHeight = 700;
 
@@ -35,36 +48,113 @@ void MenuNewGame::Draw()
     float stepX = itemW + paddingX;
     float stepY = itemH + paddingY;
 
-    auto DrawPortrait = [&](Texture2D tex, float x, float y)
+    // Helper function to make card prominent on hover
+    auto DrawCardWithEffects = [&](Texture2D tex, float x, float y, bool isHovered)
     {
-        DrawTextureEx(tex, {x, y}, 0, scale, WHITE);
-        return Rectangle{x, y, (float)tex.width * scale, (float)tex.height * scale};
+        Rectangle cardRect = {x, y, (float)tex.width * scale, (float)tex.height * scale};
+        
+        if (isHovered)
+        {
+            // Glowing shadow/aura effect
+            DrawRectangle(x - 8, y - 8, cardRect.width + 16, cardRect.height + 16, 
+                         (Color){255, 200, 100, 60});
+            DrawRectangle(x - 5, y - 5, cardRect.width + 10, cardRect.height + 10, 
+                         (Color){255, 200, 100, 100});
+            
+            // Draw card slightly enlarged
+            float hoverScale = scale * 1.05f;
+            float offsetX = (cardRect.width * 1.05f - cardRect.width) / 2.0f;
+            float offsetY = (cardRect.height * 1.05f - cardRect.height) / 2.0f;
+            DrawTextureEx(tex, {x - offsetX, y - offsetY}, 0, hoverScale, WHITE);
+            
+            // Bright glowing border
+            Rectangle glowRect = {x - offsetX, y - offsetY, 
+                                 (float)tex.width * hoverScale, 
+                                 (float)tex.height * hoverScale};
+            DrawRectangleLinesEx(glowRect, 3, (Color){255, 200, 100, 255});
+            DrawRectangleLinesEx((Rectangle){glowRect.x + 3, glowRect.y + 3, 
+                                            glowRect.width - 6, glowRect.height - 6}, 
+                                2, (Color){255, 220, 150, 180});
+            
+            // Corner accent triangles for extra flair
+            float cornerSize = 15.0f;
+            Color cornerColor = (Color){255, 200, 100, 220};
+            
+            // Top-left
+            DrawTriangle((Vector2){glowRect.x, glowRect.y},
+                        (Vector2){glowRect.x + cornerSize, glowRect.y},
+                        (Vector2){glowRect.x, glowRect.y + cornerSize},
+                        cornerColor);
+            
+            // Top-right
+            DrawTriangle((Vector2){glowRect.x + glowRect.width, glowRect.y},
+                        (Vector2){glowRect.x + glowRect.width, glowRect.y + cornerSize},
+                        (Vector2){glowRect.x + glowRect.width - cornerSize, glowRect.y},
+                        cornerColor);
+            
+            // Bottom-left
+            DrawTriangle((Vector2){glowRect.x, glowRect.y + glowRect.height},
+                        (Vector2){glowRect.x, glowRect.y + glowRect.height - cornerSize},
+                        (Vector2){glowRect.x + cornerSize, glowRect.y + glowRect.height},
+                        cornerColor);
+            
+            // Bottom-right
+            DrawTriangle((Vector2){glowRect.x + glowRect.width, glowRect.y + glowRect.height},
+                        (Vector2){glowRect.x + glowRect.width - cornerSize, glowRect.y + glowRect.height},
+                        (Vector2){glowRect.x + glowRect.width, glowRect.y + glowRect.height - cornerSize},
+                        cornerColor);
+            
+            return Rectangle{x - offsetX, y - offsetY, glowRect.width, glowRect.height};
+        }
+        else
+        {
+            // Normal state - just draw the texture
+            DrawTextureEx(tex, {x, y}, 0, scale, WHITE);
+            return cardRect;
+        }
     };
-
-    rectKnight1 = DrawPortrait(Loader::Knight1Potrait, startX, startY);
-    rectKnight2 = DrawPortrait(Loader::Knight2Potrait, startX + stepX, startY);
-    rectKnight3 = DrawPortrait(Loader::Knight3Potrait, startX + stepX * 2, startY);
-
-    float row2Y = startY + stepY;
-
-    rectSamurai1 = DrawPortrait(Loader::SamuraiPotrait, startX, row2Y);
-    rectSamurai2 = DrawPortrait(Loader::SamuraiCommanderPotrait, startX + stepX, row2Y);
-    rectSamurai3 = DrawPortrait(Loader::SamuraiArcherPotrait, startX + stepX * 2, row2Y);
 
     Vector2 mouse = GetMousePosition();
+    
+    // Check hover states first
+    bool isHoveringKnight1 = CheckCollisionPointRec(mouse, {startX, startY, itemW, itemH});
+    bool isHoveringKnight2 = CheckCollisionPointRec(mouse, {startX + stepX, startY, itemW, itemH});
+    bool isHoveringKnight3 = CheckCollisionPointRec(mouse, {startX + stepX * 2, startY, itemW, itemH});
+    bool isHoveringSamurai1 = CheckCollisionPointRec(mouse, {startX, startY + stepY, itemW, itemH});
+    bool isHoveringSamurai2 = CheckCollisionPointRec(mouse, {startX + stepX, startY + stepY, itemW, itemH});
+    bool isHoveringSamurai3 = CheckCollisionPointRec(mouse, {startX + stepX * 2, startY + stepY, itemW, itemH});
 
-    auto Hover = [&](Rectangle r)
+    // Draw all cards with hover effects
+    rectKnight1 = DrawCardWithEffects(Loader::Knight1Potrait, startX, startY, isHoveringKnight1);
+    rectKnight2 = DrawCardWithEffects(Loader::Knight2Potrait, startX + stepX, startY, isHoveringKnight2);
+    rectKnight3 = DrawCardWithEffects(Loader::Knight3Potrait, startX + stepX * 2, startY, isHoveringKnight3);
+    
+    float row2Y = startY + stepY;
+    
+    rectSamurai1 = DrawCardWithEffects(Loader::SamuraiPotrait, startX, row2Y, isHoveringSamurai1);
+    rectSamurai2 = DrawCardWithEffects(Loader::SamuraiCommanderPotrait, startX + stepX, row2Y, isHoveringSamurai2);
+    rectSamurai3 = DrawCardWithEffects(Loader::SamuraiArcherPotrait, startX + stepX * 2, row2Y, isHoveringSamurai3);
+
+    // Handle hover sound effects
+    auto CheckHoverSound = [&](bool isHovering, bool& wasHovered)
     {
-        if (CheckCollisionPointRec(mouse, r))
-            DrawRectangleLinesEx(r, 3, YELLOW);
+        if (isHovering && !wasHovered)
+        {
+            wasHovered = true;
+            Audio::PlaySFx(BUTTON_HOVER);
+        }
+        else if (!isHovering)
+        {
+            wasHovered = false;
+        }
     };
 
-    Hover(rectKnight1);
-    Hover(rectKnight2);
-    Hover(rectKnight3);
-    Hover(rectSamurai1);
-    Hover(rectSamurai2);
-    Hover(rectSamurai3);
+    CheckHoverSound(isHoveringKnight1, hoveredKnight1);
+    CheckHoverSound(isHoveringKnight2, hoveredKnight2);
+    CheckHoverSound(isHoveringKnight3, hoveredKnight3);
+    CheckHoverSound(isHoveringSamurai1, hoveredSamurai1);
+    CheckHoverSound(isHoveringSamurai2, hoveredSamurai2);
+    CheckHoverSound(isHoveringSamurai3, hoveredSamurai3);
 }
 
 void MenuNewGame::HandleInput(Engine &engine)
