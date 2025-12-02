@@ -35,6 +35,35 @@ public:
     Enemy *SpawnEnemyWithPath(Vector2 startPos, EnemyPath *path,
                               float detectionRange = 200.0f, float attackRange = 80.0f);
 
+    // Template: Create a specific enemy type without a path
+    template<typename EnemyType>
+    EnemyType *SpawnEnemyType(Vector2 startPos, float detectionRange = 200.0f, float attackRange = 80.0f)
+    {
+        auto enemy = std::make_unique<EnemyType>();
+        enemy->Pos = startPos;
+        enemy->SetTargetPlayer(playerRef);
+        enemy->SetDetectionRange(detectionRange);
+        enemy->SetAttackRange(attackRange);
+        enemy->SetDebugDraw(debugDraw);
+
+        EnemyType *ptr = enemy.get();
+        enemies.push_back(std::move(enemy));
+        return ptr;
+    }
+
+    // Template: Create a specific enemy type with a path
+    template<typename EnemyType>
+    EnemyType *SpawnEnemyTypeWithPath(Vector2 startPos, EnemyPath *path,
+                                      float detectionRange = 200.0f, float attackRange = 80.0f)
+    {
+        EnemyType *enemy = SpawnEnemyType<EnemyType>(startPos, detectionRange, attackRange);
+        if (enemy && path)
+        {
+            enemy->SetPatrolPath(path);
+        }
+        return enemy;
+    }
+
     // Create a new path for enemies to follow
     EnemyPath *CreatePath();
 
