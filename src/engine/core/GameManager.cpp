@@ -36,8 +36,6 @@ GameManager::GameManager(int ID)
     camera.rotation = 0.0f;
     camera.zoom = 2.00f;
 
-
-
     switch (ID)
     {
     case KNIGHT1:
@@ -106,9 +104,6 @@ GameManager::GameManager(int ID)
             }
         }
     }
-
-
-
 }
 
 GameManager::~GameManager()
@@ -135,8 +130,23 @@ void GameManager::Update(Engine &engine)
         debugDrawCollision = !debugDrawCollision;
     }
 
-    // Update camera to center on player
-    if (player)
+    // DEBUG: Free camera movement with arrow keys when holding ALT
+    bool cameraDebugMode = IsKeyDown(KEY_LEFT_ALT) || IsKeyDown(KEY_RIGHT_ALT);
+    float cameraPanSpeed = 10.0f;
+    if (cameraDebugMode)
+    {
+        if (IsKeyDown(KEY_UP))
+            camera.target.y -= cameraPanSpeed;
+        if (IsKeyDown(KEY_DOWN))
+            camera.target.y += cameraPanSpeed;
+        if (IsKeyDown(KEY_LEFT))
+            camera.target.x -= cameraPanSpeed;
+        if (IsKeyDown(KEY_RIGHT))
+            camera.target.x += cameraPanSpeed;
+    }
+
+    // Update camera to center on player (unless in free camera mode)
+    if (player && !cameraDebugMode)
     {
         // center the camera on the player's hitbox center
         Vector2 hitCenter = {player->Pos.x + player->hitboxOffsetX + player->hitboxW * 0.5f,
@@ -153,7 +163,7 @@ void GameManager::Update(Engine &engine)
 
         // world size based on your collision tilemap
         int tileSize = map_collide.GetTileSize();
-        float worldW = map_collide.GetWidth()  * (float)tileSize;
+        float worldW = map_collide.GetWidth() * (float)tileSize;
         float worldH = map_collide.GetHeight() * (float)tileSize;
 
         // allowed min/max camera center positions
@@ -163,18 +173,24 @@ void GameManager::Update(Engine &engine)
         float maxY = worldH - halfViewH;
 
         // If the world is smaller than the screen, center instead of clamping
-        if (maxX < minX) { minX = maxX = worldW * 0.5f; }
-        if (maxY < minY) { minY = maxY = worldH * 0.5f; }
+        if (maxX < minX)
+        {
+            minX = maxX = worldW * 0.5f;
+        }
+        if (maxY < minY)
+        {
+            minY = maxY = worldH * 0.5f;
+        }
 
-    #if __cplusplus >= 201703L
+#if __cplusplus >= 201703L
         // Use std::clamp for C++17+
         camera.target.x = std::clamp(camera.target.x, minX, maxX);
         camera.target.y = std::clamp(camera.target.y, minY, maxY);
-    #else
+#else
         // Fallback for older C++
         camera.target.x = fmax(minX, fmin(maxX, camera.target.x));
         camera.target.y = fmax(minY, fmin(maxY, camera.target.y));
-    #endif
+#endif
 
         // -------------------------------------------------------------------------
     }
@@ -340,6 +356,12 @@ void GameManager::Update(Engine &engine)
     player->anim();
     animator.Update(player, dt);
 
+    // Update coins animation
+    for (auto &coin : coins)
+    {
+        coin.Update(dt);
+    }
+
     for (size_t i = 0; i < coins.size(); i++)
     {
         if (CheckCollisionRecs(coins[i].hitbox, player->GetHitboxRect()))
@@ -358,7 +380,6 @@ void GameManager::Update(Engine &engine)
             // Optional: play sound or add score
         }
     }
-
 }
 
 void GameManager::Draw()
@@ -391,8 +412,8 @@ void GameManager::Draw()
 
                     int tileX = x * tileSize;
                     int tileY = y * tileSize + map_collide.GetCollisionTopMargin();
-                    int tW    = tileSize;
-                    int tH    = tileSize - map_collide.GetCollisionTopMargin();
+                    int tW = tileSize;
+                    int tH = tileSize - map_collide.GetCollisionTopMargin();
 
                     DrawRectangleLines(tileX, tileY, tW, tH, RED);
                 }
@@ -401,25 +422,25 @@ void GameManager::Draw()
 
         // Interactables
         for (int y = 0; y < interactables.GetHeight(); y++)
-        for (int x = 0; x < interactables.GetWidth(); x++)
-            if (interactables.IsSolidTile(x,y))
-                DrawRectangleLines(
-                    x * interactables.GetTileSize(),
-                    y * interactables.GetTileSize(),
-                    interactables.GetTileSize(),
-                    interactables.GetTileSize(),
-                    SKYBLUE);
+            for (int x = 0; x < interactables.GetWidth(); x++)
+                if (interactables.IsSolidTile(x, y))
+                    DrawRectangleLines(
+                        x * interactables.GetTileSize(),
+                        y * interactables.GetTileSize(),
+                        interactables.GetTileSize(),
+                        interactables.GetTileSize(),
+                        SKYBLUE);
 
         // Non-colliding
         for (int y = 0; y < map_non_colliding.GetHeight(); y++)
-        for (int x = 0; x < map_non_colliding.GetWidth(); x++)
-            if (map_non_colliding.IsSolidTile(x,y))
-                DrawRectangleLines(
-                    x * map_non_colliding.GetTileSize(),
-                    y * map_non_colliding.GetTileSize(),
-                    map_non_colliding.GetTileSize(),
-                    map_non_colliding.GetTileSize(),
-                    GRAY);
+            for (int x = 0; x < map_non_colliding.GetWidth(); x++)
+                if (map_non_colliding.IsSolidTile(x, y))
+                    DrawRectangleLines(
+                        x * map_non_colliding.GetTileSize(),
+                        y * map_non_colliding.GetTileSize(),
+                        map_non_colliding.GetTileSize(),
+                        map_non_colliding.GetTileSize(),
+                        GRAY);
 
         // Player hitbox
         if (player)
@@ -434,6 +455,12 @@ void GameManager::Draw()
             if (e)
                 DrawRectangleLinesEx(e->GetHitboxRect(), 1, YELLOW);
         }
+    }
+
+    // Draw coins in world space
+    for (auto &coin : coins)
+    {
+        coin.Draw();
     }
 
     EndMode2D(); // exit camera
@@ -452,8 +479,4 @@ void GameManager::Draw()
             ("TileCollisionTopMargin: " + std::to_string(map_collide.GetCollisionTopMargin())).c_str(),
             20, 36, 12, WHITE);
     }
-
-    for (auto& coin : coins)
-        {coin.Draw();}
-
 }

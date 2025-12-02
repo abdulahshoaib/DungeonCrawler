@@ -2,11 +2,19 @@
 #include "Loader.h"
 #include "Audio.h"
 #include "MainMenuState.h"
+#include "PlayState.h"
 
 #define TOTAL_STEPS 17
 
 void LoadingState::Update(Engine &engine)
 {
+    // DEBUG: Skip loading with CTRL+SHIFT+D
+    if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyDown(KEY_LEFT_SHIFT) && IsKeyPressed(KEY_D))
+    {
+        engine.ChangeState(new PlayState(1)); // Default to Knight1
+        return;
+    }
+
     Loader::LoadFont();
     switch (step)
     {
