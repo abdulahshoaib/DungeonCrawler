@@ -38,22 +38,28 @@ void MenuEnterName::Draw()
     DrawRectangleRec(inputBox, BLACK);
 
         // Draw text inside
-// 1. Measure the text width first
-// (We use the same Font, Text, Font Size, and Spacing as the Draw call)
-Vector2 textSize = MeasureTextEx(Loader::TitleFont, typedName.c_str(), 32, 1);
+    // 1. Measure the text width first
+    // (We use the same Font, Text, Font Size, and Spacing as the Draw call)
+    Vector2 textSize = MeasureTextEx(Loader::TitleFont, typedName.c_str(), 32, 1);
 
-// 2. Calculate the X coordinate
-// Formula: Box_X + (Box_Width / 2) - (Text_Width / 2)
-float centerPosX = inputBox.x + (inputBox.width / 2) - (textSize.x / 2);
+    // 2. Calculate the X coordinate
+    // Formula: Box_X + (Box_Width / 2) - (Text_Width / 2)
+    float centerPosX = inputBox.x + (inputBox.width / 2) - (textSize.x / 2);
+    float centerOfBox = inputBox.x + (inputBox.width / 2);
 
-// 3. Draw the text at the new calculated X position
-DrawTextEx(Loader::TitleFont, typedName.c_str(), (Vector2){centerPosX, inputBox.y + 15}, 32, 1, YELLOW);
-    // Blinking cursor if active
+    // 3. Draw the text at the new calculated X position
+    DrawTextEx(Loader::TitleFont, typedName.c_str(), (Vector2){centerPosX, inputBox.y + 15}, 32, 1, YELLOW);
+    // 4. Draw the Cursor (Center + Half Width)
     if (typingActive)
     {
-        float cx = inputBox.x + 18 + MeasureText(typedName.c_str(), 32);
+        // The cursor sits at the center + half the text width + a tiny padding (2px)
+        float cursorX = centerOfBox + (textSize.x / 2) + 2;
+
         if (((int)(GetTime() * 2)) % 2 == 0)
-            DrawText("|", cx, inputBox.y + 15, 32, GREEN); // was WHITE → BLACK
+        {
+            // Using DrawTextEx for the cursor ensures it matches the height/style of your font
+            DrawTextEx(Loader::TitleFont, "|", (Vector2){cursorX, inputBox.y + 15}, 32, 1, GREEN);
+        }
     }
 
     // Store values for HandleInput
