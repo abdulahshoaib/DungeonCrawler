@@ -272,10 +272,10 @@ void Loader::LoadSamuraiArcher()
     SamuraiArcherAttack3 = {LoadTexture("assets/Samurai_Char/Samurai_archer/Attack_3.png"), frameSize, frameSize, 6, 26};
     SamuraiArcherDead = {LoadTexture("assets/Samurai_Char/Samurai_archer/Dead.png"), frameSize, frameSize, 3, 14};
     SamuraiArcherIdle = {LoadTexture("assets/Samurai_Char/Samurai_archer/Idle.png"), frameSize, frameSize, 9, 14};
-    SamuraiArcherJump = {LoadTexture("assets/Samurai_Char/Samurai_archer/Jump.png"), frameSize, frameSize, 9, 30};
-    SamuraiArcherRun = {LoadTexture("assets/Samurai_Char/Samurai_archer/Run.png"), frameSize, frameSize, 8, 30};
-    SamuraiArcherWalk = {LoadTexture("assets/Samurai_Char/Samurai_archer/Walk.png"), frameSize, frameSize, 8, 30};
-    SamuraiArcherShot = {LoadTexture("assets/Samurai_Char/Samurai_archer/Shot.png"), frameSize, frameSize, 15, 30};
+    SamuraiArcherJump = {LoadTexture("assets/Samurai_Char/Samurai_archer/Jump.png"), frameSize, frameSize, 9, 20};
+    SamuraiArcherRun = {LoadTexture("assets/Samurai_Char/Samurai_archer/Run.png"), frameSize, frameSize, 8, 24};
+    SamuraiArcherWalk = {LoadTexture("assets/Samurai_Char/Samurai_archer/Walk.png"), frameSize, frameSize, 8, 14};
+    SamuraiArcherShot = {LoadTexture("assets/Samurai_Char/Samurai_archer/Shot.png"), frameSize, frameSize, 15, 28};
 }
 
 void Loader::UnLoadSamuraiArcher()
@@ -294,16 +294,16 @@ void Loader::UnLoadSamuraiArcher()
 void Loader::LoadSamuraiCommander()
 {
     int frameSize = 128;
-    SamuraiCommanderAttack1 = {LoadTexture("assets/Samurai_Char/Samurai_commander/Attack_1.png"), frameSize, frameSize, 4, 30};
-    SamuraiCommanderAttack2 = {LoadTexture("assets/Samurai_Char/Samurai_commander/Attack_2.png"), frameSize, frameSize, 5, 30};
-    SamuraiCommanderAttack3 = {LoadTexture("assets/Samurai_Char/Samurai_commander/Attack_3.png"), frameSize, frameSize, 4, 30};
-    SamuraiCommanderDead = {LoadTexture("assets/Samurai_Char/Samurai_commander/Dead.png"), frameSize, frameSize, 6, 30};
-    SamuraiCommanderHurt = {LoadTexture("assets/Samurai_Char/Samurai_commander/Hurt.png"), frameSize, frameSize, 2, 30};
+    SamuraiCommanderAttack1 = {LoadTexture("assets/Samurai_Char/Samurai_commander/Attack_1.png"), frameSize, frameSize, 4, 26};
+    SamuraiCommanderAttack2 = {LoadTexture("assets/Samurai_Char/Samurai_commander/Attack_2.png"), frameSize, frameSize, 5, 26};
+    SamuraiCommanderAttack3 = {LoadTexture("assets/Samurai_Char/Samurai_commander/Attack_3.png"), frameSize, frameSize, 4, 26};
+    SamuraiCommanderDead = {LoadTexture("assets/Samurai_Char/Samurai_commander/Dead.png"), frameSize, frameSize, 6, 14};
+    SamuraiCommanderHurt = {LoadTexture("assets/Samurai_Char/Samurai_commander/Hurt.png"), frameSize, frameSize, 2, 18};
     SamuraiCommanderIdle = {LoadTexture("assets/Samurai_Char/Samurai_commander/Idle.png"), frameSize, frameSize, 5, 14};
-    SamuraiCommanderJump = {LoadTexture("assets/Samurai_Char/Samurai_commander/Jump.png"), frameSize, frameSize, 7, 30};
-    SamuraiCommanderRun = {LoadTexture("assets/Samurai_Char/Samurai_commander/Run.png"), frameSize, frameSize, 8, 30};
-    SamuraiCommanderWalk = {LoadTexture("assets/Samurai_Char/Samurai_commander/Walk.png"), frameSize, frameSize, 9, 30};
-    SamuraiCommanderProtect = {LoadTexture("assets/Samurai_Char/Samurai_commander/Protection.png"), frameSize, frameSize, 2, 30};
+    SamuraiCommanderJump = {LoadTexture("assets/Samurai_Char/Samurai_commander/Jump.png"), frameSize, frameSize, 7, 20};
+    SamuraiCommanderRun = {LoadTexture("assets/Samurai_Char/Samurai_commander/Run.png"), frameSize, frameSize, 8, 26};
+    SamuraiCommanderWalk = {LoadTexture("assets/Samurai_Char/Samurai_commander/Walk.png"), frameSize, frameSize, 9, 14};
+    SamuraiCommanderProtect = {LoadTexture("assets/Samurai_Char/Samurai_commander/Protection.png"), frameSize, frameSize, 2, 12};
 }
 
 void Loader::UnLoadSamuraiCommander()
