@@ -20,6 +20,11 @@ void MenuHUD::SetPlayer(Character *p)
   }
 }
 
+void MenuHUD::HurtFlash()
+{
+  hurtTimer = hurtDuration;
+}
+
 void MenuHUD::Draw()
 {
   int padding = 40;
@@ -91,6 +96,20 @@ void MenuHUD::Draw()
       fontSize,
       1.0f,
       WHITE);
+
+  // Update and draw hurt flash overlay for HUD
+  if (hurtTimer > 0.0f)
+  {
+    float dt = GetFrameTime();
+    hurtTimer -= dt;
+    if (hurtTimer < 0.0f)
+      hurtTimer = 0.0f;
+
+    float alphaPct = hurtTimer / hurtDuration;                // 1.0 -> 0.0
+    unsigned char alpha = (unsigned char)(alphaPct * 200.0f); // max ~200
+    // Draw a vertical gradient from red (top) to transparent (bottom)
+    DrawRectangleGradientV(0, 0, GetScreenWidth(), portraitY + portraitH + 60, (Color){255, 60, 60, alpha}, (Color){255, 60, 60, 0});
+  }
 }
 
 void MenuHUD::HandleInput(Engine &)

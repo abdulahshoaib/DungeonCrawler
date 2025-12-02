@@ -9,6 +9,9 @@ class MenuHUD : public Menu
   int maxHealth;
   int coins;
   class Character *playerRef = nullptr;
+  // Hurt flash timer (seconds)
+  float hurtTimer = 0.0f;
+  const float hurtDuration = 0.5f; // half-second flash
 
 public:
   std::string playerName;
@@ -18,4 +21,5 @@ public:
   void Draw();
   void HandleInput(Engine &);
   void SetPlayer(class Character *p);
+  void HurtFlash();
 };
