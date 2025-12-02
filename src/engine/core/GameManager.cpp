@@ -207,6 +207,17 @@ GameManager::GameManager(int ID)
             }
         }
     }
+
+    // If a saved player position exists, place the player there
+    if (player && GameProgress::IsDataLoaded())
+    {
+        Vector2 savedPos = GameProgress::GetMapPosition();
+        // Only apply if the saved position is non-zero (avoid applying default 0,0 accidentally)
+        if (savedPos.x != 0.0f || savedPos.y != 0.0f)
+        {
+            player->Pos = savedPos;
+        }
+    }
 }
 
 GameManager::~GameManager()
@@ -696,4 +707,11 @@ void GameManager::SetCoinsFromPositions(const std::vector<Vector2> &positions)
         if (tx >= 0 && ty >= 0 && tx < interactables.GetWidth() && ty < interactables.GetHeight())
             interactables.SetTile(tx, ty, 397);
     }
+}
+
+Vector2 GameManager::GetPlayerPosition() const
+{
+    if (player)
+        return player->Pos;
+    return {0.0f, 0.0f};
 }

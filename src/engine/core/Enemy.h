@@ -53,10 +53,7 @@ public:
     {
         patrolPath = path;
         currentPathNode = 0;
-        if (path && path->IsValid())
-        {
-            pathPauseTimer = path->GetPauseTime(0);
-        }
+        pathPauseTimer = 0.0f; // Start at 0 so enemy moves toward first waypoint immediately
     }
     void SetTargetPlayer(Character *player) { targetPlayer = player; }
     void SetDetectionRange(float range) { detectionRange = range; }
@@ -76,6 +73,9 @@ public:
     void TakeDamage(float damage);
     void ApplyKnockback(Vector2 direction, float force);
 
+    // ===== ANIMATION =====
+    void anim() override; // Implement from Character
+
 private:
     // ===== PRIVATE BEHAVIOR METHODS =====
     void UpdatePatrol(float dt, Map &collisionMap);
@@ -83,12 +83,12 @@ private:
     void UpdateAttack(float dt);
     void UpdateKnockback(float dt, Map &collisionMap);
 
+    // ===== COLLISION =====
+    void HandleCollisions(Map &collisionMap);
+
     // ===== PATHFINDING =====
     float GetDistanceToPlayer() const;
     bool IsPlayerInRange(float range) const;
     void MoveTowardTarget(Vector2 target, float dt);
     void MoveAlongPath(float dt, Map &collisionMap);
-
-    // ===== ANIMATION =====
-    void anim() override; // Implement from Character
 };

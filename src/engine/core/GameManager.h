@@ -55,6 +55,8 @@ public:
     // Coin helpers for saving/loading
     std::vector<Vector2> GetCoinPositions() const;
     void SetCoinsFromPositions(const std::vector<Vector2> &positions);
+    // Player position accessor
+    Vector2 GetPlayerPosition() const;
 
     // ===== ENEMY MANAGEMENT =====
     EnemyManager &GetEnemyManager() { return enemyManager; }

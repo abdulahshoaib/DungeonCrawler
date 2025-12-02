@@ -158,7 +158,7 @@ void MenuPause::HandleInput(Engine &engine)
     {
         Audio::PlaySFx(BUTTON_HOVER);
 
-        // If underlying state is a PlayState, capture current coin positions before saving
+        // If underlying state is a PlayState, capture current coin positions and player position before saving
         GameState *prev = engine.GetPreviousState();
         if (prev)
         {
@@ -167,6 +167,9 @@ void MenuPause::HandleInput(Engine &engine)
             {
                 auto coins = ps->GetGameManager().GetCoinPositions();
                 GameProgress::SetRemainingCoins(coins);
+
+                Vector2 playerPos = ps->GetGameManager().GetPlayerPosition();
+                GameProgress::SetMapPosition(playerPos);
             }
         }
 

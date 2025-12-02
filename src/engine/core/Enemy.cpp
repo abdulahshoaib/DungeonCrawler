@@ -118,30 +118,97 @@ void Enemy::Update(float dt, Map &collisionMap)
     // Apply physics
     ApplyPhysics(dt);
 
-    // Collision resolution
-    if (collisionMap.CheckCollisionRect(GetHitboxRect()))
+    // Handle collisions with tilemap - resolve multiple times to ensure escape from tiles
+    for (int i = 0; i < 3; i++)
     {
-        int tx, ty;
-        if (collisionMap.GetFirstCollisionTile(GetHitboxRect(), tx, ty))
-        {
-            if (velocityY > 0)
-            {
-                // moving down: place hitbox on top of the tile
-                Pos.y = ty * collisionMap.GetTileSize() - (hitboxOffsetY + hitboxH);
-                isGrounded = true;
-            }
-            else
-            {
-                // moving up: place below the tile
-                Pos.y = (ty + 1) * collisionMap.GetTileSize() - hitboxOffsetY;
-            }
-        }
-        // Stop vertical motion
-        velocityY = 0;
+        HandleCollisions(collisionMap);
     }
 
     // Update animation
     anim();
+}
+
+void Enemy::HandleCollisions(Map &collisionMap)
+{
+    Rectangle hitbox = GetHitboxRect();
+    isGrounded = false; // Reset grounded each frame
+
+    // Check for collisions
+    if (collisionMap.CheckCollisionRect(hitbox))
+    {
+        // Try to resolve collisions by checking collision tiles
+        int tx, ty;
+        if (collisionMap.GetFirstCollisionTile(hitbox, tx, ty))
+        {
+            float tileSize = collisionMap.GetTileSize();
+            float tileX = tx * tileSize;
+            float tileY = ty * tileSize;
+
+            // Get hitbox bounds
+            float hitboxLeft = hitbox.x;
+            float hitboxRight = hitbox.x + hitbox.width;
+            float hitboxTop = hitbox.y;
+            float hitboxBottom = hitbox.y + hitbox.height;
+
+            float tileLeft = tileX;
+            float tileRight = tileX + tileSize;
+            float tileTop = tileY;
+            float tileBottom = tileY + tileSize;
+
+            // Calculate overlaps in each direction
+            float overlapLeft = hitboxRight - tileLeft;   // how far into tile from the left
+            float overlapRight = tileRight - hitboxLeft;  // how far into tile from the right
+            float overlapTop = hitboxBottom - tileTop;    // how far into tile from the top
+            float overlapBottom = tileBottom - hitboxTop; // how far into tile from the bottom
+
+            // Find minimum overlap to determine collision direction
+            float minOverlap = overlapLeft;
+            int collisionDir = 0; // 0=left, 1=right, 2=top, 3=bottom
+
+            if (overlapRight < minOverlap)
+            {
+                minOverlap = overlapRight;
+                collisionDir = 1;
+            }
+            if (overlapTop < minOverlap)
+            {
+                minOverlap = overlapTop;
+                collisionDir = 2;
+            }
+            if (overlapBottom < minOverlap)
+            {
+                minOverlap = overlapBottom;
+                collisionDir = 3;
+            }
+
+            // Resolve collision based on direction
+            if (collisionDir == 0)
+            {
+                // Hit from left side of tile - push enemy right
+                Pos.x = tileLeft - hitboxOffsetX;
+                velocityX = 0;
+            }
+            else if (collisionDir == 1)
+            {
+                // Hit from right side of tile - push enemy left
+                Pos.x = tileRight - hitboxOffsetX - hitboxW;
+                velocityX = 0;
+            }
+            else if (collisionDir == 2)
+            {
+                // Hit from top of tile - push enemy down (bounce off ceiling)
+                Pos.y = tileTop - hitboxOffsetY;
+                velocityY = 0;
+            }
+            else if (collisionDir == 3)
+            {
+                // Hit from bottom of tile - push enemy up (landed on ground)
+                Pos.y = tileBottom - hitboxOffsetY - hitboxH;
+                velocityY = 0;
+                isGrounded = true;
+            }
+        }
+    }
 }
 
 void Enemy::UpdatePatrol(float dt, Map &collisionMap)
@@ -157,11 +224,17 @@ void Enemy::UpdatePatrol(float dt, Map &collisionMap)
 
     // Get target waypoint
     Vector2 targetNode = patrolPath->GetNode(currentPathNode);
-    float distToNode = std::sqrt(
-        (Pos.x - targetNode.x) * (Pos.x - targetNode.x) +
-        (Pos.y - targetNode.y) * (Pos.y - targetNode.y));
 
-    const float WAYPOINT_REACH_DISTANCE = 16.0f;
+    // Use enemy center for distance calculation (consistency with MoveTowardTarget)
+    Vector2 enemyCenter = {
+        Pos.x + hitboxOffsetX + hitboxW * 0.5f,
+        Pos.y + hitboxOffsetY + hitboxH * 0.5f};
+
+    float dx = targetNode.x - enemyCenter.x;
+    float dy = targetNode.y - enemyCenter.y;
+    float distToNode = std::sqrt(dx * dx + dy * dy);
+
+    const float WAYPOINT_REACH_DISTANCE = 32.0f;
 
     // Check if we've reached the current waypoint
     if (distToNode < WAYPOINT_REACH_DISTANCE)
