@@ -7,6 +7,16 @@ bool Character::IsAnimationLocked() const
 
 void Character::OnAnimationComplete()
 {
+    // If death animation finished while death was pending, mark it so
+    // the game manager can show the DeathState (don't transition to IDLE).
+    if (animState == AnimState::DEAD && deathPending)
+    {
+        isAnimationLocked = false;
+        deathAnimationFinished = true;
+        // leave animState as DEAD and don't switch to IDLE
+        return;
+    }
+
     isAnimationLocked = false;
     ChangeAnimState(AnimState::IDLE);
 }
@@ -26,10 +36,11 @@ Character::Character()
     animState = AnimState::IDLE;
 
     // Set a reasonable default hitbox relative offsets for 128x128 sprites
-    hitboxW = 64.0f;
-    hitboxH = 92.0f;
+    // Reduced default hitbox size for tighter collisions
+    hitboxW = 48.0f;
+    hitboxH = 64.0f; // lowered height
     hitboxOffsetX = 32.0f;
-    hitboxOffsetY = 32.0f; // default offset for sprites (move hitbox down by 32px)
+    hitboxOffsetY = 48.0f; // move hitbox further down to keep feet alignment
 }
 
 // optional helper to change offset at runtime
@@ -75,4 +86,30 @@ void Character::ChangeAnimState(AnimState newState)
     {
         isAnimationLocked = true;
     }
+}
+
+void Character::ForceChangeAnimState(AnimState newState)
+{
+    // Force the animation state regardless of lock (for interrupts like HURT/DEAD)
+    animState = newState;
+
+    // Lock animations that shouldn't be interrupted
+    if (newState == AnimState::ATTACK1 ||
+        newState == AnimState::ATTACK2 ||
+        newState == AnimState::ATTACK3 ||
+        newState == AnimState::SHOT1 ||
+        newState == AnimState::SHOT2 ||
+        newState == AnimState::RUN_ATTACK ||
+        newState == AnimState::HURT ||
+        newState == AnimState::DEAD)
+    {
+        isAnimationLocked = true;
+    }
+    else
+    {
+        isAnimationLocked = false;
+    }
+
+    // Reset previousAnim so Animator will reinitialize frame timers on next Update
+    previousAnim = nullptr;
 }

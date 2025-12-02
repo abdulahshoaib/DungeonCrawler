@@ -33,7 +33,9 @@ GameManager::GameManager(int ID)
     map_collide.LoadMap("assets/maps/map.csv");
 
     // Reduce collidable region by a few pixels from top for better visuals
-    map_collide.SetCollisionTopMargin(6);
+    // Smaller margin -> slightly more solid tile area near top so player
+    // collides earlier (reduces clipping into tiles). Lowered from 6 to 2.
+    map_collide.SetCollisionTopMargin(2);
 
     // Setup camera defaults
     camera.offset = {(float)GetScreenWidth() * 0.5f, (float)GetScreenHeight() * 0.5f};
@@ -53,8 +55,9 @@ GameManager::GameManager(int ID)
         // Set player hitbox to match sprite/frame size if available
         if (player && player->currentAnim)
         {
-            player->hitboxW = player->currentAnim->frameWidth * 0.5f;   // half width
-            player->hitboxH = player->currentAnim->frameHeight * 0.75f; // use lower 75% of sprite
+            // Use a slightly smaller hitbox (40% width, 65% height) for tighter collisions
+            player->hitboxW = player->currentAnim->frameWidth * 0.40f;
+            player->hitboxH = player->currentAnim->frameHeight * 0.65f; // reduce height
             player->hitboxOffsetX = (player->currentAnim->frameWidth - player->hitboxW) * 0.5f;
             player->hitboxOffsetY = player->currentAnim->frameHeight - player->hitboxH; // align to bottom
         }
@@ -559,6 +562,15 @@ void GameManager::Update(Engine &engine)
     player->anim();
     animator.Update(player, dt);
 
+    // If a death animation just finished, transition to DeathState (overlay)
+    if (player->deathAnimationFinished)
+    {
+        player->deathAnimationFinished = false;
+        player->deathPending = false;
+        engine.PushState(new DeathState());
+        return;
+    }
+
     // If player attack just triggered, damage nearby enemies
     if (player->attackTriggered)
     {
@@ -615,17 +627,21 @@ void GameManager::Update(Engine &engine)
                 {
                     // Apply damage to player
                     player->hp -= enemy->damage;
+                    // Flash HUD on hit
+                    hud.HurtFlash();
                     if (player->hp <= 0)
                     {
                         player->hp = 0;
-                        player->ChangeAnimState(AnimState::DEAD);
-                        // Push the DeathState to show overlay while keeping the play state
-                        engine.PushState(new DeathState());
+                        // Mark death pending and force play the death animation;
+                        // the DeathState will be pushed once the animation finishes.
+                        player->deathPending = true;
+                        player->ForceChangeAnimState(AnimState::DEAD);
                         return;
                     }
                     else
                     {
-                        player->ChangeAnimState(AnimState::HURT);
+                        // Force hurt animation to interrupt current actions
+                        player->ForceChangeAnimState(AnimState::HURT);
                     }
                 }
             }

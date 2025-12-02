@@ -13,7 +13,7 @@ void Animator::Update(Character *c, float delta)
     Animation *anim = c->currentAnim;
     if (!anim)
         return;
-    
+
     // Reset frame when animation changes
     if (c->previousAnim != anim)
     {
@@ -21,7 +21,7 @@ void Animator::Update(Character *c, float delta)
         anim->frameTimer = 0.0f;
         c->previousAnim = anim;
     }
-    
+
     anim->frameTimer += delta;
     float frameTime = 1.0f / anim->fps;
 
@@ -47,9 +47,19 @@ void Animator::Update(Character *c, float delta)
         // Check if animation completed
         if (anim->currentFrame >= anim->frameCount)
         {
-            anim->currentFrame = 0;
+            // If this is the character's death animation, clamp to last frame
+            // so it stays on the final pose instead of looping.
+            if (c->GetDeadAnim() == anim)
+            {
+                anim->currentFrame = anim->frameCount - 1;
+            }
+            else
+            {
+                // Looping/default behaviour: wrap to first frame
+                anim->currentFrame = 0;
+            }
 
-            // Unlock character when non-looping animations complete
+            // Unlock character when non-looping/locked animations complete
             if (c->IsAnimationLocked())
             {
                 c->OnAnimationComplete();

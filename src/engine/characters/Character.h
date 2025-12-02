@@ -91,6 +91,10 @@ public:
     // Attack trigger set by Animator when attack animation reaches hit frame
     bool attackTriggered = false;
 
+    // Death handling flags
+    bool deathPending = false;           // set when hp reaches 0 and death animation should play
+    bool deathAnimationFinished = false; // set when death animation completes
+
     // Called by Animator when attack 'hit' frame is reached. Override in
     // subclasses to implement attack effects (default does nothing).
     virtual void OnAttackHit() {}
@@ -98,4 +102,8 @@ public:
     virtual void anim() = 0;
     void ApplyPhysics(float);
     void ChangeAnimState(AnimState);
+    void ForceChangeAnimState(AnimState newState);
+
+    // Accessor for Animator to query death animation pointer
+    Animation *GetDeadAnim() const { return deadAnim; }
 };
