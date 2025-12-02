@@ -10,7 +10,7 @@ enum GMusic
 enum SFx
 {
     HOVER_BUTTON,
-    BUTTON_CLICKED,
+    BUTTON_HOVER,
 
     ATTACK_SFX,
     HURT_SFX,

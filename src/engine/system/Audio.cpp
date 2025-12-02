@@ -84,7 +84,7 @@ void Audio::PlaySFx(SFx ref)
     case HOVER_BUTTON:
         sound = &HoverButton;
         break;
-    case BUTTON_CLICKED:
+    case BUTTON_HOVER:
         sound = &ButtonClicked;
         break;
 

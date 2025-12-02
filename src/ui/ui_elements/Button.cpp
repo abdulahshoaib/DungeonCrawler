@@ -19,7 +19,7 @@ void Button::Draw(Color normalColor, Color hoverColor)
         if (!hovered)
         {
             hovered = true;
-            Audio::PlaySFx(BUTTON_CLICKED);
+            Audio::PlaySFx(BUTTON_HOVER);
         }
     }
     else

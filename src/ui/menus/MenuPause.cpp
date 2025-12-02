@@ -153,14 +153,14 @@ void MenuPause::HandleInput(Engine &engine)
     // Resume Button - Return to previous state (game)
     if (CheckCollisionPointRec(GetMousePosition(), resumeButton.rect) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
-        Audio::PlaySFx(BUTTON_CLICKED);
+        Audio::PlaySFx(BUTTON_HOVER);
         engine.PopState(); // You'll need to add this method to Engine
     }
     
     // Save Game Button
     if (CheckCollisionPointRec(GetMousePosition(), saveGameButton.rect) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
-        Audio::PlaySFx(BUTTON_CLICKED);
+        Audio::PlaySFx(BUTTON_HOVER);
         
         if (GameProgress::SaveProgress())
         {
@@ -176,7 +176,7 @@ void MenuPause::HandleInput(Engine &engine)
     // Main Menu Button - Save and return to main menu
     if (CheckCollisionPointRec(GetMousePosition(), mainMenuButton.rect) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
-        Audio::PlaySFx(BUTTON_CLICKED);
+        Audio::PlaySFx(BUTTON_HOVER);
         // Save progress before going to main menu
         GameProgress::SaveProgress();
         // Change to main menu state
@@ -186,7 +186,7 @@ void MenuPause::HandleInput(Engine &engine)
     // Quit Button - Save and close the game
     if (CheckCollisionPointRec(GetMousePosition(), quitButton.rect) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
-        Audio::PlaySFx(BUTTON_CLICKED);
+        Audio::PlaySFx(BUTTON_HOVER);
         // Save progress before quitting
         GameProgress::SaveProgress();
         // Close the window (Engine::run() will handle cleanup)
@@ -196,7 +196,7 @@ void MenuPause::HandleInput(Engine &engine)
     // ESC key to resume game
     if (IsKeyPressed(KEY_ESCAPE))
     {
-        Audio::PlaySFx(BUTTON_CLICKED);
+        Audio::PlaySFx(BUTTON_HOVER);
         engine.PopState(); // Return to game
     }
 }
