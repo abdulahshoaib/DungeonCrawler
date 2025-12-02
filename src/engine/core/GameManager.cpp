@@ -514,9 +514,11 @@ void GameManager::Draw()
     BeginMode2D(camera);
 
     // --- Draw tilemaps ---
-    map_collide.DrawMap();
-    interactables.DrawMap();
+    
     map_non_colliding.DrawMap();
+    interactables.DrawMap();
+    
+    map_collide.DrawMap();
 
     // --- Draw enemies ---
     enemyManager.Draw(animator);
