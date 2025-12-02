@@ -36,7 +36,17 @@ Character::Character()
 
 void Character::ApplyPhysics(float dt)
 {
-    velocityY += gravity * dt;
+    // Only apply gravity if not grounded
+    if (!isGrounded)
+    {
+        velocityY += gravity * dt;
+    }
+    else
+    {
+        // Keep grounded velocity at zero to prevent wobble
+        velocityY = 0.0f;
+    }
+
     Pos.x += velocityX * dt;
     Pos.y += velocityY * dt;
 
