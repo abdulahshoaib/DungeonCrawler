@@ -56,6 +56,12 @@ void Animator::Draw(Character *c)
         (float)anim->frameWidth,
         (float)anim->frameHeight};
 
+    // Flip sprite based on facing direction
+    if (c->IsFacingLeft())
+    {
+        src.width = -src.width;
+    }
+
     Rectangle dest = {
         c->Pos.x,
         c->Pos.y,

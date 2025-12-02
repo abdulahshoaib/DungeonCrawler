@@ -38,6 +38,9 @@ protected:
     Animation *fire1Anim = nullptr;
     Animation *fire2Anim = nullptr;
 
+private:
+    bool facingLeft = false; // ADD THIS - tracks which direction character is facing
+
 public:
     Vector2 Pos;
     AnimState animState;
@@ -52,10 +55,8 @@ public:
 
     Character();
 
-    // subject to change in each derived class
     float hp;
     float damage;
-    // Movement speed (pixels/second). Raised for visible in-game movement.
     float speed = 200.0f;
 
     // ===== MOVEMENT =====
@@ -81,6 +82,10 @@ public:
     void SetHitboxOffsetY(float y) { hitboxOffsetY = y; }
     void ChangeHitboxOffsetY(float dy) { hitboxOffsetY += dy; }
     float GetHitboxOffsetY() const { return hitboxOffsetY; }
+
+    // ADD THESE TWO METHODS:
+    void SetFacingLeft(bool left) { facingLeft = left; }
+    bool IsFacingLeft() const { return facingLeft; }
 
     virtual void anim() = 0;
     void ApplyPhysics(float);

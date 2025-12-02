@@ -191,13 +191,14 @@ void GameManager::Update(Engine &engine)
     if (movingRight)
     {
         player->velocityX = runKey ? player->speed * 1.8f : player->speed;
-        // player->FlipX = false;
+        player->SetFacingLeft(false); // Face right when moving right
     }
     else if (movingLeft)
     {
         player->velocityX = runKey ? -player->speed * 1.8f : -player->speed;
-        // player->FlipX = true;
+        player->SetFacingLeft(true); // Face left when moving left
     }
+    // When not moving, don't change facing - character remembers last direction
 
     if (jumpPressed && player->isGrounded)
     {
