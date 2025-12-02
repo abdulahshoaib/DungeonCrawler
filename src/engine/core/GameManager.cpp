@@ -10,6 +10,9 @@
 
 #include "characters/AnimStates.h"
 
+#include "EnemySkeleton.h"
+#include "EnemyYokai.h"
+
 #include <cmath>
 #include <string>
 #include <algorithm>
@@ -96,46 +99,46 @@ GameManager::GameManager(int ID)
     enemyManager.SetCollisionMapReference(&map_collide);
     enemyManager.SetDebugDraw(debugDrawCollision);
 
-    // --- Spawn example enemies with patrol paths (spread far apart on map) ---
-    // Create patrol path 1 (left side of map)
+    // --- Spawn diverse enemies with patrol paths ---
+    // Create patrol path 1 (left side of map) - Skeleton Warrior
     EnemyPath *path1 = enemyManager.CreatePath();
     enemyManager.AddPathNode(path1, {100.0f, 400.0f}, 1.0f);
     enemyManager.AddPathNode(path1, {300.0f, 400.0f}, 0.5f);
     enemyManager.AddPathNode(path1, {100.0f, 400.0f}, 1.0f);
     enemyManager.SetPathLooping(path1, true);
+    enemyManager.SpawnEnemyTypeWithPath<EnemySkeletonWarrior>({100.0f, 400.0f}, path1, 200.0f, 80.0f);
 
-    // Spawn enemy 1 with path (left side)
-    enemyManager.SpawnEnemyWithPath({100.0f, 400.0f}, path1, 200.0f, 80.0f);
-
-    // Create patrol path 2 (middle-left of map)
+    // Create patrol path 2 (middle-left of map) - Skeleton Archer
     EnemyPath *path2 = enemyManager.CreatePath();
     enemyManager.AddPathNode(path2, {500.0f, 350.0f}, 0.8f);
     enemyManager.AddPathNode(path2, {700.0f, 350.0f}, 0.5f);
     enemyManager.AddPathNode(path2, {500.0f, 350.0f}, 0.8f);
     enemyManager.SetPathLooping(path2, true);
+    enemyManager.SpawnEnemyTypeWithPath<EnemySkeletonArcher>({500.0f, 350.0f}, path2, 200.0f, 80.0f);
 
-    // Spawn enemy 2 with path (middle-left)
-    enemyManager.SpawnEnemyWithPath({500.0f, 350.0f}, path2, 200.0f, 80.0f);
-
-    // Create patrol path 3 (middle-right of map)
+    // Create patrol path 3 (middle-right of map) - Skeleton Spearman
     EnemyPath *path3 = enemyManager.CreatePath();
     enemyManager.AddPathNode(path3, {900.0f, 300.0f}, 1.0f);
     enemyManager.AddPathNode(path3, {1100.0f, 300.0f}, 0.5f);
     enemyManager.AddPathNode(path3, {900.0f, 300.0f}, 1.0f);
     enemyManager.SetPathLooping(path3, true);
+    enemyManager.SpawnEnemyTypeWithPath<EnemySkeletonSpearman>({900.0f, 300.0f}, path3, 200.0f, 80.0f);
 
-    // Spawn enemy 3 with path (middle-right)
-    enemyManager.SpawnEnemyWithPath({900.0f, 300.0f}, path3, 200.0f, 80.0f);
-
-    // Create patrol path 4 (right side of map)
+    // Create patrol path 4 (right side of map) - Karasu Tengu
     EnemyPath *path4 = enemyManager.CreatePath();
     enemyManager.AddPathNode(path4, {1300.0f, 380.0f}, 0.8f);
     enemyManager.AddPathNode(path4, {1500.0f, 380.0f}, 0.6f);
     enemyManager.AddPathNode(path4, {1300.0f, 380.0f}, 0.8f);
     enemyManager.SetPathLooping(path4, true);
+    enemyManager.SpawnEnemyTypeWithPath<EnemyKarasuTengu>({1300.0f, 380.0f}, path4, 200.0f, 80.0f);
 
-    // Spawn enemy 4 with path (right side)
-    enemyManager.SpawnEnemyWithPath({1300.0f, 380.0f}, path4, 200.0f, 80.0f);
+    // Create patrol path 5 (far right of map) - Yamabushi Tengu
+    EnemyPath *path5 = enemyManager.CreatePath();
+    enemyManager.AddPathNode(path5, {1650.0f, 350.0f}, 0.7f);
+    enemyManager.AddPathNode(path5, {1850.0f, 350.0f}, 0.5f);
+    enemyManager.AddPathNode(path5, {1650.0f, 350.0f}, 0.7f);
+    enemyManager.SetPathLooping(path5, true);
+    enemyManager.SpawnEnemyTypeWithPath<EnemyYamabushiTengu>({1650.0f, 350.0f}, path5, 200.0f, 80.0f);
 
     // --- Spawn coins here ---
     for (int y = 0; y < interactables.GetHeight(); y++)
@@ -473,6 +476,7 @@ void GameManager::Update(Engine &engine)
         Enemy *enemy = enemyManager.GetEnemy(i);
         if (enemy)
         {
+            enemy->anim();
             animator.Update(enemy, dt);
         }
     }

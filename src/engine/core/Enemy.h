@@ -49,7 +49,15 @@ public:
     ~Enemy();
 
     // ===== INITIALIZATION =====
-    void SetPatrolPath(EnemyPath *path) { patrolPath = path; }
+    void SetPatrolPath(EnemyPath *path)
+    {
+        patrolPath = path;
+        currentPathNode = 0;
+        if (path && path->IsValid())
+        {
+            pathPauseTimer = path->GetPauseTime(0);
+        }
+    }
     void SetTargetPlayer(Character *player) { targetPlayer = player; }
     void SetDetectionRange(float range) { detectionRange = range; }
     void SetAttackRange(float range) { attackRange = range; }

@@ -6,7 +6,7 @@ EnemyYokai::EnemyYokai() : Enemy()
     // Base Yokai setup
     hp = 40.0f;
     damage = 11.0f;
-    speed = 200.0f;  // Yokai are faster
+    speed = 200.0f; // Yokai are faster
 }
 
 EnemyKarasuTengu::EnemyKarasuTengu() : EnemyYokai()

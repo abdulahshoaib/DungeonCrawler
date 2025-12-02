@@ -36,7 +36,7 @@ public:
                               float detectionRange = 200.0f, float attackRange = 80.0f);
 
     // Template: Create a specific enemy type without a path
-    template<typename EnemyType>
+    template <typename EnemyType>
     EnemyType *SpawnEnemyType(Vector2 startPos, float detectionRange = 200.0f, float attackRange = 80.0f)
     {
         auto enemy = std::make_unique<EnemyType>();
@@ -52,7 +52,7 @@ public:
     }
 
     // Template: Create a specific enemy type with a path
-    template<typename EnemyType>
+    template <typename EnemyType>
     EnemyType *SpawnEnemyTypeWithPath(Vector2 startPos, EnemyPath *path,
                                       float detectionRange = 200.0f, float attackRange = 80.0f)
     {

@@ -29,16 +29,16 @@ void Loader::UnLoadSkeletonSpearman()
 
 void Loader::LoadKarasuTengu()
 {
-    int frameSize = 128;
-    KarasuTenguAttack1 = {LoadTexture("assets/Yokai/Karasu_tengu/Attack_1.png"), frameSize, frameSize, 6, 28};
-    KarasuTenguAttack2 = {LoadTexture("assets/Yokai/Karasu_tengu/Attack_2.png"), frameSize, frameSize, 4, 26};
-    KarasuTenguAttack3 = {LoadTexture("assets/Yokai/Karasu_tengu/Attack_3.png"), frameSize, frameSize, 3, 26};
-    KarasuTenguDead = {LoadTexture("assets/Yokai/Karasu_tengu/Dead.png"), frameSize, frameSize, 6, 14};
-    KarasuTenguHurt = {LoadTexture("assets/Yokai/Karasu_tengu/Hurt.png"), frameSize, frameSize, 3, 18};
-    KarasuTenguRun = {LoadTexture("assets/Yokai/Karasu_tengu/Run.png"), frameSize, frameSize, 8, 26};
-    KarasuTenguWalk = {LoadTexture("assets/Yokai/Karasu_tengu/Walk.png"), frameSize, frameSize, 8, 14};
-    KarasuTenguIdle1 = {LoadTexture("assets/Yokai/Karasu_tengu/Idle.png"), frameSize, frameSize, 6, 14};
-    KarasuTenguIdle2 = {LoadTexture("assets/Yokai/Karasu_tengu/Idle_2.png"), frameSize, frameSize, 5, 14};
+    int frameSize = 96;  // Smaller than skeletons (128) to make them appropriately sized
+    KarasuTenguAttack1 = {LoadTexture("assets/Yokai/Karasu_tengu/Attack_1.png"), frameSize, frameSize, 6, 13};
+    KarasuTenguAttack2 = {LoadTexture("assets/Yokai/Karasu_tengu/Attack_2.png"), frameSize, frameSize, 4, 13};
+    KarasuTenguAttack3 = {LoadTexture("assets/Yokai/Karasu_tengu/Attack_3.png"), frameSize, frameSize, 3, 13};
+    KarasuTenguDead = {LoadTexture("assets/Yokai/Karasu_tengu/Dead.png"), frameSize, frameSize, 6, 7};
+    KarasuTenguHurt = {LoadTexture("assets/Yokai/Karasu_tengu/Hurt.png"), frameSize, frameSize, 3, 9};
+    KarasuTenguRun = {LoadTexture("assets/Yokai/Karasu_tengu/Run.png"), frameSize, frameSize, 8, 12};
+    KarasuTenguWalk = {LoadTexture("assets/Yokai/Karasu_tengu/Walk.png"), frameSize, frameSize, 8, 8};
+    KarasuTenguIdle1 = {LoadTexture("assets/Yokai/Karasu_tengu/Idle.png"), frameSize, frameSize, 6, 8};
+    KarasuTenguIdle2 = {LoadTexture("assets/Yokai/Karasu_tengu/Idle_2.png"), frameSize, frameSize, 5, 8};
 }
 void Loader::UnLoadKarasuTengu()
 {
@@ -209,17 +209,17 @@ void Loader::UnLoadKnight3()
 
 void Loader::LoadYamabushiTengu()
 {
-    int frameSize = 128;
+    int frameSize = 96;  // Smaller than skeletons (128) to make them appropriately sized
 
-    YamabushiTenguAttack1 = {LoadTexture("assets/Yokai/Yamabushi_tengu/Attack_1.png"), frameSize, frameSize, 3, 26};
-    YamabushiTenguAttack2 = {LoadTexture("assets/Yokai/Yamabushi_tengu/Attack_2.png"), frameSize, frameSize, 6, 28};
-    YamabushiTenguAttack3 = {LoadTexture("assets/Yokai/Yamabushi_tengu/Attack_3.png"), frameSize, frameSize, 4, 28};
-    YamabushiTenguDead = {LoadTexture("assets/Yokai/Yamabushi_tengu/Dead.png"), frameSize, frameSize, 6, 14};
-    YamabushiTenguHurt = {LoadTexture("assets/Yokai/Yamabushi_tengu/Hurt.png"), frameSize, frameSize, 3, 18};
-    YamabushiTenguIdle1 = {LoadTexture("assets/Yokai/Yamabushi_tengu/Idle.png"), frameSize, frameSize, 6, 14};
-    YamabushiTenguIdle2 = {LoadTexture("assets/Yokai/Yamabushi_tengu/Idle_2.png"), frameSize, frameSize, 5, 14};
-    YamabushiTenguRun = {LoadTexture("assets/Yokai/Yamabushi_tengu/Run.png"), frameSize, frameSize, 8, 26};
-    YamabushiTenguWalk = {LoadTexture("assets/Yokai/Yamabushi_tengu/Walk.png"), frameSize, frameSize, 8, 14};
+    YamabushiTenguAttack1 = {LoadTexture("assets/Yokai/Yamabushi_tengu/Attack_1.png"), frameSize, frameSize, 3, 13};
+    YamabushiTenguAttack2 = {LoadTexture("assets/Yokai/Yamabushi_tengu/Attack_2.png"), frameSize, frameSize, 6, 13};
+    YamabushiTenguAttack3 = {LoadTexture("assets/Yokai/Yamabushi_tengu/Attack_3.png"), frameSize, frameSize, 4, 13};
+    YamabushiTenguDead = {LoadTexture("assets/Yokai/Yamabushi_tengu/Dead.png"), frameSize, frameSize, 6, 7};
+    YamabushiTenguHurt = {LoadTexture("assets/Yokai/Yamabushi_tengu/Hurt.png"), frameSize, frameSize, 3, 9};
+    YamabushiTenguIdle1 = {LoadTexture("assets/Yokai/Yamabushi_tengu/Idle.png"), frameSize, frameSize, 6, 8};
+    YamabushiTenguIdle2 = {LoadTexture("assets/Yokai/Yamabushi_tengu/Idle_2.png"), frameSize, frameSize, 5, 8};
+    YamabushiTenguRun = {LoadTexture("assets/Yokai/Yamabushi_tengu/Run.png"), frameSize, frameSize, 8, 12};
+    YamabushiTenguWalk = {LoadTexture("assets/Yokai/Yamabushi_tengu/Walk.png"), frameSize, frameSize, 8, 8};
 }
 
 void Loader::UnLoadYamabushiTengu()

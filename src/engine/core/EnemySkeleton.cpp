@@ -45,7 +45,7 @@ EnemySkeletonArcher::EnemySkeletonArcher() : EnemySkeleton()
 
     hp = 28.0f;
     damage = 8.0f;
-    speed = 140.0f;  // Archers are slower
+    speed = 140.0f; // Archers are slower
 }
 
 EnemySkeletonSpearman::EnemySkeletonSpearman() : EnemySkeleton()
@@ -56,7 +56,7 @@ EnemySkeletonSpearman::EnemySkeletonSpearman() : EnemySkeleton()
     walkAnim = &Loader::SkeletonSpearmanWalk;
     attack1Anim = &Loader::SkeletonSpearmanAttack1;
     attack2Anim = &Loader::SkeletonSpearmanAttack2;
-    attack3Anim = &Loader::SkeletonSpearmanAttack1;  // Use attack1 if attack3 not available
+    attack3Anim = &Loader::SkeletonSpearmanAttack1; // Use attack1 if attack3 not available
     runAttackAnim = &Loader::SkeletonSpearmanRunAttack;
     hurtAnim = &Loader::SkeletonSpearmanHurt;
     deadAnim = &Loader::SkeletonSpearmanDead;
@@ -66,5 +66,5 @@ EnemySkeletonSpearman::EnemySkeletonSpearman() : EnemySkeleton()
 
     hp = 42.0f;
     damage = 12.0f;
-    speed = 160.0f;  // Spearmen are strong but slower
+    speed = 160.0f; // Spearmen are strong but slower
 }
