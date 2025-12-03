@@ -1,11 +1,4 @@
 # Game
-
-# IF YOU ARE CRASHING TRY:
-1.
-```bash
-Get-ChildItem -Recurse -Filter *.o | Remove-Item -Force
-# Dungeon Crawler
-
 A lightweight 2D dungeon-crawler prototype built with Raylib and C++. This repository contains the game source, a small editor, and assets used during development.
 
 ---
