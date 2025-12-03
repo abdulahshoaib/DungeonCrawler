@@ -24,20 +24,20 @@ Enemy::Enemy() : Character()
     hp = 30.0f;
     maxHp = hp;
     damage = 8.0f;
-    speed = 180.0f; // Increased walking speed for more engaging gameplay
+    speed = 180.0f;
 
-    // Hitbox for enemy (adjust as needed)
-    hitboxW = 48.0f;
-    hitboxH = 80.0f;
-    hitboxOffsetX = 40.0f;
-    hitboxOffsetY = 48.0f;
+    // Hitbox for enemy (128x128 sprite)
+    // Make hitbox tighter and aligned to bottom of sprite
+    hitboxW = 50.0f;
+    hitboxH = 90.0f;
+    hitboxOffsetX = 39.0f;  // Center horizontally in 128px sprite
+    hitboxOffsetY = 38.0f;  // Align to bottom, feet at y=128
 
     animState = AnimState::IDLE;
 }
 
 Enemy::~Enemy()
 {
-    // Path is managed externally, don't delete
     patrolPath = nullptr;
     targetPlayer = nullptr;
 }
@@ -74,23 +74,19 @@ void Enemy::Update(float dt, Map &collisionMap)
         UpdateKnockback(dt, collisionMap);
         break;
     case EnemyAIState::DEAD:
-        // Stay dead
         break;
     case EnemyAIState::IDLE:
     default:
-        // Idle state - do nothing
         break;
     }
 
     // Check for player detection and state transitions
-    // Don't interrupt ATTACKING state unless player is out of range
     if (targetPlayer && aiState != EnemyAIState::KNOCKBACK && aiState != EnemyAIState::DEAD)
     {
         float distToPlayer = GetDistanceToPlayer();
 
         if (distToPlayer < attackRange)
         {
-            // Close enough to attack - transition to attacking state
             if (aiState != EnemyAIState::ATTACKING)
             {
                 aiState = EnemyAIState::ATTACKING;
@@ -99,7 +95,6 @@ void Enemy::Update(float dt, Map &collisionMap)
         }
         else if (distToPlayer < detectionRange)
         {
-            // Player detected - start chasing (but not if already attacking)
             if (aiState != EnemyAIState::ATTACKING)
             {
                 aiState = EnemyAIState::CHASING;
@@ -108,7 +103,6 @@ void Enemy::Update(float dt, Map &collisionMap)
         }
         else
         {
-            // Player out of range - go back to patrol if not attacking
             if (aiState == EnemyAIState::CHASING)
             {
                 aiState = EnemyAIState::PATROLLING;
@@ -119,7 +113,7 @@ void Enemy::Update(float dt, Map &collisionMap)
     // Apply physics
     ApplyPhysics(dt);
 
-    // Handle collisions with tilemap - resolve multiple times to ensure escape from tiles
+    // Handle collisions with tilemap
     for (int i = 0; i < 3; i++)
     {
         HandleCollisions(collisionMap);
@@ -132,81 +126,65 @@ void Enemy::Update(float dt, Map &collisionMap)
 void Enemy::HandleCollisions(Map &collisionMap)
 {
     Rectangle hitbox = GetHitboxRect();
-    isGrounded = false; // Reset grounded each frame
+    isGrounded = false;
 
-    // Check for collisions
+    // Check bottom/ground collision first (more important)
+    Rectangle feetCheck = {hitbox.x + 2, hitbox.y + hitbox.height - 2, hitbox.width - 4, 4};
+    if (collisionMap.CheckCollisionRect(feetCheck))
+    {
+        isGrounded = true;
+    }
+
+    // Handle horizontal collisions
+    if (velocityX != 0)
+    {
+        Rectangle horizontalCheck = hitbox;
+        if (collisionMap.CheckCollisionRect(horizontalCheck))
+        {
+            int tx, ty;
+            if (collisionMap.GetFirstCollisionTile(horizontalCheck, tx, ty))
+            {
+                float tileSize = collisionMap.GetTileSize();
+                
+                // Push out of collision based on movement direction
+                if (velocityX > 0)
+                {
+                    // Moving right - push left
+                    Pos.x = tx * tileSize - hitboxOffsetX - hitboxW - 1;
+                }
+                else if (velocityX < 0)
+                {
+                    // Moving left - push right
+                    Pos.x = (tx + 1) * tileSize - hitboxOffsetX + 1;
+                }
+                velocityX = 0;
+            }
+        }
+    }
+
+    // Handle vertical collisions
+    hitbox = GetHitboxRect(); // Recalculate after horizontal adjustment
+    
     if (collisionMap.CheckCollisionRect(hitbox))
     {
-        // Try to resolve collisions by checking collision tiles
         int tx, ty;
         if (collisionMap.GetFirstCollisionTile(hitbox, tx, ty))
         {
             float tileSize = collisionMap.GetTileSize();
-            float tileX = tx * tileSize;
             float tileY = ty * tileSize;
-
-            // Get hitbox bounds
-            float hitboxLeft = hitbox.x;
-            float hitboxRight = hitbox.x + hitbox.width;
-            float hitboxTop = hitbox.y;
-            float hitboxBottom = hitbox.y + hitbox.height;
-
-            float tileLeft = tileX;
-            float tileRight = tileX + tileSize;
-            float tileTop = tileY;
-            float tileBottom = tileY + tileSize;
-
-            // Calculate overlaps in each direction
-            float overlapLeft = hitboxRight - tileLeft;   // how far into tile from the left
-            float overlapRight = tileRight - hitboxLeft;  // how far into tile from the right
-            float overlapTop = hitboxBottom - tileTop;    // how far into tile from the top
-            float overlapBottom = tileBottom - hitboxTop; // how far into tile from the bottom
-
-            // Find minimum overlap to determine collision direction
-            float minOverlap = overlapLeft;
-            int collisionDir = 0; // 0=left, 1=right, 2=top, 3=bottom
-
-            if (overlapRight < minOverlap)
+            
+            if (velocityY > 0)
             {
-                minOverlap = overlapRight;
-                collisionDir = 1;
-            }
-            if (overlapTop < minOverlap)
-            {
-                minOverlap = overlapTop;
-                collisionDir = 2;
-            }
-            if (overlapBottom < minOverlap)
-            {
-                minOverlap = overlapBottom;
-                collisionDir = 3;
-            }
-
-            // Resolve collision based on direction
-            if (collisionDir == 0)
-            {
-                // Hit from left side of tile - push enemy right
-                Pos.x = tileLeft - hitboxOffsetX;
-                velocityX = 0;
-            }
-            else if (collisionDir == 1)
-            {
-                // Hit from right side of tile - push enemy left
-                Pos.x = tileRight - hitboxOffsetX - hitboxW;
-                velocityX = 0;
-            }
-            else if (collisionDir == 2)
-            {
-                // Hit from top of tile - push enemy down (bounce off ceiling)
-                Pos.y = tileTop - hitboxOffsetY;
-                velocityY = 0;
-            }
-            else if (collisionDir == 3)
-            {
-                // Hit from bottom of tile - push enemy up (landed on ground)
-                Pos.y = tileBottom - hitboxOffsetY - hitboxH;
+                // Falling - land on top of tile
+                Pos.y = tileY - hitboxOffsetY - hitboxH;
                 velocityY = 0;
                 isGrounded = true;
+            }
+            else if (velocityY < 0)
+            {
+                // Jumping - hit ceiling
+                Pos.y = (ty + 1) * tileSize - hitboxOffsetY;
+                velocityY = 0;
             }
         }
     }
@@ -214,7 +192,6 @@ void Enemy::HandleCollisions(Map &collisionMap)
 
 void Enemy::UpdatePatrol(float dt, Map &collisionMap)
 {
-    // If no path, stay idle
     if (!patrolPath || !patrolPath->IsValid())
     {
         aiState = EnemyAIState::IDLE;
@@ -223,10 +200,8 @@ void Enemy::UpdatePatrol(float dt, Map &collisionMap)
         return;
     }
 
-    // Get target waypoint
     Vector2 targetNode = patrolPath->GetNode(currentPathNode);
 
-    // Use enemy center for distance calculation (consistency with MoveTowardTarget)
     Vector2 enemyCenter = {
         Pos.x + hitboxOffsetX + hitboxW * 0.5f,
         Pos.y + hitboxOffsetY + hitboxH * 0.5f};
@@ -235,52 +210,70 @@ void Enemy::UpdatePatrol(float dt, Map &collisionMap)
     float dy = targetNode.y - enemyCenter.y;
     float distToNode = std::sqrt(dx * dx + dy * dy);
 
-    const float WAYPOINT_REACH_DISTANCE = 32.0f;
+    const float WAYPOINT_REACH_DISTANCE = 48.0f; // Increased from 32 to make it easier to reach
 
     // Check if we've reached the current waypoint
     if (distToNode < WAYPOINT_REACH_DISTANCE)
     {
-        // Reached waypoint - decrement pause timer
-        pathPauseTimer -= dt;
-
-        if (pathPauseTimer <= 0)
+        // At waypoint - handle pause
+        if (pathPauseTimer > 0)
         {
-            // Pause time expired, move to next waypoint
-            pathPauseTimer = 0;
-            currentPathNode++;
-
-            if (currentPathNode >= patrolPath->GetNodeCount())
-            {
-                if (patrolPath->IsLooping())
-                {
-                    currentPathNode = 0;
-                }
-                else
-                {
-                    // End of path - stay idle
-                    aiState = EnemyAIState::IDLE;
-                    ChangeAnimState(AnimState::IDLE);
-                    velocityX = 0;
-                    return;
-                }
-            }
-
-            // Set pause time for the new waypoint we just advanced to
-            pathPauseTimer = patrolPath->GetPauseTime(currentPathNode);
-        }
-        else
-        {
-            // Still pausing at waypoint
+            pathPauseTimer -= dt;
             ChangeAnimState(AnimState::IDLE);
             velocityX = 0;
             return;
         }
-    }
 
-    // Move toward the current target waypoint
-    targetNode = patrolPath->GetNode(currentPathNode);
-    MoveTowardTarget(targetNode, dt);
-    ChangeAnimState(AnimState::WALK);
+        // Pause time expired, move to next waypoint
+        currentPathNode++;
+
+        if (currentPathNode >= patrolPath->GetNodeCount())
+        {
+            if (patrolPath->IsLooping())
+            {
+                currentPathNode = 0;
+            }
+            else
+            {
+                aiState = EnemyAIState::IDLE;
+                ChangeAnimState(AnimState::IDLE);
+                velocityX = 0;
+                return;
+            }
+        }
+
+        // Set pause time for new waypoint
+        pathPauseTimer = patrolPath->GetPauseTime(currentPathNode);
+        
+        // If pause time is 0, continue moving immediately
+        if (pathPauseTimer <= 0)
+        {
+            targetNode = patrolPath->GetNode(currentPathNode);
+            MoveTowardTarget(targetNode, dt);
+            ChangeAnimState(AnimState::WALK);
+        }
+        else
+        {
+            // Start pausing
+            velocityX = 0;
+            ChangeAnimState(AnimState::IDLE);
+        }
+    }
+    else
+    {
+        // Not at waypoint yet - keep moving
+        // Only move if we're on the ground to prevent glitching
+        if (isGrounded)
+        {
+            MoveTowardTarget(targetNode, dt);
+            ChangeAnimState(AnimState::WALK);
+        }
+        else
+        {
+            // In air - let physics handle it
+            velocityX *= 0.95f; // Slight air resistance
+        }
+    }
 }
 
 void Enemy::UpdateChase(float dt, Map &collisionMap)
@@ -294,14 +287,12 @@ void Enemy::UpdateChase(float dt, Map &collisionMap)
     chaseTimer -= dt;
     if (chaseTimer <= 0)
     {
-        // Chase timeout - return to patrol
         aiState = EnemyAIState::PATROLLING;
         currentPathNode = 0;
         pathPauseTimer = 0;
         return;
     }
 
-    // Move toward player
     Vector2 playerCenter = {
         targetPlayer->Pos.x + targetPlayer->hitboxOffsetX + targetPlayer->hitboxW * 0.5f,
         targetPlayer->Pos.y + targetPlayer->hitboxOffsetY + targetPlayer->hitboxH * 0.5f};
@@ -319,31 +310,27 @@ void Enemy::UpdateAttack(float dt)
         return;
     }
 
-    velocityX = 0; // Stop moving while attacking
+    velocityX = 0;
 
     float distToPlayer = GetDistanceToPlayer();
     if (distToPlayer > attackRange * 1.2f)
     {
-        // Player moved out of range - resume chasing
         aiState = EnemyAIState::CHASING;
         chaseTimer = chaseTimeMax;
         return;
     }
 
-    // Face the player
     Vector2 playerCenter = {
         targetPlayer->Pos.x + targetPlayer->hitboxOffsetX + targetPlayer->hitboxW * 0.5f,
         targetPlayer->Pos.y};
     bool playerToRight = playerCenter.x > Pos.x;
     SetFacingLeft(!playerToRight);
 
-    // Attack when ready and not locked
     if (attackCooldown <= 0 && !IsAnimationLocked())
     {
         ChangeAnimState(AnimState::ATTACK1);
         attackCooldown = attackCooldownMax;
     }
-    // If animation is done and cooldown ready, keep playing idle until next attack
     else if (IsAnimationLocked() == false)
     {
         ChangeAnimState(AnimState::IDLE);
@@ -354,7 +341,6 @@ void Enemy::UpdateKnockback(float dt, Map &collisionMap)
 {
     knockbackDuration -= dt;
 
-    // Apply knockback velocity
     velocityX = knockbackVelocity.x;
     velocityY = knockbackVelocity.y;
 
@@ -411,8 +397,8 @@ void Enemy::MoveTowardTarget(Vector2 target, float dt)
     dx /= distance;
 
     // Set facing direction
-    bool facingPlayerRight = dx > 0;
-    SetFacingLeft(!facingPlayerRight);
+    bool facingRight = dx > 0;
+    SetFacingLeft(!facingRight);
 
     // Move with constant speed
     velocityX = dx * speed;
@@ -431,7 +417,6 @@ void Enemy::TakeDamage(float damage)
     }
     else
     {
-        // Brief knockback and hurt animation
         if (aiState != EnemyAIState::KNOCKBACK)
         {
             aiState = EnemyAIState::KNOCKBACK;
@@ -457,7 +442,6 @@ void Enemy::ApplyKnockback(Vector2 direction, float force)
 
 void Enemy::anim()
 {
-    // Switch animation based on current state
     switch (animState)
     {
     case AnimState::IDLE:
@@ -498,21 +482,18 @@ void Enemy::DebugDraw() const
     if (!debugDraw)
         return;
 
-    // Draw detection range
     Vector2 center = {Pos.x + hitboxOffsetX + hitboxW * 0.5f,
                       Pos.y + hitboxOffsetY + hitboxH * 0.5f};
 
     DrawCircleLines((int)center.x, (int)center.y, (int)detectionRange, ORANGE);
     DrawCircleLines((int)center.x, (int)center.y, (int)attackRange, RED);
 
-    // Draw current waypoint if patrolling
     if (patrolPath && patrolPath->IsValid() && currentPathNode < patrolPath->GetNodeCount())
     {
         Vector2 waypoint = patrolPath->GetNode(currentPathNode);
         DrawCircle((int)waypoint.x, (int)waypoint.y, 6, PURPLE);
     }
 
-    // Draw AI state text
     const char *stateStr = "";
     switch (aiState)
     {

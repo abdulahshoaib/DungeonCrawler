@@ -26,6 +26,12 @@ EnemySkeletonWarrior::EnemySkeletonWarrior() : EnemySkeleton()
 
     hp = 35.0f;
     damage = 10.0f;
+    
+    // Hitbox for 128x128 sprite - centered and bottom-aligned
+    hitboxW = 50.0f;
+    hitboxH = 90.0f;
+    hitboxOffsetX = 39.0f;
+    hitboxOffsetY = 38.0f;
 }
 
 EnemySkeletonArcher::EnemySkeletonArcher() : EnemySkeleton()
@@ -45,7 +51,13 @@ EnemySkeletonArcher::EnemySkeletonArcher() : EnemySkeleton()
 
     hp = 28.0f;
     damage = 8.0f;
-    speed = 140.0f; // Archers are slower
+    speed = 140.0f;
+    
+    // Hitbox for 128x128 sprite
+    hitboxW = 48.0f;
+    hitboxH = 88.0f;
+    hitboxOffsetX = 40.0f;
+    hitboxOffsetY = 40.0f;
 }
 
 EnemySkeletonSpearman::EnemySkeletonSpearman() : EnemySkeleton()
@@ -56,7 +68,7 @@ EnemySkeletonSpearman::EnemySkeletonSpearman() : EnemySkeleton()
     walkAnim = &Loader::SkeletonSpearmanWalk;
     attack1Anim = &Loader::SkeletonSpearmanAttack1;
     attack2Anim = &Loader::SkeletonSpearmanAttack2;
-    attack3Anim = &Loader::SkeletonSpearmanAttack1; // Use attack1 if attack3 not available
+    attack3Anim = &Loader::SkeletonSpearmanAttack1;
     runAttackAnim = &Loader::SkeletonSpearmanRunAttack;
     hurtAnim = &Loader::SkeletonSpearmanHurt;
     deadAnim = &Loader::SkeletonSpearmanDead;
@@ -66,5 +78,11 @@ EnemySkeletonSpearman::EnemySkeletonSpearman() : EnemySkeleton()
 
     hp = 42.0f;
     damage = 12.0f;
-    speed = 160.0f; // Spearmen are strong but slower
+    speed = 160.0f;
+    
+    // Hitbox for 128x128 sprite
+    hitboxW = 52.0f;
+    hitboxH = 92.0f;
+    hitboxOffsetX = 38.0f;
+    hitboxOffsetY = 36.0f;
 }

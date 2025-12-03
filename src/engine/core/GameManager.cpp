@@ -103,73 +103,67 @@ GameManager::GameManager(int ID)
 
     hud.SetPlayer(player);
 
-    enemyManager.LoadPathsFromCSV("assets/maps/enemy_paths.csv");
+    // In GameManager constructor, replace the enemy spawning code with this:
 
+    // Load enemy paths from CSV
+    enemyManager.LoadPathsFromCSV("assets/maps/enemy_paths.csv");
+    
+    // Spawn enemies at proper positions (not offset from waypoints)
     if (enemyManager.GetPathCount() > 0)
     {
         EnemyPath *path = enemyManager.GetPath(0);
         if (path && path->IsValid())
         {
             Vector2 nodePos = path->GetNode(0);
-            Vector2 startPos = {nodePos.x - 64.0f, nodePos.y - 80.0f};
+            // Don't offset - spawn directly at waypoint position
+            // The waypoint position from the editor is already in world coordinates (tile * 32)
+            Vector2 startPos = {nodePos.x - 64.0f, nodePos.y - 128.0f}; // Align sprite center
             enemyManager.SpawnEnemyTypeWithPath<EnemySkeletonWarrior>(startPos, path, 200.0f, 80.0f);
         }
     }
-
+    
     if (enemyManager.GetPathCount() > 1)
     {
         EnemyPath *path = enemyManager.GetPath(1);
         if (path && path->IsValid())
         {
             Vector2 nodePos = path->GetNode(0);
-            Vector2 startPos = {nodePos.x - 64.0f, nodePos.y - 80.0f};
+            Vector2 startPos = {nodePos.x - 64.0f, nodePos.y - 128.0f};
             enemyManager.SpawnEnemyTypeWithPath<EnemySkeletonArcher>(startPos, path, 200.0f, 80.0f);
         }
     }
-
+    
     if (enemyManager.GetPathCount() > 2)
     {
         EnemyPath *path = enemyManager.GetPath(2);
         if (path && path->IsValid())
         {
             Vector2 nodePos = path->GetNode(0);
-            Vector2 startPos = {nodePos.x - 64.0f, nodePos.y - 80.0f};
+            Vector2 startPos = {nodePos.x - 64.0f, nodePos.y - 128.0f};
             enemyManager.SpawnEnemyTypeWithPath<EnemySkeletonSpearman>(startPos, path, 200.0f, 80.0f);
         }
     }
-
+    
     if (enemyManager.GetPathCount() > 3)
     {
         EnemyPath *path = enemyManager.GetPath(3);
         if (path && path->IsValid())
         {
             Vector2 nodePos = path->GetNode(0);
-            Vector2 startPos = {nodePos.x - 64.0f, nodePos.y - 80.0f};
+            // Yokai sprites are 96x96, adjust accordingly
+            Vector2 startPos = {nodePos.x - 48.0f, nodePos.y - 96.0f};
             enemyManager.SpawnEnemyTypeWithPath<EnemyKarasuTengu>(startPos, path, 200.0f, 80.0f);
         }
     }
-
+    
     if (enemyManager.GetPathCount() > 4)
     {
         EnemyPath *path = enemyManager.GetPath(4);
         if (path && path->IsValid())
         {
             Vector2 nodePos = path->GetNode(0);
-            Vector2 startPos = {nodePos.x - 64.0f, nodePos.y - 80.0f};
+            Vector2 startPos = {nodePos.x - 48.0f, nodePos.y - 96.0f};
             enemyManager.SpawnEnemyTypeWithPath<EnemyYamabushiTengu>(startPos, path, 200.0f, 80.0f);
-        }
-    }
-
-    for (int y = 0; y < interactables.GetHeight(); y++)
-    {
-        for (int x = 0; x < interactables.GetWidth(); x++)
-        {
-            if (interactables.GetTile(x, y) == 397)
-            {
-                float posX = x * interactables.GetTileSize();
-                float posY = y * interactables.GetTileSize();
-                coins.emplace_back(posX, posY);
-            }
         }
     }
 

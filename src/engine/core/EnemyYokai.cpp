@@ -6,7 +6,7 @@ EnemyYokai::EnemyYokai() : Enemy()
     // Base Yokai setup
     hp = 40.0f;
     damage = 11.0f;
-    speed = 200.0f; // Yokai are faster
+    speed = 200.0f;
 }
 
 EnemyKarasuTengu::EnemyKarasuTengu() : EnemyYokai()
@@ -27,6 +27,12 @@ EnemyKarasuTengu::EnemyKarasuTengu() : EnemyYokai()
     hp = 38.0f;
     damage = 11.0f;
     speed = 200.0f;
+    
+    // Hitbox for 96x96 sprite (smaller than skeletons)
+    hitboxW = 38.0f;
+    hitboxH = 68.0f;
+    hitboxOffsetX = 29.0f;
+    hitboxOffsetY = 28.0f;
 }
 
 EnemyYamabushiTengu::EnemyYamabushiTengu() : EnemyYokai()
@@ -47,4 +53,10 @@ EnemyYamabushiTengu::EnemyYamabushiTengu() : EnemyYokai()
     hp = 44.0f;
     damage = 13.0f;
     speed = 180.0f;
+    
+    // Hitbox for 96x96 sprite
+    hitboxW = 40.0f;
+    hitboxH = 70.0f;
+    hitboxOffsetX = 28.0f;
+    hitboxOffsetY = 26.0f;
 }
