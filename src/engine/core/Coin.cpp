@@ -3,9 +3,16 @@
 CoinObject::CoinObject(float x, float y)
 {
     pos = {x, y};
-    hitbox = {x, y,
-              (float)Loader::CoinAnim.frameWidth,
-              (float)Loader::CoinAnim.frameHeight};
+    float scale = 32.0f / Loader::CoinAnim.frameWidth;
+    scaledWidth = Loader::CoinAnim.frameWidth * scale;
+    scaledHeight = Loader::CoinAnim.frameHeight * scale;
+    drawOffset = {
+        (32.0f - scaledWidth) / 2.0f,
+        (32.0f - scaledHeight) / 2.0f};
+    hitbox = {x + drawOffset.x,
+              y + drawOffset.y,
+              scaledWidth,
+              scaledHeight};
 }
 
 void CoinObject::Update(float dt)
@@ -23,9 +30,9 @@ void CoinObject::Update(float dt)
             currentFrame = 0;
     }
 
-    // Update hitbox
-    hitbox.x = pos.x;
-    hitbox.y = pos.y;
+    // Update hitbox to follow the scaled destination area
+    hitbox.x = pos.x + drawOffset.x;
+    hitbox.y = pos.y + drawOffset.y;
 }
 
 void CoinObject::Draw()
@@ -38,14 +45,10 @@ void CoinObject::Draw()
         (float)Loader::CoinAnim.frameHeight};
 
     // Scale coin down from 120x120 to 32x32 (scale factor ~0.27)
-    float scale = 32.0f / Loader::CoinAnim.frameWidth;
-
-    // Center the scaled coin on the tile position
-    float scaledWidth = Loader::CoinAnim.frameWidth * scale;
-    float scaledHeight = Loader::CoinAnim.frameHeight * scale;
-    Vector2 centerOffset = {
-        (32.0f - scaledWidth) / 2.0f,
-        (32.0f - scaledHeight) / 2.0f};
+    // Reuse precomputed draw measurements
+    float scaledWidth = this->scaledWidth;
+    float scaledHeight = this->scaledHeight;
+    Vector2 centerOffset = drawOffset;
 
     // Destination rect for scaled drawing
     Rectangle dest = {
