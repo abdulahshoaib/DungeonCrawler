@@ -326,7 +326,7 @@ void Loader::LoadBackgrounds()
     LoadMenuBackground = LoadTexture("assets/images/loadmenu_bg.jpeg");
     SelectionMenuBackground = LoadTexture("assets/images/selection.png");
     TileSet = LoadTexture("assets/maps/map.png");
-    MapBackground = LoadTexture("assets/maps/map_bg_2.png"); // Add this line
+    MapBackground = LoadTexture("assets/maps/map_bg_1.png"); // Add this line
 }
 
 void Loader::UnLoadBackgrounds()

@@ -724,7 +724,7 @@ void GameManager::Draw()
     if (Loader::MapBackground.id != 0)
     {
         // Scale factor to make background smaller (adjust this value as needed)
-        float bgScale = 0.5f; // 50% of original size - change this to make it bigger/smaller
+        float bgScale = 0.3f; // 30% of original size - change this to make it bigger/smaller
         
         int bgWidth = (int)(Loader::MapBackground.width * bgScale);
         int bgHeight = (int)(Loader::MapBackground.height * bgScale);
