@@ -64,7 +64,8 @@ void EndState::Draw(Engine &engine)
 
     // Slate panel
     float panelWidth = screenW * 0.58f;
-    if (panelWidth < 480.0f) panelWidth = 480.0f;
+    if (panelWidth < 480.0f)
+        panelWidth = 480.0f;
     float panelHeight = 220.0f;
     Rectangle panelRect = {cx - panelWidth / 2.0f, screenH / 2.0f - panelHeight / 2.0f + 14.0f, panelWidth, panelHeight};
     DrawRectangleRounded(panelRect, 0.12f, 6, (Color){28, 30, 34, 230});
