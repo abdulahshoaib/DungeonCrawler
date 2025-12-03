@@ -15,7 +15,7 @@ A lightweight 2D dungeon-crawler prototype built with Raylib and C++. This repos
 ---
 
 ## Features
-- Simple top-down dungeon crawler gameplay
+- Simple side-scroller dungeon crawler gameplay
 - Multiple character/enemy types with animations
 - Level maps and asset pipeline (images, audio, fonts)
 - Basic UI system and in-game editor (in `editor/`)
