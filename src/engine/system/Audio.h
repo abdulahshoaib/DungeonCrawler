@@ -1,3 +1,4 @@
+// Audio.h
 #pragma once
 #include <raylib.h>
 
@@ -14,7 +15,10 @@ enum SFx
 
     ATTACK_SFX,
     HURT_SFX,
-    JUMP_SFX
+    JUMP_SFX,
+    
+    RUN_SFX,        // Add this
+    SWORD_SLICE_SFX // Add this
 };
 
 class Audio
@@ -30,6 +34,9 @@ private:
     inline static Sound AttackSFX;
     inline static Sound HurtSFX;
     inline static Sound JumpSFX;
+    
+    inline static Sound RunningSFX;      // Add this
+    inline static Sound SwordSliceSFX;   // Add this
 
     // ======== CURRENT STREAM ========
     inline static Music currentMusic;
@@ -51,6 +58,11 @@ public:
     static void Play(GMusic ref);
     static void StopMusic();
     static void PlaySFx(SFx ref);
+    
+    // Add special method for looping run sound
+    static void PlayRunningSFX();
+    static void StopRunningSFX();
+    static bool IsRunningSFXPlaying();
 
     static void SetMasterVolume(float vol);
     static void SetSFxVolume(float vol);

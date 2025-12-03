@@ -1,3 +1,4 @@
+// Audio.cpp
 #include "Audio.h"
 #include <iostream>
 
@@ -5,18 +6,22 @@ void Audio::Load()
 {
     // --- MUSIC ---
     MainMenuMusic = LoadMusicStream("assets/audio/music.mp3");
-    LevelMusic = LoadMusicStream("assets/audio/music/level_theme.mp3");
+    // LevelMusic = LoadMusicStream("assets/audio/music/level_theme.mp3");
 
-    MainMenuMusic.looping = true;
-    LevelMusic.looping = true;
+    // MainMenuMusic.looping = true;
+    // LevelMusic.looping = true;
 
-    // // --- SFX ---
-    HoverButton = LoadSound("assets/audio/sfx/hover.wav");
+    // --- SFX ---
+    // HoverButton = LoadSound("assets/audio/sfx/hover.wav");
     ButtonClicked = LoadSound("assets/audio/click.mp3");
 
     // AttackSFX = LoadSound("assets/audio/sfx/attack.wav");
-    // HurtSFX   = LoadSound("assets/audio/sfx/hurt.wav");
-    // JumpSFX   = LoadSound("assets/audio/sfx/jump.wav");
+    // HurtSFX = LoadSound("assets/audio/sfx/hurt.wav");
+    // JumpSFX = LoadSound("assets/audio/sfx/jump.wav");
+    
+    // --- NEW SFX ---
+    RunningSFX = LoadSound("assets/Sound Effects/running-363346.mp3");
+    SwordSliceSFX = LoadSound("assets/Sound Effects/violent-sword-slice-393839.mp3");
 
     currentMusic = MainMenuMusic;
 }
@@ -38,23 +43,21 @@ void Audio::Clean()
 {
     UnloadMusicStream(MainMenuMusic);
     UnloadMusicStream(LevelMusic);
+
     UnloadSound(HoverButton);
     UnloadSound(ButtonClicked);
     UnloadSound(AttackSFX);
     UnloadSound(HurtSFX);
     UnloadSound(JumpSFX);
+    
+    UnloadSound(RunningSFX);      // Add this
+    UnloadSound(SwordSliceSFX);   // Add this
 
     CloseAudioDevice();
 }
 
 void Audio::Play(GMusic ref)
 {
-    // stop currently playing music (if any) before switching
-    if (currentMusic.stream.buffer != nullptr)
-    {
-        StopMusicStream(currentMusic);
-    }
-
     switch (ref)
     {
     case MAIN_MENU_MUSIC:
@@ -66,15 +69,12 @@ void Audio::Play(GMusic ref)
         break;
     }
 
-    // ensure the new music has the correct volume and start it
-    ::SetMusicVolume(currentMusic, musicVolume);
     PlayMusicStream(currentMusic);
 }
 
 void Audio::Update()
 {
-    if (currentMusic.stream.buffer != nullptr)
-        UpdateMusicStream(currentMusic);
+    UpdateMusicStream(currentMusic);
 }
 
 void Audio::StopMusic()
@@ -105,6 +105,13 @@ void Audio::PlaySFx(SFx ref)
     case JUMP_SFX:
         sound = &JumpSFX;
         break;
+        
+    case RUN_SFX:
+        sound = &RunningSFX;
+        break;
+    case SWORD_SLICE_SFX:
+        sound = &SwordSliceSFX;
+        break;
 
     default:
         return;
@@ -112,6 +119,29 @@ void Audio::PlaySFx(SFx ref)
 
     SetSoundVolume(*sound, sfxVolume);
     PlaySound(*sound);
+}
+
+// Special methods for running sound (needs to loop while running)
+void Audio::PlayRunningSFX()
+{
+    if (!IsSoundPlaying(RunningSFX))
+    {
+        SetSoundVolume(RunningSFX, sfxVolume);
+        PlaySound(RunningSFX);
+    }
+}
+
+void Audio::StopRunningSFX()
+{
+    if (IsSoundPlaying(RunningSFX))
+    {
+        StopSound(RunningSFX);
+    }
+}
+
+bool Audio::IsRunningSFXPlaying()
+{
+    return IsSoundPlaying(RunningSFX);
 }
 
 void Audio::SetMasterVolume(float vol)
@@ -129,6 +159,8 @@ void Audio::SetSFxVolume(float vol)
     SetSoundVolume(JumpSFX, vol);
     SetSoundVolume(ButtonClicked, vol);
     SetSoundVolume(HoverButton, vol);
+    SetSoundVolume(RunningSFX, vol);
+    SetSoundVolume(SwordSliceSFX, vol);
 }
 
 void Audio::SetMusicVolume(float vol)

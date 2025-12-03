@@ -14,6 +14,7 @@
 
 #include "EnemySkeleton.h"
 #include "EnemyYokai.h"
+#include "Audio.h"  // Add this include
 
 #include <cmath>
 #include <string>
@@ -26,19 +27,18 @@
 #define SAMURAI_COMMANDER 5
 #define SAMURAI_ARCHER 6
 
+// ... [Constructor remains the same - no changes needed] ...
+
 GameManager::GameManager(int ID)
 {
+    // [All your existing constructor code stays exactly the same]
     // layer order: interactables, non-colliding visuals, collidable map
     interactables.LoadMap("assets/maps/interactables.csv");
     map_non_colliding.LoadMap("assets/maps/non_colliding.csv");
     map_collide.LoadMap("assets/maps/map.csv");
 
-    // Reduce collidable region by a few pixels from top for better visuals
-    // Smaller margin -> slightly more solid tile area near top so player
-    // collides earlier (reduces clipping into tiles). Lowered from 6 to 2.
     map_collide.SetCollisionTopMargin(2);
 
-    // Setup camera defaults
     camera.offset = {(float)GetScreenWidth() * 0.5f, (float)GetScreenHeight() * 0.5f};
     camera.rotation = 0.0f;
     camera.zoom = 2.00f;
@@ -53,14 +53,12 @@ GameManager::GameManager(int ID)
         break;
     }
 
-        // Set player hitbox to match sprite/frame size if available
         if (player && player->currentAnim)
         {
-            // Use a slightly smaller hitbox (40% width, 65% height) for tighter collisions
             player->hitboxW = player->currentAnim->frameWidth * 0.40f;
-            player->hitboxH = player->currentAnim->frameHeight * 0.65f; // reduce height
+            player->hitboxH = player->currentAnim->frameHeight * 0.65f;
             player->hitboxOffsetX = (player->currentAnim->frameWidth - player->hitboxW) * 0.5f;
-            player->hitboxOffsetY = player->currentAnim->frameHeight - player->hitboxH; // align to bottom
+            player->hitboxOffsetY = player->currentAnim->frameHeight - player->hitboxH;
         }
     case KNIGHT2:
     {
@@ -99,34 +97,25 @@ GameManager::GameManager(int ID)
     }
     }
 
-    // --- Initialize enemy manager ---
     enemyManager.SetPlayerReference(player);
     enemyManager.SetCollisionMapReference(&map_collide);
     enemyManager.SetDebugDraw(debugDrawCollision);
 
-    // Connect HUD to player so it can display live HP
     hud.SetPlayer(player);
 
-    // --- Load enemy paths from CSV and spawn enemies ---
     enemyManager.LoadPathsFromCSV("assets/maps/enemy_paths.csv");
 
-    // For now, spawn diverse enemies with loaded paths if available
-    // Path 0 - Skeleton Warrior
     if (enemyManager.GetPathCount() > 0)
     {
         EnemyPath *path = enemyManager.GetPath(0);
         if (path && path->IsValid())
         {
             Vector2 nodePos = path->GetNode(0);
-            // Adjust spawn position so hitbox center aligns with path node
-            // Hitbox offset is (32, 32), hitbox size is (64, 96)
-            // Hitbox center offset from Pos: (32 + 32, 32 + 48) = (64, 80)
             Vector2 startPos = {nodePos.x - 64.0f, nodePos.y - 80.0f};
             enemyManager.SpawnEnemyTypeWithPath<EnemySkeletonWarrior>(startPos, path, 200.0f, 80.0f);
         }
     }
 
-    // Path 1 - Skeleton Archer
     if (enemyManager.GetPathCount() > 1)
     {
         EnemyPath *path = enemyManager.GetPath(1);
@@ -138,7 +127,6 @@ GameManager::GameManager(int ID)
         }
     }
 
-    // Path 2 - Skeleton Spearman
     if (enemyManager.GetPathCount() > 2)
     {
         EnemyPath *path = enemyManager.GetPath(2);
@@ -150,7 +138,6 @@ GameManager::GameManager(int ID)
         }
     }
 
-    // Path 3 - Karasu Tengu
     if (enemyManager.GetPathCount() > 3)
     {
         EnemyPath *path = enemyManager.GetPath(3);
@@ -162,7 +149,6 @@ GameManager::GameManager(int ID)
         }
     }
 
-    // Path 4 - Yamabushi Tengu
     if (enemyManager.GetPathCount() > 4)
     {
         EnemyPath *path = enemyManager.GetPath(4);
@@ -174,12 +160,11 @@ GameManager::GameManager(int ID)
         }
     }
 
-    // --- Spawn coins here ---
     for (int y = 0; y < interactables.GetHeight(); y++)
     {
         for (int x = 0; x < interactables.GetWidth(); x++)
         {
-            if (interactables.GetTile(x, y) == 397) // coin
+            if (interactables.GetTile(x, y) == 397)
             {
                 float posX = x * interactables.GetTileSize();
                 float posY = y * interactables.GetTileSize();
@@ -188,15 +173,12 @@ GameManager::GameManager(int ID)
         }
     }
 
-    // If a save was loaded and it contains coin positions, override the default spawn
     if (GameProgress::IsDataLoaded())
     {
         const auto &saved = GameProgress::GetRemainingCoins();
         if (!saved.empty())
         {
-            // Clear current coins and reset interactable coin tiles
             coins.clear();
-            // Clear all coin tiles first
             for (int y = 0; y < interactables.GetHeight(); y++)
                 for (int x = 0; x < interactables.GetWidth(); x++)
                     if (interactables.GetTile(x, y) == 397)
@@ -216,11 +198,9 @@ GameManager::GameManager(int ID)
         }
     }
 
-    // If a saved player position exists, place the player there
     if (player && GameProgress::IsDataLoaded())
     {
         Vector2 savedPos = GameProgress::GetMapPosition();
-        // Only apply if the saved position is non-zero (avoid applying default 0,0 accidentally)
         if (savedPos.x != 0.0f || savedPos.y != 0.0f)
         {
             player->Pos = savedPos;
@@ -230,7 +210,6 @@ GameManager::GameManager(int ID)
 
 GameManager::~GameManager()
 {
-    // NOTE(demon_slayer): Cleanup resources if any
     enemyManager.Clear();
 }
 
@@ -238,34 +217,27 @@ void GameManager::Update(Engine &engine)
 {
     float dt = GetFrameTime();
 
-    // =========================================================
-    //     ESC → PAUSE MENU
-    // =========================================================
     if (IsKeyPressed(KEY_ESCAPE))
     {
         engine.PushState(new PauseState());
         return;
     }
 
-    // Update combo timer
     if (currentComboStep > 0)
     {
         comboTimer -= dt;
         if (comboTimer <= 0.0f)
         {
-            // Combo timeout - reset
             currentComboStep = 0;
             comboTimer = 0.0f;
         }
     }
 
-    // Toggle debug draw
     if (IsKeyPressed(KEY_F1))
     {
         debugDrawCollision = !debugDrawCollision;
     }
 
-    // DEBUG: Free camera movement with arrow keys when holding ALT
     bool cameraDebugMode = IsKeyDown(KEY_LEFT_ALT) || IsKeyDown(KEY_RIGHT_ALT);
     float cameraPanSpeed = 10.0f;
     if (cameraDebugMode)
@@ -280,34 +252,24 @@ void GameManager::Update(Engine &engine)
             camera.target.x += cameraPanSpeed;
     }
 
-    // Update camera to center on player (unless in free camera mode)
     if (player && !cameraDebugMode)
     {
-        // center the camera on the player's hitbox center
         Vector2 hitCenter = {player->Pos.x + player->hitboxOffsetX + player->hitboxW * 0.5f,
                              player->Pos.y + player->hitboxOffsetY + player->hitboxH * 0.5f};
         camera.target = hitCenter;
 
-        // -------------------------------------------------------------------------
-        // CLAMP CAMERA TO LEVEL BOUNDS
-        // -------------------------------------------------------------------------
-
-        // half of the visible area in world units (account for zoom)
         float halfViewW = camera.offset.x / camera.zoom;
         float halfViewH = camera.offset.y / camera.zoom;
 
-        // world size based on your collision tilemap
         int tileSize = map_collide.GetTileSize();
         float worldW = map_collide.GetWidth() * (float)tileSize;
         float worldH = map_collide.GetHeight() * (float)tileSize;
 
-        // allowed min/max camera center positions
         float minX = halfViewW;
         float maxX = worldW - halfViewW;
         float minY = halfViewH;
         float maxY = worldH - halfViewH;
 
-        // If the world is smaller than the screen, center instead of clamping
         if (maxX < minX)
         {
             minX = maxX = worldW * 0.5f;
@@ -318,25 +280,20 @@ void GameManager::Update(Engine &engine)
         }
 
 #if __cplusplus >= 201703L
-        // Use std::clamp for C++17+
         camera.target.x = std::clamp(camera.target.x, minX, maxX);
         camera.target.y = std::clamp(camera.target.y, minY, maxY);
 #else
-        // Fallback for older C++
         camera.target.x = fmax(minX, fmin(maxX, camera.target.x));
         camera.target.y = fmax(minY, fmin(maxY, camera.target.y));
 #endif
-
-        // -------------------------------------------------------------------------
     }
 
-    // runtime control for tile collision top margin
-    if (IsKeyPressed(KEY_F4)) // increase margin
+    if (IsKeyPressed(KEY_F4))
     {
         int delta = (IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT)) ? 4 : 1;
         map_collide.SetCollisionTopMargin(map_collide.GetCollisionTopMargin() + delta);
     }
-    if (IsKeyPressed(KEY_F5)) // decrease margin
+    if (IsKeyPressed(KEY_F5))
     {
         int delta = (IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT)) ? 4 : 1;
         int newm = map_collide.GetCollisionTopMargin() - delta;
@@ -345,23 +302,18 @@ void GameManager::Update(Engine &engine)
         map_collide.SetCollisionTopMargin(newm);
     }
 
-    // Adjust hitbox vertical offset at runtime (F2/F3) for fine tuning
     if (player)
     {
         float offsetDelta = (IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT)) ? 5.0f : 1.0f;
-        if (IsKeyPressed(KEY_F2)) // move hitbox down
+        if (IsKeyPressed(KEY_F2))
         {
             player->ChangeHitboxOffsetY(offsetDelta);
         }
-        if (IsKeyPressed(KEY_F3)) // move hitbox up
+        if (IsKeyPressed(KEY_F3))
         {
             player->ChangeHitboxOffsetY(-offsetDelta);
         }
     }
-
-    // =========================================================
-    //     ACTION INPUTS (attacks, test keys)
-    // =========================================================
 
     bool attackPressed = IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
     bool shootPressed = IsMouseButtonPressed(MOUSE_RIGHT_BUTTON);
@@ -369,7 +321,9 @@ void GameManager::Update(Engine &engine)
 
     if (attackPressed && player->IsAnimationLocked() == false)
     {
-        // Combo system
+        // ===== PLAY SWORD SLICE SOUND =====
+        Audio::PlaySFx(SWORD_SLICE_SFX);
+        
         AnimState nextAttack = AnimState::ATTACK1;
 
         if (currentComboStep == 0)
@@ -389,7 +343,6 @@ void GameManager::Update(Engine &engine)
         }
         else
         {
-            // Combo complete, restart
             nextAttack = AnimState::ATTACK1;
             currentComboStep = 1;
         }
@@ -398,16 +351,13 @@ void GameManager::Update(Engine &engine)
         comboTimer = COMBO_TIMEOUT;
     }
 
-    // Right-click: Shoot arrow (for archers)
     if (shootPressed && player->IsAnimationLocked() == false)
     {
-        // Archers have SHOT animations available
         player->ChangeAnimState(AnimState::SHOT1);
-        currentComboStep = 0; // Reset combo when shooting
+        currentComboStep = 0;
         comboTimer = 0.0f;
     }
 
-    // TEST KEYS
     if (IsKeyPressed(KEY_H))
         player->ChangeAnimState(AnimState::HURT);
     if (IsKeyPressed(KEY_P))
@@ -420,9 +370,6 @@ void GameManager::Update(Engine &engine)
     bool inputLocked = player->IsAnimationLocked();
     if (inputLocked)
     {
-        // Advance animation even while locked, but do NOT return —
-        // allow physics (gravity) and collision resolution to continue so
-        // the player doesn't freeze mid-air during attack animations.
         player->anim();
         animator.Update(player, dt);
     }
@@ -431,20 +378,28 @@ void GameManager::Update(Engine &engine)
     bool movingLeft = IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT);
     bool runKey = IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT);
 
-    // Check if player is running
     bool isRunning = (movingRight || movingLeft) && runKey;
 
-    // If running and attack pressed, do run attack instead
+    // ===== RUNNING SOUND EFFECT =====
+    if (isRunning && player->isGrounded && !player->IsAnimationLocked())
+    {
+        Audio::PlayRunningSFX();
+    }
+    else
+    {
+        Audio::StopRunningSFX();
+    }
+
     if (isRunning && attackPressed && player->IsAnimationLocked() == false)
     {
+        // ===== PLAY SWORD SLICE FOR RUN ATTACK =====
+        Audio::PlaySFx(SWORD_SLICE_SFX);
+        
         player->ChangeAnimState(AnimState::RUN_ATTACK);
-        currentComboStep = 0; // Reset normal combo when doing run attack
+        currentComboStep = 0;
         comboTimer = 0.0f;
     }
 
-    // If the player's animation has locked input (e.g., attack), skip processing
-    // movement/jump inputs here so the character cannot be controlled during
-    // the locked animation. We still allow physics to run below.
     if (!inputLocked)
     {
         player->velocityX = 0;
@@ -452,15 +407,14 @@ void GameManager::Update(Engine &engine)
         if (movingRight)
         {
             player->velocityX = runKey ? player->speed * 1.8f : player->speed;
-            player->SetFacingLeft(false); // Face right when moving right
+            player->SetFacingLeft(false);
         }
         else if (movingLeft)
         {
             player->velocityX = runKey ? -player->speed * 1.8f : -player->speed;
-            player->SetFacingLeft(true); // Face left when moving left
+            player->SetFacingLeft(true);
         }
     }
-    // When not moving, don't change facing - character remembers last direction
 
     if (!inputLocked && jumpPressed && player->isGrounded)
     {
@@ -471,7 +425,6 @@ void GameManager::Update(Engine &engine)
 
     if (!player->isGrounded)
     {
-        // In air
         if (player->velocityY < 0)
             player->ChangeAnimState(AnimState::JUMP);
         else
@@ -479,7 +432,6 @@ void GameManager::Update(Engine &engine)
     }
     else if (player->velocityX != 0 && !player->IsAnimationLocked())
     {
-        // Running or walking (only if not in a locked animation)
         if (runKey)
             player->ChangeAnimState(AnimState::RUN);
         else
@@ -487,75 +439,58 @@ void GameManager::Update(Engine &engine)
     }
     else if (player->velocityX == 0 && !player->IsAnimationLocked())
     {
-        // No movement (only if not in a locked animation)
         player->ChangeAnimState(AnimState::IDLE);
     }
 
     player->ApplyPhysics(dt);
 
-    // Resolve collisions between player and world tiles.
-    // Keep a copy of previous position
     Vector2 prevPos = {player->Pos.x - player->velocityX * dt, player->Pos.y - player->velocityY * dt};
 
-    // Use player's hitbox rect for collision checks
-    // previous hitbox rect is available as needed via prevPos/hitbox offsets
     Rectangle rectX = Rectangle{player->Pos.x + player->hitboxOffsetX, prevPos.y + player->hitboxOffsetY, player->hitboxW, player->hitboxH};
     if (map_collide.CheckCollisionRect(rectX))
     {
-        // Resolve horizontal collision by snapping to tile boundary
         int tx = 0, ty = 0;
         if (map_collide.GetFirstCollisionTile(rectX, tx, ty))
         {
             if (player->velocityX > 0)
             {
-                // moving right: place player left of tile
                 player->Pos.x = tx * map_collide.GetTileSize() - (player->hitboxOffsetX + player->hitboxW);
             }
             else if (player->velocityX < 0)
             {
-                // moving left: place player right of tile
                 player->Pos.x = (tx + 1) * map_collide.GetTileSize() - player->hitboxOffsetX;
             }
         }
         player->velocityX = 0;
     }
 
-    // Vertical collision check: move vertically (with possibly corrected X)
     Rectangle rectY = {player->Pos.x + player->hitboxOffsetX, player->Pos.y + player->hitboxOffsetY, player->hitboxW, player->hitboxH};
     if (map_collide.CheckCollisionRect(rectY))
     {
-        // we collided vertically, try to get the colliding tile to compute a resolution
         int tx = 0, ty = 0;
         if (map_collide.GetFirstCollisionTile(rectY, tx, ty))
         {
             if (player->velocityY > 0)
             {
-                // moving down: place hitbox on top of the tile
                 player->Pos.y = ty * map_collide.GetTileSize() - (player->hitboxOffsetY + player->hitboxH);
                 player->isGrounded = true;
             }
             else
             {
-                // moving up: place below the tile
                 player->Pos.y = (ty + 1) * map_collide.GetTileSize() - player->hitboxOffsetY;
             }
         }
-        // Stop vertical motion
         player->velocityY = 0;
     }
     else
     {
-        // No direct vertical collision at the player's hitbox.
-        // Check a small area just below the player's feet to detect if ground exists.
         Rectangle feetCheck = {player->Pos.x + player->hitboxOffsetX, player->Pos.y + player->hitboxOffsetY + player->hitboxH + 1, player->hitboxW, 2};
         if (map_collide.CheckCollisionRect(feetCheck))
         {
-            // Ground is right below (e.g., standing on thin tile); keep grounded
             player->isGrounded = true;
         }
         else
         {
-            // No ground below — player should be in the air and subject to gravity
             player->isGrounded = false;
         }
     }
@@ -563,7 +498,6 @@ void GameManager::Update(Engine &engine)
     player->anim();
     animator.Update(player, dt);
 
-    // If a death animation just finished, transition to DeathState (overlay)
     if (player->deathAnimationFinished)
     {
         player->deathAnimationFinished = false;
@@ -572,7 +506,6 @@ void GameManager::Update(Engine &engine)
         return;
     }
 
-    // If player attack just triggered, damage nearby enemies
     if (player->attackTriggered)
     {
         player->attackTriggered = false;
@@ -580,7 +513,7 @@ void GameManager::Update(Engine &engine)
         Vector2 playerCenter = {player->Pos.x + player->hitboxOffsetX + player->hitboxW * 0.5f,
                                 player->Pos.y + player->hitboxOffsetY + player->hitboxH * 0.5f};
 
-        float attackRange = 80.0f; // reasonable default melee range
+        float attackRange = 80.0f;
         auto hitEnemies = enemyManager.GetEnemiesInRange(playerCenter, attackRange);
         for (size_t idx : hitEnemies)
         {
@@ -588,12 +521,8 @@ void GameManager::Update(Engine &engine)
         }
     }
 
-    // =========================================================
-    //     UPDATE ENEMIES
-    // =========================================================
     enemyManager.Update(dt);
 
-    // Update animator for all enemies
     for (size_t i = 0; i < enemyManager.GetEnemyCount(); i++)
     {
         Enemy *enemy = enemyManager.GetEnemy(i);
@@ -604,7 +533,6 @@ void GameManager::Update(Engine &engine)
         }
     }
 
-    // Handle enemy attack triggers (apply damage to player)
     for (size_t i = 0; i < enemyManager.GetEnemyCount(); i++)
     {
         Enemy *enemy = enemyManager.GetEnemy(i);
@@ -614,7 +542,6 @@ void GameManager::Update(Engine &engine)
         if (enemy->attackTriggered)
         {
             enemy->attackTriggered = false;
-            // Check range and facing - simple proximity check
             if (player)
             {
                 Vector2 enemyCenter = {enemy->Pos.x + enemy->hitboxOffsetX + enemy->hitboxW * 0.5f,
@@ -626,22 +553,17 @@ void GameManager::Update(Engine &engine)
                 float dist = sqrt(dx * dx + dy * dy);
                 if (dist <= enemy->GetAttackRange() * 1.2f)
                 {
-                    // Apply damage to player
                     player->hp -= enemy->damage;
-                    // Flash HUD on hit
                     hud.HurtFlash();
                     if (player->hp <= 0)
                     {
                         player->hp = 0;
-                        // Mark death pending and force play the death animation;
-                        // the DeathState will be pushed once the animation finishes.
                         player->deathPending = true;
                         player->ForceChangeAnimState(AnimState::DEAD);
                         return;
                     }
                     else
                     {
-                        // Force hurt animation to interrupt current actions
                         player->ForceChangeAnimState(AnimState::HURT);
                     }
                 }
@@ -649,7 +571,6 @@ void GameManager::Update(Engine &engine)
         }
     }
 
-    // Update coins animation
     for (auto &coin : coins)
     {
         coin.Update(dt);
@@ -659,23 +580,18 @@ void GameManager::Update(Engine &engine)
     {
         if (CheckCollisionRecs(coins[i].hitbox, player->GetHitboxRect()))
         {
-            // Compute tile coordinates BEFORE erasing coin
             int tileX = (int)(coins[i].pos.x / interactables.GetTileSize());
             int tileY = (int)(coins[i].pos.y / interactables.GetTileSize());
 
-            // Remove coin from vector
             coins.erase(coins.begin() + i);
             i--;
 
-            // Update interactables map to remove the coin
             interactables.SetTile(tileX, tileY, 0);
 
-            // Track coin collection in global state
             GameProgress::AddCoins(1);
         }
     }
 
-    // Check for level exit interactable (tile id 280) when player overlaps it
     if (player && !levelCompletedTriggered)
     {
         Rectangle phb = player->GetHitboxRect();
@@ -685,7 +601,6 @@ void GameManager::Update(Engine &engine)
         int top = (int)floor(phb.y / tileSize);
         int bottom = (int)floor((phb.y + phb.height) / tileSize);
 
-        // Clamp to bounds
         left = std::max(0, left);
         top = std::max(0, top);
         right = std::min(interactables.GetWidth() - 1, right);
@@ -715,29 +630,25 @@ void GameManager::Update(Engine &engine)
     }
 }
 
+// Draw() method and other methods remain exactly the same
 void GameManager::Draw()
 {
-    // WORLD RENDERING WITH CAMERA
     BeginMode2D(camera);
 
-    // --- Draw tiled background FIRST (behind everything) ---
     if (Loader::MapBackground.id != 0)
     {
-        // Scale factor to make background smaller (adjust this value as needed)
-        float bgScale = 0.3f; // 30% of original size - change this to make it bigger/smaller
+        float bgScale = 0.3f;
         
         int bgWidth = (int)(Loader::MapBackground.width * bgScale);
         int bgHeight = (int)(Loader::MapBackground.height * bgScale);
         
-        // Calculate how many tiles we need to cover the entire map
         int tileSize = map_collide.GetTileSize();
         int worldWidth = map_collide.GetWidth() * tileSize;
         int worldHeight = map_collide.GetHeight() * tileSize;
         
-        int tilesX = (worldWidth / bgWidth) + 2;  // +2 for safety margin
+        int tilesX = (worldWidth / bgWidth) + 2;
         int tilesY = (worldHeight / bgHeight) + 2;
         
-        // Draw the background in a grid pattern
         for (int y = 0; y < tilesY; y++)
         {
             for (int x = 0; x < tilesX; x++)
@@ -752,24 +663,19 @@ void GameManager::Draw()
         }
     }
 
-    // --- Draw tilemaps ---
     map_non_colliding.DrawMap();
     interactables.DrawMap();
     map_collide.DrawMap();
 
-    // --- Draw enemies ---
     enemyManager.Draw(animator);
 
-    // --- Draw player properly inside camera ---
     if (player)
         animator.Draw(player);
 
-    // --- DEBUG DRAW (inside camera) ---
     if (debugDrawCollision)
     {
         int tileSize = map_collide.GetTileSize();
 
-        // Collidable tiles
         for (int y = 0; y < map_collide.GetHeight(); y++)
         {
             for (int x = 0; x < map_collide.GetWidth(); x++)
@@ -788,7 +694,6 @@ void GameManager::Draw()
             }
         }
 
-        // Interactables
         for (int y = 0; y < interactables.GetHeight(); y++)
             for (int x = 0; x < interactables.GetWidth(); x++)
                 if (interactables.IsSolidTile(x, y))
@@ -799,7 +704,6 @@ void GameManager::Draw()
                         interactables.GetTileSize(),
                         SKYBLUE);
 
-        // Non-colliding
         for (int y = 0; y < map_non_colliding.GetHeight(); y++)
             for (int x = 0; x < map_non_colliding.GetWidth(); x++)
                 if (map_non_colliding.IsSolidTile(x, y))
@@ -810,17 +714,14 @@ void GameManager::Draw()
                         map_non_colliding.GetTileSize(),
                         GRAY);
 
-        // Player hitbox
         if (player)
         {
             Rectangle hb = player->GetHitboxRect();
             DrawRectangleLinesEx(hb, 2, RED);
         }
 
-        // Enemy detection and attack ranges
         enemyManager.DebugDraw();
 
-        // Entity hitboxes
         for (auto e : entities)
         {
             if (e)
@@ -828,18 +729,15 @@ void GameManager::Draw()
         }
     }
 
-    // Draw coins in world space
     for (auto &coin : coins)
     {
         coin.Draw();
     }
 
-    EndMode2D(); // exit camera
+    EndMode2D();
 
-    // HUD drawing (screen-space)
     hud.Draw();
 
-    // DEBUG TEXT (screen-space)
     if (debugDrawCollision && player)
     {
         DrawText(
@@ -865,7 +763,6 @@ void GameManager::SetCoinsFromPositions(const std::vector<Vector2> &positions)
 {
     coins.clear();
     int tileSize = interactables.GetTileSize();
-    // Clear existing coin tiles
     for (int y = 0; y < interactables.GetHeight(); y++)
         for (int x = 0; x < interactables.GetWidth(); x++)
             if (interactables.GetTile(x, y) == 397)
