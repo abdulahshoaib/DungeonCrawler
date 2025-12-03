@@ -720,11 +720,41 @@ void GameManager::Draw()
     // WORLD RENDERING WITH CAMERA
     BeginMode2D(camera);
 
-    // --- Draw tilemaps ---
+    // --- Draw tiled background FIRST (behind everything) ---
+    if (Loader::MapBackground.id != 0)
+    {
+        // Scale factor to make background smaller (adjust this value as needed)
+        float bgScale = 0.5f; // 50% of original size - change this to make it bigger/smaller
+        
+        int bgWidth = (int)(Loader::MapBackground.width * bgScale);
+        int bgHeight = (int)(Loader::MapBackground.height * bgScale);
+        
+        // Calculate how many tiles we need to cover the entire map
+        int tileSize = map_collide.GetTileSize();
+        int worldWidth = map_collide.GetWidth() * tileSize;
+        int worldHeight = map_collide.GetHeight() * tileSize;
+        
+        int tilesX = (worldWidth / bgWidth) + 2;  // +2 for safety margin
+        int tilesY = (worldHeight / bgHeight) + 2;
+        
+        // Draw the background in a grid pattern
+        for (int y = 0; y < tilesY; y++)
+        {
+            for (int x = 0; x < tilesX; x++)
+            {
+                Vector2 pos = {
+                    (float)(x * bgWidth),
+                    (float)(y * bgHeight)
+                };
+                
+                DrawTextureEx(Loader::MapBackground, pos, 0.0f, bgScale, WHITE);
+            }
+        }
+    }
 
+    // --- Draw tilemaps ---
     map_non_colliding.DrawMap();
     interactables.DrawMap();
-
     map_collide.DrawMap();
 
     // --- Draw enemies ---

@@ -167,6 +167,7 @@ public:
   inline static Texture2D MainMenuBackground;
   inline static Texture2D SelectionMenuBackground;
   inline static Texture2D LoadMenuBackground;
+  inline static Texture2D MapBackground; // Add this line
   static void LoadBackgrounds();
   static void UnLoadBackgrounds();
 
