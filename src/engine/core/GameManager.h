@@ -39,6 +39,9 @@ private:
     // Enemy system
     EnemyManager enemyManager;
 
+    // Ensure end-of-level triggers only once
+    bool levelCompletedTriggered = false;
+
     // Attack combo tracking
     int currentComboStep = 0;
     float comboTimer = 0.0f;

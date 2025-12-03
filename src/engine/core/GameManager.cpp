@@ -1,6 +1,7 @@
 #include "GameManager.h"
 #include "PauseState.h"
 #include "state/DeathState.h"
+#include "state/EndState.h"
 
 #include "characters/Knight1.h"
 #include "characters/Knight2.h"
@@ -671,6 +672,45 @@ void GameManager::Update(Engine &engine)
 
             // Track coin collection in global state
             GameProgress::AddCoins(1);
+        }
+    }
+
+    // Check for level exit interactable (tile id 280) when player overlaps it
+    if (player && !levelCompletedTriggered)
+    {
+        Rectangle phb = player->GetHitboxRect();
+        int tileSize = interactables.GetTileSize();
+        int left = (int)floor(phb.x / tileSize);
+        int right = (int)floor((phb.x + phb.width) / tileSize);
+        int top = (int)floor(phb.y / tileSize);
+        int bottom = (int)floor((phb.y + phb.height) / tileSize);
+
+        // Clamp to bounds
+        left = std::max(0, left);
+        top = std::max(0, top);
+        right = std::min(interactables.GetWidth() - 1, right);
+        bottom = std::min(interactables.GetHeight() - 1, bottom);
+
+        bool foundExit = false;
+        for (int ty = top; ty <= bottom && !foundExit; ++ty)
+        {
+            for (int tx = left; tx <= right; ++tx)
+            {
+                if (interactables.GetTile(tx, ty) == 280)
+                {
+                    foundExit = true;
+                    break;
+                }
+            }
+        }
+
+        if (foundExit)
+        {
+            levelCompletedTriggered = true;
+            int kills = enemyManager.GetEnemiesKilled();
+            int coinsCollected = GameProgress::GetCoinsCollected();
+            engine.PushState(new EndState(kills, coinsCollected));
+            return;
         }
     }
 }
