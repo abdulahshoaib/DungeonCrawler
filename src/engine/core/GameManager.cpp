@@ -14,7 +14,7 @@
 
 #include "EnemySkeleton.h"
 #include "EnemyYokai.h"
-#include "Audio.h"  // Add this include
+#include "Audio.h"
 
 #include <cmath>
 #include <string>
@@ -27,11 +27,8 @@
 #define SAMURAI_COMMANDER 5
 #define SAMURAI_ARCHER 6
 
-// ... [Constructor remains the same - no changes needed] ...
-
 GameManager::GameManager(int ID)
 {
-    // [All your existing constructor code stays exactly the same]
     // layer order: interactables, non-colliding visuals, collidable map
     interactables.LoadMap("assets/maps/interactables.csv");
     map_non_colliding.LoadMap("assets/maps/non_colliding.csv");
@@ -52,14 +49,6 @@ GameManager::GameManager(int ID)
         player = new Knight1();
         break;
     }
-
-        if (player && player->currentAnim)
-        {
-            player->hitboxW = player->currentAnim->frameWidth * 0.40f;
-            player->hitboxH = player->currentAnim->frameHeight * 0.65f;
-            player->hitboxOffsetX = (player->currentAnim->frameWidth - player->hitboxW) * 0.5f;
-            player->hitboxOffsetY = player->currentAnim->frameHeight - player->hitboxH;
-        }
     case KNIGHT2:
     {
         hud.playerName = "Van Gaurd";
@@ -97,31 +86,36 @@ GameManager::GameManager(int ID)
     }
     }
 
+    // Adjust player hitbox if available
+    if (player && player->currentAnim)
+    {
+        player->hitboxW = player->currentAnim->frameWidth * 0.40f;
+        player->hitboxH = player->currentAnim->frameHeight * 0.65f;
+        player->hitboxOffsetX = (player->currentAnim->frameWidth - player->hitboxW) * 0.5f;
+        player->hitboxOffsetY = player->currentAnim->frameHeight - player->hitboxH;
+    }
+
     enemyManager.SetPlayerReference(player);
     enemyManager.SetCollisionMapReference(&map_collide);
     enemyManager.SetDebugDraw(debugDrawCollision);
 
     hud.SetPlayer(player);
 
-    // In GameManager constructor, replace the enemy spawning code with this:
-
     // Load enemy paths from CSV
     enemyManager.LoadPathsFromCSV("assets/maps/enemy_paths.csv");
-    
-    // Spawn enemies at proper positions (not offset from waypoints)
+
+    // Spawn enemies at proper positions
     if (enemyManager.GetPathCount() > 0)
     {
         EnemyPath *path = enemyManager.GetPath(0);
         if (path && path->IsValid())
         {
             Vector2 nodePos = path->GetNode(0);
-            // Don't offset - spawn directly at waypoint position
-            // The waypoint position from the editor is already in world coordinates (tile * 32)
-            Vector2 startPos = {nodePos.x - 64.0f, nodePos.y - 128.0f}; // Align sprite center
+            Vector2 startPos = {nodePos.x - 64.0f, nodePos.y - 128.0f};
             enemyManager.SpawnEnemyTypeWithPath<EnemySkeletonWarrior>(startPos, path, 200.0f, 80.0f);
         }
     }
-    
+
     if (enemyManager.GetPathCount() > 1)
     {
         EnemyPath *path = enemyManager.GetPath(1);
@@ -132,7 +126,7 @@ GameManager::GameManager(int ID)
             enemyManager.SpawnEnemyTypeWithPath<EnemySkeletonArcher>(startPos, path, 200.0f, 80.0f);
         }
     }
-    
+
     if (enemyManager.GetPathCount() > 2)
     {
         EnemyPath *path = enemyManager.GetPath(2);
@@ -143,19 +137,18 @@ GameManager::GameManager(int ID)
             enemyManager.SpawnEnemyTypeWithPath<EnemySkeletonSpearman>(startPos, path, 200.0f, 80.0f);
         }
     }
-    
+
     if (enemyManager.GetPathCount() > 3)
     {
         EnemyPath *path = enemyManager.GetPath(3);
         if (path && path->IsValid())
         {
             Vector2 nodePos = path->GetNode(0);
-            // Yokai sprites are 96x96, adjust accordingly
             Vector2 startPos = {nodePos.x - 48.0f, nodePos.y - 96.0f};
             enemyManager.SpawnEnemyTypeWithPath<EnemyKarasuTengu>(startPos, path, 200.0f, 80.0f);
         }
     }
-    
+
     if (enemyManager.GetPathCount() > 4)
     {
         EnemyPath *path = enemyManager.GetPath(4);
@@ -167,17 +160,34 @@ GameManager::GameManager(int ID)
         }
     }
 
+    // Load coins from interactables layer (tile ID 397)
+    for (int y = 0; y < interactables.GetHeight(); y++)
+    {
+        for (int x = 0; x < interactables.GetWidth(); x++)
+        {
+            if (interactables.GetTile(x, y) == 397)
+            {
+                float posX = x * interactables.GetTileSize();
+                float posY = y * interactables.GetTileSize();
+                coins.emplace_back(posX, posY);
+            }
+        }
+    }
+
+    // If loading saved game, restore coin positions and player position
     if (GameProgress::IsDataLoaded())
     {
         const auto &saved = GameProgress::GetRemainingCoins();
         if (!saved.empty())
         {
             coins.clear();
+            // Clear all coin tiles first
             for (int y = 0; y < interactables.GetHeight(); y++)
                 for (int x = 0; x < interactables.GetWidth(); x++)
                     if (interactables.GetTile(x, y) == 397)
                         interactables.SetTile(x, y, 0);
 
+            // Restore saved coins
             int tileSize = interactables.GetTileSize();
             for (const auto &p : saved)
             {
@@ -190,14 +200,15 @@ GameManager::GameManager(int ID)
                 }
             }
         }
-    }
 
-    if (player && GameProgress::IsDataLoaded())
-    {
-        Vector2 savedPos = GameProgress::GetMapPosition();
-        if (savedPos.x != 0.0f || savedPos.y != 0.0f)
+        // Restore player position
+        if (player)
         {
-            player->Pos = savedPos;
+            Vector2 savedPos = GameProgress::GetMapPosition();
+            if (savedPos.x != 0.0f || savedPos.y != 0.0f)
+            {
+                player->Pos = savedPos;
+            }
         }
     }
 }
@@ -315,9 +326,8 @@ void GameManager::Update(Engine &engine)
 
     if (attackPressed && player->IsAnimationLocked() == false)
     {
-        // ===== PLAY SWORD SLICE SOUND =====
         Audio::PlaySFx(SWORD_SLICE_SFX);
-        
+
         AnimState nextAttack = AnimState::ATTACK1;
 
         if (currentComboStep == 0)
@@ -374,7 +384,6 @@ void GameManager::Update(Engine &engine)
 
     bool isRunning = (movingRight || movingLeft) && runKey;
 
-    // ===== RUNNING SOUND EFFECT =====
     if (isRunning && player->isGrounded && !player->IsAnimationLocked())
     {
         Audio::PlayRunningSFX();
@@ -386,9 +395,8 @@ void GameManager::Update(Engine &engine)
 
     if (isRunning && attackPressed && player->IsAnimationLocked() == false)
     {
-        // ===== PLAY SWORD SLICE FOR RUN ATTACK =====
         Audio::PlaySFx(SWORD_SLICE_SFX);
-        
+
         player->ChangeAnimState(AnimState::RUN_ATTACK);
         currentComboStep = 0;
         comboTimer = 0.0f;
@@ -500,18 +508,39 @@ void GameManager::Update(Engine &engine)
         return;
     }
 
+    // Handle player attack hitting enemies
     if (player->attackTriggered)
     {
         player->attackTriggered = false;
 
-        Vector2 playerCenter = {player->Pos.x + player->hitboxOffsetX + player->hitboxW * 0.5f,
-                                player->Pos.y + player->hitboxOffsetY + player->hitboxH * 0.5f};
+        // Calculate player attack position (center of hitbox)
+        Vector2 playerCenter = {
+            player->Pos.x + player->hitboxOffsetX + player->hitboxW * 0.5f,
+            player->Pos.y + player->hitboxOffsetY + player->hitboxH * 0.5f
+        };
 
-        float attackRange = 80.0f;
-        auto hitEnemies = enemyManager.GetEnemiesInRange(playerCenter, attackRange);
+        // Attack range - increased for better feel
+        float attackRange = 100.0f;
+
+        // Get all enemies in range
+        std::vector<size_t> hitEnemies = enemyManager.GetEnemiesInRange(playerCenter, attackRange);
+
+        // Apply damage to each enemy
         for (size_t idx : hitEnemies)
         {
-            enemyManager.DamageEnemy(idx, player->damage, {player->velocityX >= 0 ? 1.0f : -1.0f, -0.2f}, 200.0f);
+            Enemy* enemy = enemyManager.GetEnemy(idx);
+            if (enemy && enemy->hp > 0)
+            {
+                // Calculate knockback direction based on player facing
+                Vector2 knockbackDir = {
+                    player->IsFacingLeft() ? -1.0f : 1.0f,
+                    -0.2f
+                };
+                
+                // Apply damage with knockback
+                float damageAmount = player->damage > 0 ? player->damage : 15.0f; // Fallback damage
+                enemyManager.DamageEnemy(idx, damageAmount, knockbackDir, 250.0f);
+            }
         }
     }
 
@@ -565,11 +594,13 @@ void GameManager::Update(Engine &engine)
         }
     }
 
+    // Update coins animation
     for (auto &coin : coins)
     {
         coin.Update(dt);
     }
 
+    // Check coin collection
     for (size_t i = 0; i < coins.size(); i++)
     {
         if (CheckCollisionRecs(coins[i].hitbox, player->GetHitboxRect()))
@@ -624,7 +655,6 @@ void GameManager::Update(Engine &engine)
     }
 }
 
-// Draw() method and other methods remain exactly the same
 void GameManager::Draw()
 {
     BeginMode2D(camera);
@@ -632,26 +662,25 @@ void GameManager::Draw()
     if (Loader::MapBackground.id != 0)
     {
         float bgScale = 0.3f;
-        
+
         int bgWidth = (int)(Loader::MapBackground.width * bgScale);
         int bgHeight = (int)(Loader::MapBackground.height * bgScale);
-        
+
         int tileSize = map_collide.GetTileSize();
         int worldWidth = map_collide.GetWidth() * tileSize;
         int worldHeight = map_collide.GetHeight() * tileSize;
-        
+
         int tilesX = (worldWidth / bgWidth) + 2;
         int tilesY = (worldHeight / bgHeight) + 2;
-        
+
         for (int y = 0; y < tilesY; y++)
         {
             for (int x = 0; x < tilesX; x++)
             {
                 Vector2 pos = {
                     (float)(x * bgWidth),
-                    (float)(y * bgHeight)
-                };
-                
+                    (float)(y * bgHeight)};
+
                 DrawTextureEx(Loader::MapBackground, pos, 0.0f, bgScale, WHITE);
             }
         }
@@ -665,6 +694,12 @@ void GameManager::Draw()
 
     if (player)
         animator.Draw(player);
+
+    // Draw coins
+    for (auto &coin : coins)
+    {
+        coin.Draw();
+    }
 
     if (debugDrawCollision)
     {
@@ -721,11 +756,6 @@ void GameManager::Draw()
             if (e)
                 DrawRectangleLinesEx(e->GetHitboxRect(), 1, YELLOW);
         }
-    }
-
-    for (auto &coin : coins)
-    {
-        coin.Draw();
     }
 
     EndMode2D();
