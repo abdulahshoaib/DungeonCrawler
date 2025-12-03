@@ -133,11 +133,29 @@ const Enemy *EnemyManager::GetEnemy(size_t index) const
 
 void EnemyManager::RemoveDeadEnemies()
 {
-    enemies.erase(
-        std::remove_if(enemies.begin(), enemies.end(),
-                       [](const std::unique_ptr<Enemy> &e)
-                       { return e && e->GetAIState() == EnemyAIState::DEAD && e->hp <= 0; }),
-        enemies.end());
+    // Collect indices of enemies that are dead (AIState==DEAD and hp<=0)
+    std::vector<size_t> deadIndices;
+    for (size_t i = 0; i < enemies.size(); ++i)
+    {
+        const auto &e = enemies[i];
+        if (e && e->GetAIState() == EnemyAIState::DEAD && e->hp <= 0)
+        {
+            deadIndices.push_back(i);
+        }
+    }
+
+    // If any dead enemies found, increment kill counter and remove them
+    if (!deadIndices.empty())
+    {
+        // Increment kill count by the number removed
+        enemiesKilled += (int)deadIndices.size();
+
+        // Remove from back-to-front to keep indices valid
+        for (auto it = deadIndices.rbegin(); it != deadIndices.rend(); ++it)
+        {
+            enemies.erase(enemies.begin() + *it);
+        }
+    }
 }
 
 void EnemyManager::Clear()

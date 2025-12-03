@@ -17,6 +17,8 @@ private:
     Character *playerRef = nullptr;
     Map *collisionMapRef = nullptr;
     bool debugDraw = false;
+    // Number of enemies killed during the current run/session
+    int enemiesKilled = 0;
 
 public:
     EnemyManager();
@@ -78,6 +80,10 @@ public:
     void Update(float dt);
     void Draw(class Animator &animator);
     void DebugDraw() const;
+
+    // ===== STATS =====
+    int GetEnemiesKilled() const { return enemiesKilled; }
+    void ResetEnemiesKilled() { enemiesKilled = 0; }
 
     // ===== QUERIES =====
     size_t GetEnemyCount() const { return enemies.size(); }
