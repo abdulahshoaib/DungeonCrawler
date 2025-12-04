@@ -267,7 +267,7 @@ void GameManager::Update(Engine &engine)
     {
         Vector2 hitCenter = {player->Pos.x + player->hitboxOffsetX + player->hitboxW * 0.5f,
                              player->Pos.y + player->hitboxOffsetY + player->hitboxH * 0.5f};
-        
+
         // Smooth camera follow using lerp
         camera.target.x += (hitCenter.x - camera.target.x) * cameraLerpSpeed * dt;
         camera.target.y += (hitCenter.y - camera.target.y) * cameraLerpSpeed * dt;
@@ -309,12 +309,12 @@ void GameManager::Update(Engine &engine)
             float shakeY = ((float)(GetRandomValue(-100, 100)) / 100.0f) * screenShakeIntensity;
             camera.target.x += shakeX;
             camera.target.y += shakeY;
-            
+
             // Fade out shake intensity
             screenShakeIntensity *= 0.9f;
         }
     }
-    
+
     // Update invincibility timer
     if (playerInvincibilityTimer > 0.0f)
     {
@@ -606,14 +606,14 @@ void GameManager::Update(Engine &engine)
                 {
                     player->hp -= enemy->damage;
                     hud.HurtFlash();
-                    
+
                     // Trigger screen shake on hit
                     screenShakeTimer = 0.3f;
                     screenShakeIntensity = 5.0f;
-                    
+
                     // Start invincibility frames
                     playerInvincibilityTimer = INVINCIBILITY_DURATION;
-                    
+
                     if (player->hp <= 0)
                     {
                         player->hp = 0;
@@ -835,7 +835,7 @@ void GameManager::Draw()
             20, 36, 12, WHITE);
     }
 #endif
-    
+
     // Always show FPS in top-right corner (useful for players too)
     DrawFPS(GetScreenWidth() - 100, 10);
 }

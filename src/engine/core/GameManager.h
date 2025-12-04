@@ -16,18 +16,18 @@ private:
     bool blink = true;
     // By default draw all hitboxes as outlines. Toggle with F1.
     bool debugDrawCollision = false;
-    
+
     // Camera smoothing
     float cameraLerpSpeed = 8.0f;
-    
+
     // Screen shake effect
     float screenShakeTimer = 0.0f;
     float screenShakeIntensity = 0.0f;
-    
+
     // Player invincibility frames after getting hit
     float playerInvincibilityTimer = 0.0f;
     const float INVINCIBILITY_DURATION = 1.0f;
-    
+
     // Layer 0: Interactables
     Map interactables;
 

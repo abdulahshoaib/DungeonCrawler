@@ -22,9 +22,9 @@ void PauseState::Draw(Engine &engine)
     {
         prevState->Draw(engine);
     }
-    
+
     // Draw semi-transparent overlay over the game
     DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), (Color){0, 0, 0, 180});
-    
+
     pauseMenu.Draw();
 }
