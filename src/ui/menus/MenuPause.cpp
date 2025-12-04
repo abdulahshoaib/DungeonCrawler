@@ -4,7 +4,8 @@
 #include "../../engine/state/PlayState.h"
 #include "Loader.h"
 #include "Audio.h"
-#include "MainMenuState.h" // You'll need to include your main menu state
+#include "MainMenuState.h"
+#include "../UITheme.h"
 #include <raylib.h>
 
 MenuPause::MenuPause()
@@ -58,10 +59,8 @@ void MenuPause::DrawPauseHeader()
     float x = GetScreenWidth() / 2 - textSize.x / 2;
     float y = 80;
 
-    // Shadow
-    DrawTextEx(Loader::TitleFont, title, {x + 3, y + 3}, fontSize, 2.0f, (Color){20, 15, 10, 200});
-    // Main text
-    DrawTextEx(Loader::TitleFont, title, {x, y}, fontSize, 2.0f, (Color){255, 200, 100, 255});
+    // Use consistent text rendering
+    UITheme::TextEffects::DrawTextWithShadow(Loader::TitleFont, title, {x, y}, fontSize, 2.0f, UITheme::Colors::TEXT_TITLE);
 }
 
 void MenuPause::DrawPlayerInfo()
@@ -72,29 +71,22 @@ void MenuPause::DrawPlayerInfo()
     // Slim player info box (only name + score)
     Rectangle infoBox = {(float)(GetScreenWidth() / 2) - 180, infoY - 10, 360, 80};
 
-    // Outer shadow
-    DrawRectangleRec((Rectangle){infoBox.x + 3, infoBox.y + 3, infoBox.width, infoBox.height},
-                     (Color){20, 15, 10, 180});
-    // Main border
-    DrawRectangleRec(infoBox, (Color){45, 38, 32, 255});
-    // Inner area
-    DrawRectangleRec((Rectangle){infoBox.x + 4, infoBox.y + 4, infoBox.width - 8, infoBox.height - 8},
-                     (Color){65, 55, 45, 255});
+    // Use consistent panel drawing
+    UITheme::Panels::DrawPanel(infoBox, false);
 
     // Player information (only name and score)
     std::string usernameText = GameProgress::GetUsername();
     std::string pointsText = "Score: " + std::to_string(GameProgress::GetPoints());
 
     float textX = GetScreenWidth() / 2;
-    Color infoColor = (Color){235, 220, 195, 255};
 
     Vector2 usernameSize = MeasureTextEx(Loader::TitleFont, usernameText.c_str(), fontSize, 1.0f);
-    DrawTextEx(Loader::TitleFont, usernameText.c_str(),
-               {textX - usernameSize.x / 2, infoY}, fontSize, 1.0f, infoColor);
+    UITheme::TextEffects::DrawTextWithShadow(Loader::TitleFont, usernameText,
+                                             {textX - usernameSize.x / 2, infoY}, fontSize, 1.0f, UITheme::Colors::TEXT_PRIMARY);
 
     Vector2 pointsSize = MeasureTextEx(Loader::TitleFont, pointsText.c_str(), fontSize * 0.9f, 1.0f);
-    DrawTextEx(Loader::TitleFont, pointsText.c_str(),
-               {textX - pointsSize.x / 2, infoY + 36}, fontSize * 0.9f, 1.0f, infoColor);
+    UITheme::TextEffects::DrawTextWithShadow(Loader::TitleFont, pointsText,
+                                             {textX - pointsSize.x / 2, infoY + 36}, fontSize * 0.9f, 1.0f, UITheme::Colors::TEXT_PRIMARY);
 }
 
 void MenuPause::Draw()

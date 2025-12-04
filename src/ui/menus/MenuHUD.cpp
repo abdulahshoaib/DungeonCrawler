@@ -2,6 +2,7 @@
 #include "MenuHUD.h"
 #include "system/GameProgress.h"
 #include "characters/Character.h"
+#include "../UITheme.h"
 MenuHUD::MenuHUD()
 {
   playerName = "Haris";
@@ -41,15 +42,15 @@ void MenuHUD::Draw()
       0.0f,
       1.0f,
       WHITE);
-  DrawRectangleLines(portraitX, portraitY, portraitW, portraitH, BROWN);
+  DrawRectangleLines(portraitX, portraitY, portraitW, portraitH, UITheme::Colors::STONE_DARK);
 
   // ==== PLAYER NAME ====
-  DrawTextEx(Loader::TitleFont,
-             playerName.c_str(),
-             {(float)(portraitX + portraitW + 15), (float)(portraitY + 5)},
-             24.0f,
-             1.0f,
-             WHITE);
+  UITheme::TextEffects::DrawTextWithShadow(Loader::TitleFont,
+                                           playerName,
+                                           {(float)(portraitX + portraitW + 15), (float)(portraitY + 5)},
+                                           24.0f,
+                                           1.0f,
+                                           UITheme::Colors::TEXT_PRIMARY);
 
   int barX = portraitX + portraitW + 15;
   int barY = portraitY + 45;
@@ -70,12 +71,14 @@ void MenuHUD::Draw()
     healthPercent = 0;
   int healthWidth = (int)(barW * healthPercent);
 
-  // Health
-  DrawRectangle(barX, barY, barW, barH, DARKGRAY);
-  DrawRectangle(barX, barY, healthWidth, barH, RED);
+  // Health bar background
+  DrawRectangle(barX, barY, barW, barH, UITheme::Colors::STONE_DARK);
+  // Health bar - use color palette based on health
+  Color healthColor = healthPercent > 0.5f ? UITheme::Colors::HEALTH_GREEN : UITheme::Colors::HEALTH_RED;
+  DrawRectangle(barX, barY, healthWidth, barH, healthColor);
 
   // Outline
-  DrawRectangleLines(barX, barY, barW, barH, BLACK);
+  DrawRectangleLines(barX, barY, barW, barH, UITheme::Colors::STONE_LIGHT);
 
   // ==== COINS ====
   int coinY = barY + 25;
@@ -95,7 +98,7 @@ void MenuHUD::Draw()
       {(float)(barX + 45), (float)(coinY + 4)},
       fontSize,
       1.0f,
-      WHITE);
+      UITheme::Colors::ACCENT_GOLD);
 
   // Update and draw hurt flash overlay for HUD
   if (hurtTimer > 0.0f)

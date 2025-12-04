@@ -6,6 +6,7 @@
 #include "LoadGameState.h"
 #include "EnterNameState.h"
 #include "Audio.h"
+#include "../UITheme.h"
 
 void MenuMain::Draw()
 {
@@ -35,7 +36,8 @@ void MenuMain::Draw()
     titleLabel.fontSize = titleFontSize;
     titleLabel.text = title;
     titleLabel.position = titleTextPos;
-    titleLabel.Draw(WHITE);
+    // Use consistent text rendering with shadow
+    UITheme::TextEffects::DrawTextWithShadow(titleFont, title, titleTextPos, titleFontSize, 2.0f, UITheme::Colors::TEXT_TITLE);
 
     NewGame_btn.label.text = "NEW GAME";
     NewGame_btn.rect = NewGameRect;
