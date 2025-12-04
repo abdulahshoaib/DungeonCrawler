@@ -267,7 +267,10 @@ void GameManager::Update(Engine &engine)
     {
         Vector2 hitCenter = {player->Pos.x + player->hitboxOffsetX + player->hitboxW * 0.5f,
                              player->Pos.y + player->hitboxOffsetY + player->hitboxH * 0.5f};
-        camera.target = hitCenter;
+        
+        // Smooth camera follow using lerp
+        camera.target.x += (hitCenter.x - camera.target.x) * cameraLerpSpeed * dt;
+        camera.target.y += (hitCenter.y - camera.target.y) * cameraLerpSpeed * dt;
 
         float halfViewW = camera.offset.x / camera.zoom;
         float halfViewH = camera.offset.y / camera.zoom;
@@ -297,6 +300,25 @@ void GameManager::Update(Engine &engine)
         camera.target.x = fmax(minX, fmin(maxX, camera.target.x));
         camera.target.y = fmax(minY, fmin(maxY, camera.target.y));
 #endif
+
+        // Apply screen shake
+        if (screenShakeTimer > 0.0f)
+        {
+            screenShakeTimer -= dt;
+            float shakeX = ((float)(GetRandomValue(-100, 100)) / 100.0f) * screenShakeIntensity;
+            float shakeY = ((float)(GetRandomValue(-100, 100)) / 100.0f) * screenShakeIntensity;
+            camera.target.x += shakeX;
+            camera.target.y += shakeY;
+            
+            // Fade out shake intensity
+            screenShakeIntensity *= 0.9f;
+        }
+    }
+    
+    // Update invincibility timer
+    if (playerInvincibilityTimer > 0.0f)
+    {
+        playerInvincibilityTimer -= dt;
     }
 
 #ifdef DEBUG
@@ -571,7 +593,7 @@ void GameManager::Update(Engine &engine)
         if (enemy->attackTriggered)
         {
             enemy->attackTriggered = false;
-            if (player)
+            if (player && playerInvincibilityTimer <= 0.0f)
             {
                 Vector2 enemyCenter = {enemy->Pos.x + enemy->hitboxOffsetX + enemy->hitboxW * 0.5f,
                                        enemy->Pos.y + enemy->hitboxOffsetY + enemy->hitboxH * 0.5f};
@@ -584,6 +606,14 @@ void GameManager::Update(Engine &engine)
                 {
                     player->hp -= enemy->damage;
                     hud.HurtFlash();
+                    
+                    // Trigger screen shake on hit
+                    screenShakeTimer = 0.3f;
+                    screenShakeIntensity = 5.0f;
+                    
+                    // Start invincibility frames
+                    playerInvincibilityTimer = INVINCIBILITY_DURATION;
+                    
                     if (player->hp <= 0)
                     {
                         player->hp = 0;
@@ -698,8 +728,31 @@ void GameManager::Draw()
 
     enemyManager.Draw(animator);
 
+    // Draw player with invincibility flashing effect
     if (player)
-        animator.Draw(player);
+    {
+        // Flash white during invincibility frames
+        if (playerInvincibilityTimer > 0.0f)
+        {
+            // Flash every 0.1 seconds
+            bool showWhite = ((int)(playerInvincibilityTimer * 10) % 2) == 0;
+            if (showWhite)
+            {
+                // Draw with tint to show invincibility
+                BeginBlendMode(BLEND_ADDITIVE);
+                animator.Draw(player);
+                EndBlendMode();
+            }
+            else
+            {
+                animator.Draw(player);
+            }
+        }
+        else
+        {
+            animator.Draw(player);
+        }
+    }
 
     // Draw coins
     for (auto &coin : coins)
@@ -770,6 +823,7 @@ void GameManager::Draw()
 
     hud.Draw();
 
+#ifdef DEBUG
     if (debugDrawCollision && player)
     {
         DrawText(
@@ -780,6 +834,10 @@ void GameManager::Draw()
             ("TileCollisionTopMargin: " + std::to_string(map_collide.GetCollisionTopMargin())).c_str(),
             20, 36, 12, WHITE);
     }
+#endif
+    
+    // Always show FPS in top-right corner (useful for players too)
+    DrawFPS(GetScreenWidth() - 100, 10);
 }
 
 std::vector<Vector2> GameManager::GetCoinPositions() const
