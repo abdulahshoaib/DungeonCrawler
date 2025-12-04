@@ -21,7 +21,7 @@ Enemy::Enemy() : Character()
     currentAnim = idle1Anim;
 
     // Default enemy stats
-    hp = 30.0f;
+    hp = 50.0f;
     maxHp = hp;
     damage = 8.0f;
     speed = 180.0f;

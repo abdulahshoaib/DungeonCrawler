@@ -14,6 +14,9 @@ SamuraiArcher::SamuraiArcher()
     shot1Anim = &Loader::SamuraiArcherShot;
 
     currentAnim = idle1Anim;
+
+    // Combat stats
+    damage = 8.0f;
 }
 
 void SamuraiArcher::anim()

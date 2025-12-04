@@ -15,6 +15,9 @@ Samurai::Samurai()
     protectAnim = &Loader::SamuraiProtect;
 
     currentAnim = idle1Anim;
+
+    // Combat stats
+    damage = 12.0f;
 }
 
 void Samurai::anim()

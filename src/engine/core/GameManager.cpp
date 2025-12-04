@@ -402,11 +402,8 @@ void GameManager::Update(Engine &engine)
         player->ChangeAnimState(AnimState::DEAD);
 
     bool inputLocked = player->IsAnimationLocked();
-    if (inputLocked)
-    {
-        player->anim();
-        animator.Update(player, dt);
-    }
+    // Note: Don't update animator here - it's updated once later in the frame
+    // to avoid double-updating which can cause attackTriggered to be missed
 
     bool movingRight = IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT);
     bool movingLeft = IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT);

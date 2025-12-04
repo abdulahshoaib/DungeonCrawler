@@ -20,6 +20,9 @@ Knight3::Knight3()
     runAttackAnim = &Loader::Knight3RunAttack;
 
     currentAnim = idle1Anim;
+
+    // Combat stats
+    damage = 15.0f;
 }
 
 void Knight3::anim()
