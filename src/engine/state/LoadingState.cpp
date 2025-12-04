@@ -8,12 +8,14 @@
 
 void LoadingState::Update(Engine &engine)
 {
+#ifdef DEBUG
     // DEBUG: Skip loading with CTRL+SHIFT+D
     if (IsKeyDown(KEY_LEFT_CONTROL) && IsKeyDown(KEY_LEFT_SHIFT) && IsKeyPressed(KEY_D))
     {
         engine.ChangeState(new PlayState(1)); // Default to Knight1
         return;
     }
+#endif
 
     Loader::LoadFont();
     switch (step)

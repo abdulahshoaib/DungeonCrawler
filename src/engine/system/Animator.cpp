@@ -72,7 +72,7 @@ void Animator::Draw(Character *c)
 {
     Animation *anim = c->currentAnim;
     if (!anim)
-        DrawText("CURRENT ANIM NULL!", 50, 50, 20, RED);
+        return;
 
     Rectangle src = {
         (float)(anim->currentFrame * anim->frameWidth),

@@ -145,7 +145,9 @@ bool GameProgress::SaveProgress(int slot)
 
     saveFile.close();
 
+#ifdef DEBUG
     std::cout << "Progress saved to slot " << slot << " successfully!" << std::endl;
+#endif
     return true;
 }
 
@@ -159,7 +161,9 @@ bool GameProgress::LoadProgress(int slot)
 
     if (!FileExists(filepath))
     {
+#ifdef DEBUG
         std::cout << "No save file found in slot " << slot << ". Starting fresh." << std::endl;
+#endif
         return false;
     }
 
@@ -197,8 +201,10 @@ bool GameProgress::LoadProgress(int slot)
     dataLoaded = true;
     currentSlot = slot;
 
+#ifdef DEBUG
     std::cout << "Progress loaded from slot " << slot << " successfully!" << std::endl;
     std::cout << "Welcome back, " << username << "!" << std::endl;
+#endif
     return true;
 }
 
@@ -214,7 +220,9 @@ void GameProgress::ResetProgress()
     currentLevel = 1;
     dataLoaded = false;
 
+#ifdef DEBUG
     std::cout << "Progress reset to defaults." << std::endl;
+#endif
 }
 
 // Check if save data exists
@@ -247,6 +255,7 @@ bool GameProgress::HasSaveDataInSlot(int slot)
 // Initialize the system (call at game start)
 void GameProgress::Initialize()
 {
+#ifdef DEBUG
     if (HasSaveData())
     {
         std::cout << "Save data found. Can load from main menu." << std::endl;
@@ -255,6 +264,7 @@ void GameProgress::Initialize()
     {
         std::cout << "No existing save found. Starting new game." << std::endl;
     }
+#endif
 }
 
 bool GameProgress::IsDataLoaded()

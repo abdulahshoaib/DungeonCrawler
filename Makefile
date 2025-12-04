@@ -198,9 +198,9 @@ endif
 CFLAGS += -Wall -std=c++17 -D_DEFAULT_SOURCE -Wno-missing-braces
 
 ifeq ($(BUILD_MODE),DEBUG)
-    CFLAGS += -g -O0
+    CFLAGS += -g -O0 -DDEBUG
 else
-    CFLAGS += -s -O1
+    CFLAGS += -s -O1 -DRELEASE
 endif
 
 # Additional flags for compiler (if desired)
@@ -364,7 +364,7 @@ endif
 # Define a recursive wildcard function
 rwildcard=$(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2) $(filter $(subst *,%,$2),$d))
 
-SRC = $(call rwildcard, src/, *.cpp) $(wildcard test/*.cpp)
+SRC = $(call rwildcard, src/, *.cpp)
 OBJS = $(patsubst %.cpp, $(BUILD_DIR)/%.o, $(SRC))
 
 # For Android platform we call a custom Makefile.Android

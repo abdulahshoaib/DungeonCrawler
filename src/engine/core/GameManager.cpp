@@ -238,6 +238,7 @@ void GameManager::Update(Engine &engine)
         }
     }
 
+#ifdef DEBUG
     if (IsKeyPressed(KEY_F1))
     {
         debugDrawCollision = !debugDrawCollision;
@@ -256,8 +257,13 @@ void GameManager::Update(Engine &engine)
         if (IsKeyDown(KEY_RIGHT))
             camera.target.x += cameraPanSpeed;
     }
+#endif
 
-    if (player && !cameraDebugMode)
+    if (player
+#ifdef DEBUG
+        && !cameraDebugMode
+#endif
+    )
     {
         Vector2 hitCenter = {player->Pos.x + player->hitboxOffsetX + player->hitboxW * 0.5f,
                              player->Pos.y + player->hitboxOffsetY + player->hitboxH * 0.5f};
@@ -281,7 +287,7 @@ void GameManager::Update(Engine &engine)
         }
         if (maxY < minY)
         {
-            minY = maxY = worldH * 0.5f;
+            minY = maxY = worldH - halfViewH;
         }
 
 #if __cplusplus >= 201703L
@@ -293,6 +299,7 @@ void GameManager::Update(Engine &engine)
 #endif
     }
 
+#ifdef DEBUG
     if (IsKeyPressed(KEY_F4))
     {
         int delta = (IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT)) ? 4 : 1;
@@ -306,6 +313,7 @@ void GameManager::Update(Engine &engine)
             newm = 0;
         map_collide.SetCollisionTopMargin(newm);
     }
+#endif
 
     if (player)
     {
@@ -516,8 +524,7 @@ void GameManager::Update(Engine &engine)
         // Calculate player attack position (center of hitbox)
         Vector2 playerCenter = {
             player->Pos.x + player->hitboxOffsetX + player->hitboxW * 0.5f,
-            player->Pos.y + player->hitboxOffsetY + player->hitboxH * 0.5f
-        };
+            player->Pos.y + player->hitboxOffsetY + player->hitboxH * 0.5f};
 
         // Attack range - increased for better feel
         float attackRange = 100.0f;
@@ -528,15 +535,14 @@ void GameManager::Update(Engine &engine)
         // Apply damage to each enemy
         for (size_t idx : hitEnemies)
         {
-            Enemy* enemy = enemyManager.GetEnemy(idx);
+            Enemy *enemy = enemyManager.GetEnemy(idx);
             if (enemy && enemy->hp > 0)
             {
                 // Calculate knockback direction based on player facing
                 Vector2 knockbackDir = {
                     player->IsFacingLeft() ? -1.0f : 1.0f,
-                    -0.2f
-                };
-                
+                    -0.2f};
+
                 // Apply damage with knockback
                 float damageAmount = player->damage > 0 ? player->damage : 15.0f; // Fallback damage
                 enemyManager.DamageEnemy(idx, damageAmount, knockbackDir, 250.0f);
@@ -701,6 +707,7 @@ void GameManager::Draw()
         coin.Draw();
     }
 
+#ifdef DEBUG
     if (debugDrawCollision)
     {
         int tileSize = map_collide.GetTileSize();
@@ -757,6 +764,7 @@ void GameManager::Draw()
                 DrawRectangleLinesEx(e->GetHitboxRect(), 1, YELLOW);
         }
     }
+#endif
 
     EndMode2D();
 

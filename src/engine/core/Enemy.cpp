@@ -30,8 +30,8 @@ Enemy::Enemy() : Character()
     // Make hitbox tighter and aligned to bottom of sprite
     hitboxW = 50.0f;
     hitboxH = 90.0f;
-    hitboxOffsetX = 39.0f;  // Center horizontally in 128px sprite
-    hitboxOffsetY = 38.0f;  // Align to bottom, feet at y=128
+    hitboxOffsetX = 39.0f; // Center horizontally in 128px sprite
+    hitboxOffsetY = 38.0f; // Align to bottom, feet at y=128
 
     animState = AnimState::IDLE;
 }
@@ -145,7 +145,7 @@ void Enemy::HandleCollisions(Map &collisionMap)
             if (collisionMap.GetFirstCollisionTile(horizontalCheck, tx, ty))
             {
                 float tileSize = collisionMap.GetTileSize();
-                
+
                 // Push out of collision based on movement direction
                 if (velocityX > 0)
                 {
@@ -164,7 +164,7 @@ void Enemy::HandleCollisions(Map &collisionMap)
 
     // Handle vertical collisions
     hitbox = GetHitboxRect(); // Recalculate after horizontal adjustment
-    
+
     if (collisionMap.CheckCollisionRect(hitbox))
     {
         int tx, ty;
@@ -172,7 +172,7 @@ void Enemy::HandleCollisions(Map &collisionMap)
         {
             float tileSize = collisionMap.GetTileSize();
             float tileY = ty * tileSize;
-            
+
             if (velocityY > 0)
             {
                 // Falling - land on top of tile
@@ -244,7 +244,7 @@ void Enemy::UpdatePatrol(float dt, Map &collisionMap)
 
         // Set pause time for new waypoint
         pathPauseTimer = patrolPath->GetPauseTime(currentPathNode);
-        
+
         // If pause time is 0, continue moving immediately
         if (pathPauseTimer <= 0)
         {
@@ -479,9 +479,7 @@ void Enemy::anim()
 
 void Enemy::DebugDraw() const
 {
-    if (!debugDraw)
-        return;
-
+#ifdef DEBUG
     Vector2 center = {Pos.x + hitboxOffsetX + hitboxW * 0.5f,
                       Pos.y + hitboxOffsetY + hitboxH * 0.5f};
 
@@ -517,4 +515,5 @@ void Enemy::DebugDraw() const
         break;
     }
     DrawText(stateStr, (int)center.x - 20, (int)center.y - 20, 10, WHITE);
+#endif
 }
